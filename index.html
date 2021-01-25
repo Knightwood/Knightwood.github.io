@@ -1,99 +1,615 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="John Doe">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta property="og:type" content="website">
+<meta property="og:title" content="nightwood的博客">
+<meta property="og:url" content="https://knightwood.github.io/index.html">
+<meta property="og:site_name" content="nightwood的博客">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="night">
 <meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
 
-  
-  
-<link rel="stylesheet" href="/css/style.css">
 
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+<link rel="canonical" href="https://knightwood.github.io/">
 
-  
-<meta name="generator" content="Hexo 5.3.0"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>nightwood的博客</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">nightwood的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
         
-          <a class="main-nav-link" href="/">Home</a>
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">night</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
         
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
       </div>
     </div>
-  </div>
-</header>
+  </aside>
+  <div class="sidebar-dimmer"></div>
 
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/01/25/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2021-01-25T03:28:04.569Z" itemprop="datePublished">2021-01-25</time>
-</a>
+
+    </header>
+
     
+  <div class="back-to-top" role="button">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
   </div>
-  <div class="article-inner">
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner index posts-expand">
+
     
-    
-      <header class="article-header">
-        
+
+
+<div class="post-block">
   
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/01/25/hello-world/">Hello World</a>
-    </h1>
   
 
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://knightwood.github.io/2021/01/25/hexo8%E7%95%99%E8%A8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="night">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="nightwood的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/01/25/hexo8%E7%95%99%E8%A8%80/" class="post-title-link" itemprop="url">hexo8留言</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+
+      <time title="创建时间：2021-01-25 21:22:00 / 修改时间：21:31:07" itemprop="dateCreated datePublished" datetime="2021-01-25T21:22:00+08:00">2021-01-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h5 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h5><p>经过前三轮的折腾，你已经拥有一个自己定义的静态页面了，是时候给它添加一个留言板功能了。next主题自带了多种留言功能的插件，比如畅言，disqus，disqusjs，gitalk，livere，valine。 valine是其中相对简洁并且限制较少的一款轻量型博客评论系统。本文将教你如何开启并美化valine评论系统。  </p>
+<h5 id="开启valine评论系统"><a href="#开启valine评论系统" class="headerlink" title="开启valine评论系统"></a>开启valine评论系统</h5><ul>
+<li><p>注册 Leancloud 账号<br>在leancloud官网注册一个账号，海外同学推荐使用leancloud国际版，国内同学可以使用华东或华北节点。本文将使用国际版作为演示，国内版有些许不同，同学们可以自行查阅网上的资料。<br>注册完成后进入app控制面板-&gt;创建应用-&gt;创建开发版应用。<br>接下来我们配置一下我们的leancloud。点击设置-&gt;安全中心-&gt;Web 安全域名，输入你的域名来保证其他人就算获取了你的appid也没办法操作你的数据库。<br>接下来点击应用keys获取你的appid和appkey。  </p>
+</li>
+<li><p>在next主题中配置valine<br>打开 _config.next.yml，找到comments栏目并开启valine。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">comments:</span><br><span class="line">  active: valine</span><br></pre></td></tr></table></figure>
+<p>往下滑动进入valine设置栏，开启valine并填入你的appid和appkey。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">valine:</span><br><span class="line">  enable: true</span><br><span class="line">  appId:  # Your leancloud application appid</span><br><span class="line">  appKey:  # Your leancloud application appkey</span><br><span class="line">  placeholder: &quot;输入你的评论\n昵称为必填项目，输入QQ号可以直接获取用户名和头像，并且省去了填写邮箱的麻烦！\n虽然email不是必选，但是填写了email可以收到推送通知哦！&quot; # Comment box placeholder</span><br><span class="line">  avatar: &quot;&quot; # Gravatar style</span><br><span class="line">  meta: [nick, mail] # Custom comment header</span><br><span class="line">  pageSize: 10 # Pagination size</span><br><span class="line">  lang: # Language, available values: en, zh-cn</span><br><span class="line">  visitor: true # Article reading statistic</span><br><span class="line">  comment_count: true # If false, comment count will only be displayed in post page, not in home page</span><br><span class="line">  recordIP: true # Whether to record the commenter IP</span><br><span class="line">  serverURLs: # When the custom domain name is enabled, fill it in here (it will be detected automatically by default, no need to fill in)</span><br><span class="line">  enableQQ: true # Whether to enable the Nickname box to automatically get QQ Nickname and QQ Avatar</span><br><span class="line">  requiredFields: [nick] # Set required fields: [nick] | [nick, mail]</span><br></pre></td></tr></table></figure>
+<p>这里稍微解释一下各个参数的用途。<br><code>placeholder</code>是在用户未输入任何参数时默认显示的值；<br><code>avatar</code>是默认用户头像，参考link；<br><code>meta</code>是可以选择的用户信息栏；<br><code>enableQQ</code>可以自动匹配用户在nick栏目的输入，若是QQ，直接拉取用户的QQ头像和昵称作为评论使用，推荐开启（目前有个bug，若用户QQ昵称小于三个字符，可能出现拉取失败，等待大佬更新）；</p>
+</li>
+</ul>
+<p>至此你的评论系统已经开启。</p>
+<ul>
+<li>在菜单栏添加留言板<br>添加一个新的page<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new page guestbook</span><br></pre></td></tr></table></figure>
+进入 source/guestbook/index.md。加入你想显示的内容，如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> ---</span><br><span class="line">title: 留言板</span><br><span class="line">date: 2020-09-13 13:34:29</span><br><span class="line"> ---</span><br><span class="line"># 欢迎来到我的博客！</span><br><span class="line">&gt; 欢迎在这里留言！任何问题都可以在这里留言，我会及时回复的，添加email可以获得更快的回复速度，在nickname栏目输入QQ号可以直接获取你的QQ头像。</span><br></pre></td></tr></table></figure>
+进入 <code>_config.next.yml</code>， 找到menu栏目，添加留言板功能：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  guestbook: &#x2F;guestbook&#x2F; || fa fa-book</span><br></pre></td></tr></table></figure>
+图标支持font awesome，可以按自己喜好修改。</li>
+</ul>
+<p>如果有多语言支持需求，可以更改 themes/next/languages 下对应语言的翻译.<br>en.yml:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  guestbook: guestbook</span><br></pre></td></tr></table></figure>
+<p>zh-CN.yml:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  guestbook: 留言板</span><br></pre></td></tr></table></figure>
+<ul>
+<li>重新生成页面即可<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo g -d</span><br></pre></td></tr></table></figure>
+<h5 id="如果能正常使用，那么恭喜大家。"><a href="#如果能正常使用，那么恭喜大家。" class="headerlink" title="如果能正常使用，那么恭喜大家。"></a>如果能正常使用，那么恭喜大家。</h5></li>
+</ul>
+<p>如果大家遇到问题了，那么可以请继续往下看：</p>
+<p>这是 5.1.3版本 的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">valine:</span><br><span class="line">  enable: true</span><br><span class="line">  appid: </span><br><span class="line">  appkey: </span><br><span class="line">  notify: false # mail notifier , https:&#x2F;&#x2F;github.com&#x2F;xCss&#x2F;Valine&#x2F;wiki</span><br><span class="line">  verify: false # Verification code</span><br><span class="line">  placeholder: ヾﾉ≧∀≦)o来啊，快活啊! </span><br></pre></td></tr></table></figure>
+<p>这是 6.0.1版本 的配置文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">valine:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: </span><br><span class="line">  app_key: </span><br><span class="line">  notify: false # mail notifier , https:&#x2F;&#x2F;github.com&#x2F;xCss&#x2F;Valine&#x2F;wiki</span><br><span class="line">  verify: false # Verification code</span><br><span class="line">  placeholder: ヾﾉ≧∀≦)o 来呀！快活呀！~</span><br><span class="line">  avatar: mm # gravatar style</span><br><span class="line">  guest_info: nick,mail,link # custom comment header</span><br><span class="line">  pageSize: 10 # pagination size</span><br></pre></td></tr></table></figure>
+<p>看到区别了吗，app_id 和 app_key 这两个字段名是不一样的，如果字段名不对，那么是不会去加载Valine.min.js文件，也就是评论系统根本不会生效。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://knightwood.github.io/2021/01/25/%E5%85%B6%E4%BD%99hexo%E9%85%8D%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="night">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="nightwood的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/01/25/%E5%85%B6%E4%BD%99hexo%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">其余hexo配置</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-01-25 20:50:00 / 修改时间：21:21:35" itemprop="dateCreated datePublished" datetime="2021-01-25T20:50:00+08:00">2021-01-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h5 id="配置next主题"><a href="#配置next主题" class="headerlink" title="配置next主题"></a>配置next主题</h5><ul>
+<li><p>安装hexo next主题<br>如果你正在使用hexo 5.0及以上版本，可以使用以下命令安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd your_site_dir</span><br><span class="line">$ npm install hexo-theme-next</span><br></pre></td></tr></table></figure>
+<p>或者使用git submodule克隆到本地（我在使用的方法，下文也会使用此方法的路径，npm安装的主题路径在node_modules里，其他操作不变。使用submodule是为了更好的版本控制。）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd your_site_dir</span><br><span class="line">$ git submodule add https:&#x2F;&#x2F;github.com&#x2F;next-theme&#x2F;hexo-theme-next themes&#x2F;next</span><br></pre></td></tr></table></figure>
+<p>将 <code>themes/next/_config.yml</code>复制到你的博客根目录，重命名为<code>_config.next.yml</code>，linux可以使用以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd your_site_dir</span><br><span class="line">$ cp themes&#x2F;next&#x2F;_config.yml _config.next.yml</span><br></pre></td></tr></table></figure>
+<p>选择Schemes<br>打开 <code>_config.next.yml</code>，首先可以看到 <code>Scheme Settings</code>，里面提供了四种模式，对应上面介绍next的图片的四种，我用的是muse主题，可以根据自己的喜好更改。</p>
+</li>
+<li><p>Schemes</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">scheme: Muse</span><br><span class="line">#scheme: Mist</span><br><span class="line">#scheme: Pisces</span><br><span class="line">#scheme: Gemini</span><br></pre></td></tr></table></figure></li>
+<li><p>设置站点icon<br>在<code>favicon</code>中，可以设置侧边栏头像以及站点icon。需要把你的icon放在 <code>source/img/</code>目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">favicon:</span><br><span class="line"> small: &#x2F;img&#x2F;avatar.jfif</span><br><span class="line"> medium: &#x2F;img&#x2F;avatar.jfif</span><br><span class="line"> apple_touch_icon: &#x2F;img&#x2F;avatar.jfif</span><br><span class="line"> safari_pinned_tab: &#x2F;images&#x2F;logo.svg</span><br></pre></td></tr></table></figure></li>
+<li><p>设置菜单栏<br>在<code>menu</code>下，可以设置菜单显示内容，此版本next支持font awesome图标，可以去官网寻找你喜欢的图标进行替换。注：相应的菜单栏需要有对应的页面才能打开，不然会404哦！  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line"> home: &#x2F; || fa fa-home</span><br><span class="line"> #about: &#x2F;about&#x2F; || fa fa-user</span><br><span class="line"> tags: &#x2F;tags&#x2F; || fa fa-tags</span><br><span class="line"> categories: &#x2F;categories&#x2F; || fa fa-th</span><br><span class="line"> archives: &#x2F;archives&#x2F; || fa fa-archive</span><br><span class="line"> guestbook: &#x2F;guestbook&#x2F; || fa fa-book</span><br><span class="line"> #schedule: &#x2F;schedule&#x2F; || fa fa-calendar</span><br><span class="line"> #sitemap: &#x2F;sitemap.xml || fa fa-sitemap</span><br><span class="line"> #commonweal: &#x2F;404&#x2F; || fa fa-heartbeat</span><br></pre></td></tr></table></figure></li>
+<li><p>开启tags/categories/留言板栏<br>举个栗子，开启tags：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd your_site_dir</span><br><span class="line">$ hexo new page tags</span><br></pre></td></tr></table></figure>
+<p>此时在你的 source/ 文件夹下会出现一个对应的tags文件夹，打开index.md并编辑为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> ---</span><br><span class="line">title: 标签</span><br><span class="line">date: 2020-09-06 19:36:01</span><br><span class="line">type: tags</span><br><span class="line">comments: false</span><br><span class="line">sitemap: false</span><br><span class="line"> ---</span><br></pre></td></tr></table></figure>
+<p>即可开启tags，categories也是一样的操作，type改为categories即可。对于留言板来说，只需要将comments一栏改为true，type改为guestbook即可。</p>
+</li>
+<li><p>边栏设置<br>在sidebar选项下，有多个自定义选项，可以自行查看.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#调整边栏左右  </span><br><span class="line">#position: left</span><br><span class="line">position: right</span><br><span class="line"># Sidebar Display (only for Muse | Mist), available values:</span><br><span class="line">#  - post    expand on posts automatically. Default.</span><br><span class="line">#  - always  expand for all pages automatically.</span><br><span class="line">#  - hide    expand only when click on the sidebar toggle icon.</span><br><span class="line">#  - remove  totally remove sidebar including sidebar toggle.</span><br><span class="line">display: post</span><br><span class="line"># Sidebar padding in pixels.</span><br><span class="line">padding: 18</span><br><span class="line"># Sidebar offset from top menubar in pixels (only for Pisces | Gemini).</span><br><span class="line">offset: 12  </span><br></pre></td></tr></table></figure></li>
+<li><p>添加社交帐号<br>在social栏目下，可以自定义在边栏显示的社交帐号，可以根据需求自行添加。注：此处依然使用font awsome的图标，可以自行修改。</p>
+</li>
+<li><p>设置回到开头<br>将back2top的enable设置为true即可，边栏和滚动百分比可以按照需求自行添加。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">back2top:</span><br><span class="line"> enable: true</span><br><span class="line"> # Back to top in sidebar.</span><br><span class="line"> sidebar: false</span><br><span class="line"> # Scroll percent label in b2t button.</span><br><span class="line"> scrollpercent: true</span><br></pre></td></tr></table></figure></li>
+<li><p>设置已读进度条<br>将reading_progress的enable设置为true即可，位置颜色和高度都可以调整。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Reading progress bar</span><br><span class="line">reading_progress:</span><br><span class="line"> enable: true</span><br><span class="line"> # Available values: top | bottom</span><br><span class="line"> position: bottom</span><br><span class="line"> color: &quot;#37c6c0&quot;</span><br><span class="line"> height: 3px</span><br></pre></td></tr></table></figure>
+<h5 id="黑色主题"><a href="#黑色主题" class="headerlink" title="黑色主题"></a>黑色主题</h5><p>虽然next 8.0 主题已经支持原生黑色模式，只需要在 _config.next.yml 文件中，将相应开关打开即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">darkmode: true</span><br></pre></td></tr></table></figure>
+<p>但是这个黑色模式是不可以切换的，本文将介绍如何实现一个按钮来切换黑/白模式。<br>具体步骤  </p>
+</li>
+</ul>
+<ol>
+<li><p>添加darkmode.js到你的next主题中<br>你可以下载 Darkmode.js 或者直接添加他的cdn到你的vendors文件。（注：next8.0之前的版本没有接下来所提到的需要的文件，可以参考这篇文章来配置你的黑色模式）<br>我的方法是直接在 themes/next/_vendors.yml 中添加 darkmode的 cdn：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">darkmode_js:</span><br><span class="line">  name: darkmode-js</span><br><span class="line">  version: 1.5.7</span><br><span class="line">  file: lib&#x2F;darkmode-js.min.js</span><br></pre></td></tr></table></figure>
+<p>直接加在文件末尾即可。</p>
+</li>
+<li><p>在你的 _config.next.yml 添加darkmode_js的相关开关：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vendors:</span><br><span class="line">  #darkmode_js: https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;darkmode-js&#x2F;lib&#x2F;darkmode-js.min.js</span><br><span class="line">  darkmode_js:</span><br><span class="line"># darkmode.js</span><br><span class="line">darkmode_js: </span><br><span class="line">  enable: true</span><br></pre></td></tr></table></figure>
+<p>注意缩进！第一个darkmode_js是在vendors栏目下，第二个darkmode_js是一个单独的栏目。</p>
+</li>
+<li><p>开启darkmode_js<br>打开 themes/next/layout/_scripts/vendors.njk，配置以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#123;%- if theme.canvas_ribbon.enable %&#125;</span><br><span class="line">  &lt;script size&#x3D;&quot;&#123;&#123; theme.canvas_ribbon.size &#125;&#125;&quot; alpha&#x3D;&quot;&#123;&#123; theme.canvas_ribbon.alpha &#125;&#125;&quot; zIndex&#x3D;&quot;&#123;&#123; theme.canvas_ribbon.zIndex &#125;&#125;&quot; src&#x3D;&quot;&#123;&#123; theme.vendors.canvas_ribbon &#125;&#125;&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&#123;%- endif %&#125;</span><br><span class="line">&#123;# Customize darkmode.js - Declaration #&#125;</span><br><span class="line">&#123;%- if theme.darkmode_js.enable %&#125;</span><br><span class="line">  &lt;script src&#x3D;&quot;&#123;&#123; theme.vendors.darkmode_js &#125;&#125;&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&#123;%- endif %&#125;</span><br><span class="line">&#123;%- for name in js_vendors() %&#125;</span><br><span class="line">  &lt;script src&#x3D;&quot;&#123;&#123; url_for(theme.vendors[name]) &#125;&#125;&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&#123;%- endfor %&#125;</span><br><span class="line">&#123;# Customize darkmode.js - Invokation #&#125;</span><br><span class="line">&#123;%- if theme.darkmode_js.enable %&#125;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">var options &#x3D; &#123;</span><br><span class="line">  bottom: &#39;64px&#39;, &#x2F;&#x2F; default: &#39;32px&#39;</span><br><span class="line">  right: &#39;unset&#39;, &#x2F;&#x2F; default: &#39;32px&#39;</span><br><span class="line">  left: &#39;32px&#39;, &#x2F;&#x2F; default: &#39;unset&#39;</span><br><span class="line">  time: &#39;0.5s&#39;, &#x2F;&#x2F; default: &#39;0.3s&#39;</span><br><span class="line">  mixColor: &#39;#fff&#39;, &#x2F;&#x2F; default: &#39;#fff&#39;</span><br><span class="line">  backgroundColor: &#39;#fff&#39;,  &#x2F;&#x2F; default: &#39;#fff&#39;</span><br><span class="line">  buttonColorDark: &#39;#100f2c&#39;,  &#x2F;&#x2F; default: &#39;#100f2c&#39;</span><br><span class="line">  buttonColorLight: &#39;#fff&#39;, &#x2F;&#x2F; default: &#39;#fff&#39;</span><br><span class="line">  saveInCookies: true, &#x2F;&#x2F; default: true,</span><br><span class="line">  label: &#39;🌓&#39;, &#x2F;&#x2F; default: &#39;&#39;</span><br><span class="line">  autoMatchOsTheme: true &#x2F;&#x2F; default: true</span><br><span class="line">&#125;</span><br><span class="line">const darkmode &#x3D; new Darkmode(options);</span><br><span class="line">darkmode.showWidget();</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line">&#123;%- endif %&#125;</span><br></pre></td></tr></table></figure>
+<p>因为此版本的动画特效已经精简为只有canvas_ribbon，更改后的配置文件就如上所示，其他可以根据情况自行更改。</p>
+</li>
+<li><p>重新生成即可开启，点击按钮即可切换黑白模式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo g -d</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://knightwood.github.io/2021/01/25/%E5%AE%89%E8%A3%85hexo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="night">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="nightwood的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/01/25/%E5%AE%89%E8%A3%85hexo/" class="post-title-link" itemprop="url">安装hexo</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-01-25 16:48:00 / 修改时间：21:04:48" itemprop="dateCreated datePublished" datetime="2021-01-25T16:48:00+08:00">2021-01-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="记录安装hexo之后的问题"><a href="#记录安装hexo之后的问题" class="headerlink" title="记录安装hexo之后的问题"></a>记录安装hexo之后的问题</h2><h5 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h5><h5 id="1第一步"><a href="#1第一步" class="headerlink" title="1第一步"></a>1第一步</h5><p>安装使用hexo之前需要先安装Node.js和Git.<br>当已经安装了Node.js和npm(npm是node.js的包管理工具)，可以通过以下命令安装hexo  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<ul>
+<li>可以通过以下命令查看主机中是否安装了node.js和npm<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ node --version    #检查是否安装了node.js</span><br><span class="line">$ npm --version     #检查是否安装了npm</span><br></pre></td></tr></table></figure></li>
+<li>如下所示表示已经安装了node.js和npm<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@***:~# node --version</span><br><span class="line">v8.11.3</span><br><span class="line">root@***:~# npm --version</span><br><span class="line">6.7.0</span><br></pre></td></tr></table></figure>
+<h5 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h5></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+<h5 id="接下来-输入两条命令"><a href="#接下来-输入两条命令" class="headerlink" title="接下来,输入两条命令"></a>接下来,输入两条命令</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo generate  </span><br><span class="line">hexo server  </span><br><span class="line">或者输入命令的简写:  </span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+<p>首先执行”hexo generate”生成相应的静态网页，生成的静态网页以及相关资源都会在public目录下<br>hexo-server模块的主要命令如下，输入”hexo generate”以启动服务器，您的网站会在 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a> 下启动。在服务器启动期间，Hexo 会监视文件变动并自动更新，您无须重启服务器。</p>
+<p>注: 如果您想要更改端口，或是在执行时遇到了 EADDRINUSE 错误，可以在执行时使用 -p 选项指定其他端口，如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server -p 5000</span><br></pre></td></tr></table></figure>
+<h5 id="将hexo部署到github"><a href="#将hexo部署到github" class="headerlink" title="将hexo部署到github"></a>将hexo部署到github</h5><p>1 .首先将我们的Hexo与GitHub关联起来，打开站点的配置文件_config.yml，翻到最后修改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">type: git</span><br><span class="line">repo: https:&#x2F;&#x2F;github.com&#x2F;用户名&#x2F;用户名.github.io.git</span><br><span class="line">branch: master</span><br></pre></td></tr></table></figure>
+<p>其实就是给hexo d 这个命令做相应的配置，让hexo知道你要把blog部署在哪个位置，很显然，我们部署在我们GitHub的仓库里。<br>2 .安装Git部署插件，输入命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>接着，我们分别输入三条命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean </span><br><span class="line">hexo g </span><br><span class="line">hexo d  将会部署到github</span><br></pre></td></tr></table></figure>
+<p>全部完成  </p>
+<h4 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h4><p>其实第三条的 hexo d 就是部署网站命令，d是deploy的缩写。完成后，打开浏览器，在地址栏输入你的放置个人网站的仓库路径，即” <a target="_blank" rel="noopener" href="http://xxxx.github.io&quot;/">http://xxxx.github.io&quot;</a>  </p>
+<ul>
+<li>使用Hexo Admin 插件写博客, 官网链接:”<a target="_blank" rel="noopener" href="https://jaredforsyth.com/hexo-admin/&quot;">https://jaredforsyth.com/hexo-admin/&quot;</a></li>
+<li>安装方法<br>第一步:下载启动<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-admin</span><br><span class="line">hexo server -d</span><br><span class="line">open http:&#x2F;&#x2F;localhost:4000&#x2F;admin&#x2F;</span><br></pre></td></tr></table></figure>
+第二步：配置<br>在Hexo 全局配置文件_config.yml最后添加类似如下内容<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">admin:</span><br><span class="line">  username: AlexLin</span><br><span class="line">  password_hash: be121740bf988b2225a313fa1f107ca1</span><br><span class="line">  secret: your admin password</span><br></pre></td></tr></table></figure>
+secret :你的后台管理密码<br>password_hash: 用密码生成的哈希串.<br>若是部署到github pages,,是不会上传hexo admin的,没有必要添加密码. </li>
+<li>安装next主题:<br><a href="http://theme-next.iissnan.com/getting-started.html#install-next-theme" target="_blank">next主题官网</a>  </li>
+</ul>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><ol>
+<li><p>hexo使用theme出现“ <code>&#123;</code>% extends ‘_layout.swig‘ <code>%</code>} <code>&#123;</code>% import ‘_macro/post.swig‘ as post_template <code>%</code>}“问题：</p>
+<p>原因是hexo在5.0之后把swig给删除了需要自己手动安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i hexo-renderer-swig</span><br></pre></td></tr></table></figure></li>
+<li><p>安装时有可能highlights提示版本过低。<br>install the latest v10 version of Highlight.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install highlight.js@latest</span><br></pre></td></tr></table></figure>
+<h6 id="注-常用命令"><a href="#注-常用命令" class="headerlink" title="注: 常用命令"></a>注: 常用命令</h6></li>
+</ol>
+<ul>
+<li>想要删除hexo  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm uninstall hexo-cli -g</span><br></pre></td></tr></table></figure>
+文件夹中的blog，手动删除。<br>另外，进行重装之前，如果还是在原来位置，必须手动清理了才能迁移安装。</li>
+<li>其他常用的Hexo 命令  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo -g #安装Hexo</span><br><span class="line">npm update hexo -g #升级  </span><br><span class="line">hexo init #初始化博客  </span><br><span class="line">hexo n &quot;我的博客&quot; &#x3D;&#x3D; hexo new &quot;我的博客&quot; #新建文章(在&#x2F;source&#x2F;_posts文件夹中创建)  </span><br><span class="line">hexo g &#x3D;&#x3D; hexo generate #生成  </span><br><span class="line">hexo s &#x3D;&#x3D; hexo server #本地部署, 启动服务预览  </span><br><span class="line">hexo d &#x3D;&#x3D; hexo deploy #部署,部署到github等  </span><br><span class="line">hexo server #Hexo会监视文件变动并自动更新，无须重启服务器  </span><br><span class="line">hexo server -s #静态模式  </span><br><span class="line">hexo server -p 5000 #更改端口  </span><br><span class="line">hexo server -i 192.168.1.1 #自定义 IP  </span><br><span class="line">hexo clean #清除缓存，若是网页正常情况下可以忽略这条命令,清除缓存文件为了避免不必要的错误，在生成静态文件前，强烈建议先运行此命令.它会清除本地站点文件夹下的缓存文件（db.json）和已有的静态文件（public)  </span><br></pre></td></tr></table></figure>
+注: 修改配置后,需要 “hexo g”重新生成 . 若是修改了themes的配置 , 可以不用重新生成,直接F5刷新浏览器页面就可以预览.  </li>
+<li>对于上面的两种常用命令, hexo提供了简写 <code>hexo s -g</code>(生成并预览)和<code>hexo g -d</code>(生成并远程部署)  <h5 id="完善配置文件"><a href="#完善配置文件" class="headerlink" title="完善配置文件"></a>完善配置文件</h5><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/configuration">官网链接</a><br>修改hexo的根文件夹里的<code>_config.yml</code> :  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">先修改</span><br><span class="line">title: &quot;&quot;</span><br><span class="line">subtitle: &#39;&#39;</span><br><span class="line">description: &#39;&#39;</span><br><span class="line">keywords:</span><br><span class="line">author:  &quot;&quot;</span><br><span class="line">language: zh-CN #此项注意, language文件夹里可能没有zh-Han , 但是由zh-CN .  </span><br><span class="line">url:&quot;此处修改为自己的网址&quot;</span><br><span class="line">主题  </span><br><span class="line">theme: 修改为themes文件夹下的主题名称</span><br></pre></td></tr></table></figure>
+<h5 id="使用init命令后-有如下文件夹"><a href="#使用init命令后-有如下文件夹" class="headerlink" title="使用init命令后,有如下文件夹"></a>使用init命令后,有如下文件夹</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds</span><br><span class="line">├── source</span><br><span class="line">|   ├── _drafts</span><br><span class="line">|   └── _posts</span><br><span class="line">└── themes</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>1.node_modules 是node.js各种库的目录<br>2.public是生成的网页文件目录<br>3.Scaffold(模版文件夹)<br>在新建文章时，Hexo 会根据 scaffolds 文件夹内相对应的文件来建立文件.<br><code>Hexo的模板是指在新建的markdown文件中默认填充的内容。</code><br>例如，如果修改<code>scaffold/post.md</code>中的<code>Front-matter</code>内容，那么每次新建一篇文章时都会包含这个修改。也就是说，通过<code>hexo</code>命令每新建一个文章，都会包含指定模板文件中的内容。<br>4.Cource<br>资源文件夹是存放用户资源的地方，如markdown文章。Markdown 和 HTML 文件会被解析并放到 public 文件夹，而其他文件会被拷贝过去.<br><code>注意：除 _posts 文件夹之外，开头命名为 _ (下划线)的文件 / 文件夹和隐藏的文件将会被忽略.  </code><br>5. themes<br>主题文件夹。Hexo 会根据主题来解析source目录中的markdown文件生成静态页面。官网主题详述<br>6. package.json<br> 应用程序的信息，以及需要安装的模块信息</p>
+<ul>
+<li>写作<br>可以执行下列命令来创建一篇新文章。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new [layout] &lt;title&gt;</span><br></pre></td></tr></table></figure>
+可以在命令中指定文章的布局（layout），不指定默认为 post，也可以通过修改 _config.yml 中的 default_layout 参数来指定默认布局。创建的新文章会自动加上指定布局对应的模板文件中的内容。</li>
+<li>布局<br>Hexo 有三种默认布局（Layout）：post、page 和 draft，它们分别对应不同的路径，而自定义的其他布局和 post 相同，都将储存到 source/_posts 文件夹.<br><code>如果你不想你的文章被处理，你可以将 Front-Matter 中的layout: 设为 false </code>  </li>
+<li>模板<br>例如  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new photo &quot;My Gallery&quot;</span><br></pre></td></tr></table></figure>
+在执行这行指令时，Hexo 会尝试在 scaffolds 文件夹中寻找 photo.md，并根据其内容建立文章.  以下是您可以在模版中使用的变量：<br>变量描述 :<br><code>layout</code>布局<br><code>title</code>标题<br><code>date</code>文件建立日期  </li>
+<li>Front-matter<br>Front-matter是文件最上方以 — 分隔的区域，用于指定个别文件的变量，举例来说：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> ---</span><br><span class="line">title: Hello World</span><br><span class="line">date: 2013&#x2F;7&#x2F;13 20:46:25</span><br><span class="line"> ---</span><br></pre></td></tr></table></figure>
+<code>注意：一般Front-matter使用的yaml语法，yaml语法需要注意空格，如title: Hello World冒号需要有一个空格，当然除YAML 外，你也可以使用 JSON 来编写 Front-matter。</code></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://knightwood.github.io/2021/01/25/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="night">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="nightwood的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/01/25/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-01-25 11:28:04" itemprop="dateCreated datePublished" datetime="2021-01-25T11:28:04+08:00">2021-01-25</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
 <h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
@@ -105,99 +621,81 @@
 
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/25/hello-world/" data-id="ckkc0y40j0000agtqdalnfxsh" data-title="Hello World" class="article-share-link">Share</a>
-      
-      
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
       
     </footer>
+  </article>
+</div>
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">night</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
-  
-</article>
-
-
-
-  
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2021/01/25/hello-world/">Hello World</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2021 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
 
     </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.4.1.min.js"></script>
-
-
+  </footer>
 
   
-<script src="/fancybox/jquery.fancybox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
 
 
 
 
-<script src="/js/script.js"></script>
+
+
+  
 
 
 
 
 
-  </div>
 </body>
 </html>
