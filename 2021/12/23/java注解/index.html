@@ -1,0 +1,702 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="process方法的调用方式注释处理分多轮完成。每一轮都从编译器开始搜索源文件中的注释并选择适合这些注释的注释处理器。依次在相应的源上调用每个注释处理器。 如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没有新文件产生。 依次在相应的源上调用每个注释处理器。如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java注解">
+<meta property="og:url" content="https://knightwood.github.io/2021/12/23/java%E6%B3%A8%E8%A7%A3/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="process方法的调用方式注释处理分多轮完成。每一轮都从编译器开始搜索源文件中的注释并选择适合这些注释的注释处理器。依次在相应的源上调用每个注释处理器。 如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没有新文件产生。 依次在相应的源上调用每个注释处理器。如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/4134622-6cfb718f3055b89b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
+<meta property="og:image" content="https://knightwood.github.io/2021/12/23/java%E6%B3%A8%E8%A7%A3/TyporaRaw/java%E6%B3%A8%E8%A7%A3.assets/4134622-86775724faaeaa3e.png">
+<meta property="og:image" content="https://knightwood.github.io/2021/12/23/java%E6%B3%A8%E8%A7%A3/TyporaRaw/java%E6%B3%A8%E8%A7%A3.assets/4134622-b1f7494d18e216d1.png">
+<meta property="og:image" content="https://knightwood.github.io/2021/12/23/java%E6%B3%A8%E8%A7%A3/TyporaRaw/java%E6%B3%A8%E8%A7%A3.assets/4134622-55d88199566ac011.png">
+<meta property="og:image" content="https://knightwood.github.io/2021/12/23/java%E6%B3%A8%E8%A7%A3/TyporaRaw/java%E6%B3%A8%E8%A7%A3.assets/4134622-1a701ad9e6425883.png">
+<meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
+<meta property="article:modified_time" content="2021-12-23T14:10:23.705Z">
+<meta property="article:author" content="NightWood">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/4134622-6cfb718f3055b89b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
+  
+  
+  <title>java注解 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="java注解">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-23 14:36" pubdate>
+        2021年12月23日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      15k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      129 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">java注解</h1>
+            
+            <div class="markdown-body">
+              <h1 id="process方法的调用方式"><a href="#process方法的调用方式" class="headerlink" title="process方法的调用方式"></a>process方法的调用方式</h1><p>注释处理分多轮完成。每一轮都从编译器开始搜索源文件中的注释并选择适合这些注释的注释处理器。依次在相应的源上调用每个注释处理器。</p>
+<p>如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没有新文件产生。</p>
+<p>依次在相应的源上调用每个注释处理器。如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没有新文件产生。</p>
+<p>注释处理 <code>API </code>位于<code>javax.annotation.processing</code>包中。您必须实现的主要接口是<em>Processor</em>接口，它具有<code>AbstractProcessor</code>类形式的部分实现。这个类是我们将要扩展以创建我们自己的注释处理器的类。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">原文：<br>The annotation processing <span class="hljs-keyword">is</span> done <span class="hljs-keyword">in</span> multiple rounds. <span class="hljs-keyword">Each</span> round starts <span class="hljs-keyword">with</span> the compiler searching <span class="hljs-keyword">for</span> the annotations <span class="hljs-keyword">in</span> the source files <span class="hljs-keyword">and</span> choosing the annotation processors suited <span class="hljs-keyword">for</span> these annotations. <span class="hljs-keyword">Each</span> annotation processor, <span class="hljs-keyword">in</span> turn, <span class="hljs-keyword">is</span> <span class="hljs-keyword">called</span> <span class="hljs-keyword">on</span> the corresponding sources.<br><br><span class="hljs-keyword">If</span> <span class="hljs-keyword">any</span> files are <span class="hljs-keyword">generated</span> during this process, another round <span class="hljs-keyword">is</span> started <span class="hljs-keyword">with</span> the <span class="hljs-keyword">generated</span> files <span class="hljs-keyword">as</span> its <span class="hljs-keyword">input</span>. This process continues <span class="hljs-keyword">until</span> <span class="hljs-keyword">no</span> <span class="hljs-built_in">new</span> files are <span class="hljs-keyword">generated</span> during the processing stage.<br><br><span class="hljs-keyword">Each</span> annotation processor, <span class="hljs-keyword">in</span> turn, <span class="hljs-keyword">is</span> <span class="hljs-keyword">called</span> <span class="hljs-keyword">on</span> the corresponding sources. <span class="hljs-keyword">If</span> <span class="hljs-keyword">any</span> files are <span class="hljs-keyword">generated</span> during this process, another round <span class="hljs-keyword">is</span> started <span class="hljs-keyword">with</span> the <span class="hljs-keyword">generated</span> files <span class="hljs-keyword">as</span> its <span class="hljs-keyword">input</span>. This process continues <span class="hljs-keyword">until</span> <span class="hljs-keyword">no</span> <span class="hljs-built_in">new</span> files are <span class="hljs-keyword">generated</span> during the processing stage.<br><br>The annotation processing API <span class="hljs-keyword">is</span> located <span class="hljs-keyword">in</span> the javax.annotation.processing package. The main interface that you’ll have <span class="hljs-keyword">to</span> implement <span class="hljs-keyword">is</span> the Processor interface, which has a partial implementation <span class="hljs-keyword">in</span> the form <span class="hljs-keyword">of</span> AbstractProcessor <span class="hljs-keyword">class</span>. This <span class="hljs-keyword">class</span> <span class="hljs-keyword">is</span> the one we’re going <span class="hljs-keyword">to</span> extend <span class="hljs-keyword">to</span> <span class="hljs-keyword">create</span> our own annotation processor.<br><br><br></code></pre></td></tr></table></figure>
+
+<p>这是一个实现处理器的例子：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@SupportedAnnotationTypes</span>(<span class="hljs-string">&quot;com.baeldung.annotation.processor.BuilderProperty&quot;</span>)<span class="hljs-comment">//指定这个处理器能处理的注解</span><br><span class="hljs-variable">@SupportedSourceVersion</span>(SourceVersion.RELEASE_8)<br><span class="hljs-variable">@AutoService</span>(Processor.class)<br>public class BuilderProcessor extends AbstractProcessor &#123;<br><br>    <span class="hljs-variable">@Override</span><br>    public boolean process(Set&lt;? extends TypeElement&gt; annotations, <br>      RoundEnvironment roundEnv) &#123;<br>        <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">false</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>不仅可以指定具体的注释类名称，还可以指定通配符，例如<code>“com.baeldung.annotation.\*”</code> 来处理<code>com.baeldung.annotation</code>包及其所有子包中的注释，甚至可以<em>“*”</em>来处理所有注释.</p>
+<p>我们必须实现的单一方法是处理本身的<code>process</code>方法。编译器为每个包含匹配注释的源文件调用它。</p>
+<p>注释作为第一个<code>Set&lt;? extends TypeElement&gt; annotations</code>参数，有关当前处理轮次的信息作为<code>RoundEnviroment roundEnv</code>参数传递。</p>
+<p>如果您的注释处理器已经处理了所有传递的注释，并且您不希望它们被传递到列表中的其他注释处理器，则返回<em>布尔</em>值应该为<em>true</em>。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">原文：<br>You can specify <span class="hljs-keyword">not</span> only <span class="hljs-keyword">the</span> concrete annotation class names but also wildcards, like “com.baeldung.annotation.*” <span class="hljs-built_in">to</span> <span class="hljs-built_in">process</span> annotations inside <span class="hljs-keyword">the</span> com.baeldung.annotation package <span class="hljs-keyword">and</span> all its sub packages, <span class="hljs-keyword">or</span> even “*” <span class="hljs-built_in">to</span> <span class="hljs-built_in">process</span> all annotations.<br><br>The single method that we’ll have <span class="hljs-built_in">to</span> implement is <span class="hljs-keyword">the</span> <span class="hljs-built_in">process</span> method that does <span class="hljs-keyword">the</span> processing itself. It is called <span class="hljs-keyword">by</span> <span class="hljs-keyword">the</span> compiler <span class="hljs-keyword">for</span> every source <span class="hljs-built_in">file</span> containing <span class="hljs-keyword">the</span> matching annotations.<br><br>Annotations are passed <span class="hljs-keyword">as</span> <span class="hljs-keyword">the</span> <span class="hljs-keyword">first</span> Set<span class="hljs-meta">&lt;?</span> extends TypeElement&gt; annotations argument, <span class="hljs-keyword">and</span> <span class="hljs-keyword">the</span> information about <span class="hljs-keyword">the</span> current processing <span class="hljs-built_in">round</span> is passed <span class="hljs-keyword">as</span> <span class="hljs-keyword">the</span> RoundEnviroment roundEnv argument.<br><br>The <span class="hljs-literal">return</span> boolean <span class="hljs-built_in">value</span> should be <span class="hljs-literal">true</span> <span class="hljs-keyword">if</span> your annotation processor has processed all <span class="hljs-keyword">the</span> passed annotations, <span class="hljs-keyword">and</span> you don<span class="hljs-string">&#x27;t want them to be passed to other annotation processors down the list.</span><br></code></pre></td></tr></table></figure>
+
+<p>总结：</p>
+<p>在我们自定义的处理器类中，我们指定了这个处理器类可以处理的注解。</p>
+<p>然后，<code>java</code>编译器会依次调用注册好的注解处理器处理注解，这会有多轮处理。</p>
+<p>在调用注解处理器的时候，编译器会筛选出这个注解处理器可以处理的注解信息给它处理。</p>
+<p>在当前注解处理器处理注解的时候，如果产生的新类里依旧包含注解，那么，在其他所有注解处理器完成处理之后，会进行第二轮处理，第三轮，直到没有新的注解产生。</p>
+<ul>
+<li><p>例子：</p>
+<ul>
+<li><p><strong>MainActivity</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MainActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AppCompatActivity</span> </span>&#123;<br><br>    <span class="hljs-meta">@BindView</span>(<span class="hljs-type">R</span>.id.tv_hello)<br>    <span class="hljs-type">TextView</span> tvHello;<br>  &#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>在第一轮处理注解时，我们生成了新的类,而这个类使用**@Keep**注解标记了，那么注解处理器就会        开始下一轮的处理，直到生成的类里面再也没有任何注解了。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">@Keep<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-symbol">MainActivity</span>$<span class="hljs-symbol">Binding</span> &#123;<br>...<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h1 id="解析注解的步骤"><a href="#解析注解的步骤" class="headerlink" title="解析注解的步骤"></a>解析注解的步骤</h1><h2 id="插件化注解处理API的使用步骤大概如下："><a href="#插件化注解处理API的使用步骤大概如下：" class="headerlink" title="插件化注解处理API的使用步骤大概如下："></a>插件化注解处理API的使用步骤大概如下：</h2><ul>
+<li>1、自定义一个Annotation Processor，需要继承<code>javax.annotation.processing.AbstractProcessor</code>，需要重写<code>process()</code>方法。<ul>
+<li> 1.1、此外还需要实现几个简单的方法<code>init ()</code>、<code>getSupportedSourceVersion()</code>、<code>getSupportedAnnotationTypes()</code> </li>
+</ul>
+</li>
+<li>2、自定义一个注解，注解的元注解需要指定<code>@Retention(RetentionPolicy.SOURCE)</code>。</li>
+<li>3、需要在声明的自定义Annotation Processor中使用<code>javax.annotation.processing.SupportedAnnotationTypes</code>指定在第2步创建的注解类型的名称(注意需要全类名，”包名.注解类型名称”，否则会不生效)。</li>
+<li>4、需要在声明的自定义Annotation Processor中使用<code>javax.annotation.processing.SupportedSourceVersion</code>指定编译版本。</li>
+<li>5、可选操作，可以通在声明的自定义Annotation Processor中使用<code>javax.annotation.processing.SupportedOptions</code>指定编译参数。</li>
+</ul>
+<h2 id="配置和注册"><a href="#配置和注册" class="headerlink" title="配置和注册"></a>配置和注册</h2><ul>
+<li>创建一个自定义Annotation Processor继承于AbstractProcessor</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@AutoService(Processor.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyProcessor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractProcessor</span> </span>&#123;<br> 。。。省略。。。<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>@AutoService(Processor.class) :向javac注册我们这个自定义的注解处理器，这样，在javac编译时，才会调用到我们这个自定义的注解处理器方法。<br> AutoService这里主要是用来生成<br> <strong>建议直接采用@AutoService(Processor.class)进行自定义注解处理器注册，简洁方便</strong></p>
+</li>
+<li><p>其他方式注册</p>
+<p>例如：</p>
+<p>我们模仿一下测试框架Junit里面的@Test注解，在运行时通过Annotation Processor获取到使用了自定义的@Test注解对应的方法的信息。因为如果想要动态修改一个类或者方法的代码内容，需要使用到字节码修改工具例如ASM等，这些操作过于深入，日后再谈。先定义一个注解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> club.throwable.processor;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> throwable</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> v1.0</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 2018/5/27 11:18</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Target(&#123;ElementType.METHOD&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.SOURCE)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> Test &#123;<br>    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>定义一个注解处理器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SupportedAnnotationTypes(value = &#123;&quot;club.throwable.processor.Test&quot;&#125;)</span><br><span class="hljs-meta">@SupportedSourceVersion(value = SourceVersion.RELEASE_8)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AnnotationProcessor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractProcessor</span> </span>&#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">process</span><span class="hljs-params">(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv)</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;Log in AnnotationProcessor.process&quot;</span>);<br>        <span class="hljs-keyword">for</span> (TypeElement typeElement : annotations) &#123;<br>            System.out.println(typeElement);<br>        &#125;<br>        System.out.println(roundEnv);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>编写一个主类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Main</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception</span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;success&quot;</span>);<br>        test();<br>    &#125;<br><br>    <span class="hljs-meta">@Test(value = &quot;method is test&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span><span class="hljs-keyword">throws</span> Exception</span>&#123;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接着需要指定Processor，如果使用IDEA的话，Compiler-&gt;Annotation Processors中的Enable annotation processing必须勾选。然后可以通过下面几种方式指定指定Processor。</p>
+<ul>
+<li><p>1、直接使用编译参数指定，例如：javac -processor club.throwable.processor.AnnotationProcessor Main.java。</p>
+</li>
+<li><p>2、<strong>通过服务注册指定</strong>，就是META-INF/services/javax.annotation.processing.Processor文件中添加club.throwable.processor.AnnotationProcessor。</p>
+<ul>
+<li><p>具体手动注册方法如下：</p>
+<ol>
+<li><p>创建一个<br>META-INF/services/javax.annotation.processing.Processor文件，<br>其内容是一系列的自定义注解处理器完整有效类名集合，以换行切割。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">com<span class="hljs-selector-class">.example</span><span class="hljs-selector-class">.MyProcessor</span><br>com<span class="hljs-selector-class">.foo</span><span class="hljs-selector-class">.OtherProcessor</span><br>net<span class="hljs-selector-class">.blabla</span>.SpecialProcessor<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>文件放在<code>/src/main/resources/META-INF/services/javax.annotation.processing.Processor</code></li>
+<li>处理器类文件放在<code>/src/main/java/com/example/annotationcomplierlib/AnnotationComplier.java</code></li>
+</ul>
+</li>
+<li><p>将自定义注解处理器和<br>META-INF/services/javax.annotation.processing.Processor打包成一个.jar文件。所以其目录结构大概如下所示：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css">MyProcessor<span class="hljs-selector-class">.jar</span><br>    - com<br>        - example<br>            - MyProcessor<span class="hljs-selector-class">.class</span><br><br>    - META-INF<br>        - services<br>            - javax<span class="hljs-selector-class">.annotation</span><span class="hljs-selector-class">.processing</span><span class="hljs-selector-class">.Processor</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>3、通过Maven的编译插件的配置指定如下：</p>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.5.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">source</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">source</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">target</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">target</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">encoding</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">encoding</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">annotationProcessors</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">annotationProcessor</span>&gt;</span><br>                club.throwable.processor.AnnotationProcessor<br>            <span class="hljs-tag">&lt;/<span class="hljs-name">annotationProcessor</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">annotationProcessors</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>值得注意的是，以上三点生效的前提是club.throwable.processor.AnnotationProcessor已经被编译过，否则编译的时候就会报错：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-attr">[ERROR]</span> Bad service configuration file, or exception thrown while<br>constructing Processor <span class="hljs-selector-tag">object</span>: javax<span class="hljs-selector-class">.annotation</span><span class="hljs-selector-class">.processing</span><span class="hljs-selector-class">.Processor</span>: <br>Provider club<span class="hljs-selector-class">.throwable</span><span class="hljs-selector-class">.processor</span><span class="hljs-selector-class">.AnnotationProcessor</span> not found<br></code></pre></td></tr></table></figure>
+
+<p>解决方法有两种，第一种是提前使用命令或者IDEA右键club.throwable.processor.AnnotationProcessor对它进行编译；第二种是把club.throwable.processor.AnnotationProcessor放到一个独立的Jar包引入。我在这里使用第一种方式解决。</p>
+<p>最后，使用Maven命令mvn compile进行编译。输出如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs routeros">Log <span class="hljs-keyword">in</span> AnnotationProcessor.process<br>[<span class="hljs-attribute">errorRaised</span>=<span class="hljs-literal">false</span>, rootElements=[club.throwable.processor.Test,club.throwable.processor.Main, club.throwable.processor.AnnotationProcessor, <span class="hljs-attribute">processingOver</span>=<span class="hljs-literal">false</span>]<br>Log <span class="hljs-keyword">in</span> AnnotationProcessor.process<br>[<span class="hljs-attribute">errorRaised</span>=<span class="hljs-literal">false</span>, rootElements=[], <span class="hljs-attribute">processingOver</span>=<span class="hljs-literal">false</span>]<br>Log <span class="hljs-keyword">in</span> AnnotationProcessor.process<br>[<span class="hljs-attribute">errorRaised</span>=<span class="hljs-literal">false</span>, rootElements=[], <span class="hljs-attribute">processingOver</span>=<span class="hljs-literal">true</span>]<br></code></pre></td></tr></table></figure>
+
+<p>可见编译期间AnnotationProcessor生效了。</p>
+</li>
+</ul>
+<h2 id="备注："><a href="#备注：" class="headerlink" title="备注："></a>备注：</h2><ul>
+<li>Gradle配置如下：</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs php"><br>dependencies &#123;<br>    implementation fileTree(<span class="hljs-keyword">include</span>: [<span class="hljs-string">&#x27;*.jar&#x27;</span>], dir: <span class="hljs-string">&#x27;libs&#x27;</span>)<br><br>    implementation project(<span class="hljs-string">&#x27;:annotation&#x27;</span>)<br>    <span class="hljs-comment">//用于自动为 JAVA Processor 生成 META-INF 信息。</span><br>    implementation <span class="hljs-string">&#x27;com.google.auto.service:auto-service:1.0-rc3&#x27;</span><br>    <span class="hljs-comment">//快速生成.java文件的库</span><br>    implementation <span class="hljs-string">&#x27;com.squareup:javapoet:1.8.0&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>Processor</code> 重写父类的几个方法：</p>
+<ul>
+<li><code>process()</code>方法，这里是处理注解内部逻辑的，也是本文的关键点之一；</li>
+<li><code>getSupportedSourceVersion()</code>：设置支持的版本，一般用最新的就好；</li>
+</ul>
+<ul>
+<li><p><code>getSupportedAnnotationTypes()</code>：添加支持的注解类型，可以是单个／多个，用Set存储；</p>
+</li>
+<li><p><code>init ()</code>：一些初始化操作，获取一些有用的系统工具类，比如生成文件、打印信息、处理元素等；</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>​            <code>getSupportedSourceVersion()</code>、<code>getSupportedAnnotationTypes()</code>这2个方法还有一种    简单的方式来实现，如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-keyword">@AutoService</span>(Processor.class)<br>@SupportedAnnotationTypes(&#123;&quot;com<span class="hljs-selector-class">.zx</span><span class="hljs-selector-class">.annotation</span>&quot;&#125;)<br><span class="hljs-keyword">@SupportedSourceVersion</span>(SourceVersion.RELEASE_8)<br>public class ViewInjectProcessor extends AbstractProcessor &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>是通过注解来实现的，看上去是比较简洁</p>
+<ul>
+<li><code>@SupportedAnnotationTypes()</code>可以申明一个注解数组，但是这种字符串拼接容易出错；</li>
+<li><code>@SupportedSourceVersion</code>：设置支持的源码版本，可以是RELEASE_0～RELEASE_8，但是不能使用<code>latestSupported()</code>设置最新的版本；</li>
+</ul>
+<h1 id="方法讲解"><a href="#方法讲解" class="headerlink" title="方法讲解"></a>方法讲解</h1><p>我们今天只说Processor。先从接口的方法介绍起把。</p>
+<table>
+<thead>
+<tr>
+<th>变量和类型</th>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Iterable&lt;? extends Completion&gt;</code></td>
+<td>getCompletions(Element element, AnnotationMirror annotation, ExecutableElement member, String userText)</td>
+<td>返回一个空的迭代完成。</td>
+</tr>
+<tr>
+<td><code>Set&lt;String&gt;</code></td>
+<td>getSupportedAnnotationTypes()</td>
+<td>如果处理器类使用SupportedAnnotationTypes进行批注，则返回与注释具有相同字符串集的不可修改集。</td>
+</tr>
+<tr>
+<td><code>Set&lt;String&gt;</code></td>
+<td>getSupportedOptions()</td>
+<td>如果处理器类使用SupportedOptions进行批注，则返回具有与批注相同的字符串集的不可修改集。</td>
+</tr>
+<tr>
+<td><code>SourceVersion</code></td>
+<td>getSupportedSourceVersion()</td>
+<td>如果处理器类使用SupportedSourceVersion进行批注，请在批注中返回源版本。</td>
+</tr>
+<tr>
+<td><code>void</code></td>
+<td>init(ProcessingEnvironment processingEnv)</td>
+<td>通过将 processingEnv字段设置为 processingEnv参数的值，使用处理环境初始化处理器。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td>process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv)</td>
+<td>处理源自前一轮的类型元素的一组注释类型，并返回此处理器是否声明了这些注释类型。 如果返回true ，则声明注释类型，并且不会要求后续处理器处理它们; 如果返回false ，则注释类型无人认领，可能会要求后续处理器处理它们。 处理器可以总是返回相同的布尔值，或者可以根据其自己选择的标准改变结果。</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>init：<br>初始化工作，我们可以得到一些有用的工具，例如 Filer，我们需要它将生成的代码写入文件中</p>
+<p>init(ProcessingEnvironment env):每个Annotation Processor必须***<br> 有一个空的构造函数 ***。编译期间，init()会自动被注解处理工具调用，并传入ProcessingEnviroment参数，通过该参数可以获取到很多有用的工具类:  <strong>Elements , Types , Filer</strong>  等等</p>
+</li>
+<li><p>process：<br>最重要的方法，所有的注解处理都是在此完成</p>
+<p>process(Set&lt;? extends TypeElement&gt; annoations, RoundEnvironment roundEnv):Annotation Processor扫描出的结果会存储进roundEnv中，可以在这里获取到注解内容，编写你的操作逻辑。注意,process()函数中不能直接进行异常抛出,否则的话,运行Annotation Processor的进程会异常崩溃,然后弹出一大堆让人捉摸不清的堆栈调用日志显示.</p>
+</li>
+<li><p>getSupportedAnnotationTypes：<br>返回我们所要处理的注解的一个集合</p>
+<p>getSupportedAnnotationTypes(): 该函数用于指定该自定义注解处理器(Annotation Processor)是注册给哪些注解的(Annotation),注解(Annotation)指定必须是完整的包名+类名(eg:com.example.MyAnnotation)</p>
+</li>
+<li><p>getSupportedSourceVersion：<br>要支持的java版本</p>
+<p>getSupportedSourceVersion():用于指定你的java版本，一般返回：SourceVersion.latestSupported()。当然，你也可以指定具体java版本：<br> return SourceVersion.RELEASE_7;</p>
+</li>
+</ul>
+<h2 id="ProcessingEnvironment"><a href="#ProcessingEnvironment" class="headerlink" title="ProcessingEnvironment"></a>ProcessingEnvironment</h2><p>这个类很重要，要考的。这个类会在函数init的时候被传入，主要的工具类方法都在这个类上。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ProcessingEnvironment</span> </span>&#123;<br>    <span class="hljs-function">Map&lt;String, String&gt; <span class="hljs-title">getOptions</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function">Messager <span class="hljs-title">getMessager</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function">Filer <span class="hljs-title">getFiler</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function">Elements <span class="hljs-title">getElementUtils</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function">Types <span class="hljs-title">getTypeUtils</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function">SourceVersion <span class="hljs-title">getSourceVersion</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function">Locale <span class="hljs-title">getLocale</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Filer 就是文件流输出路径，当我们用AbstractProcess生成一个java类的时候，我们需要保存在Filer指定的目录下。</p>
+<p>Messager 输出日志工具，需要输出一些日志相关的时候我们就要使用这个了。</p>
+<p>Elements 获取元素信息的工具，比如说一些类信息继承关系等。</p>
+<p>Types 类型相关的工具类，processor java代码不同的是，当process执行的时候，class的由于类并没有被传递出来，所以大部分都行都是用element来代替了，所以很多类型比较等等的就会转化成type相关的进行比较了。</p>
+<p>类型相关的都被转化成了一个叫TypeMirror，其getKind方法返回类型信息，其中包含了基础类型以及引用类型。</p>
+<p>举个简单的例子，当一个实现了注解的Element被传入的时候，我们要判断Element是不是实现了特定接口，那么应该如何做呢？</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">private</span> Elements elementUtils;<br><span class="hljs-keyword">private</span> Types types;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> synchronized <span class="hljs-built_in">void</span> <span class="hljs-function"><span class="hljs-title">init</span>(<span class="hljs-params">ProcessingEnvironment processingEnv</span>)</span> &#123;<br>    <span class="hljs-built_in">super</span>.init(processingEnv);<br>    types = processingEnv.getTypeUtils();<br>    elementUtils = processingEnv.getElementUtils();<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">isSubType</span>(<span class="hljs-params">Element element, <span class="hljs-built_in">String</span> className</span>)</span> &#123;<br>    <span class="hljs-keyword">return</span> element != <span class="hljs-literal">null</span> &amp;&amp; isSubType(element.asType(), className);<br>&#125;<br><br><span class="hljs-keyword">public</span> TypeMirror <span class="hljs-function"><span class="hljs-title">typeMirror</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> className</span>)</span> &#123;<br>    <span class="hljs-keyword">return</span> typeElement(className).asType();<br>&#125;<br><br><span class="hljs-keyword">public</span> TypeElement <span class="hljs-function"><span class="hljs-title">typeElement</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> className</span>)</span> &#123;<br>    <span class="hljs-keyword">return</span> elementUtils.getTypeElement(className);<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">isSubType</span>(<span class="hljs-params">TypeMirror <span class="hljs-keyword">type</span>, <span class="hljs-built_in">String</span> className</span>)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">type</span> != <span class="hljs-literal">null</span> &amp;&amp; types.isSubtype(<span class="hljs-keyword">type</span>, typeMirror(className));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>其中isSubType方法是判断传入的Element是不是一个接口的实现类。首先我们要将对象都转化成Element, 然后将两个element转化成TypeMirror，之后调用Types的isSubtype方法对两个TypeMirror进行比较，如果发现类型一样，则该输入的Element是特定接口的实现类。</strong></p>
+<h2 id="process"><a href="#process" class="headerlink" title="process()"></a>process()</h2><p>扫描代码的时候会把当前获取到的，此processer能处理的annotations传入当前方法</p>
+<h3 id="Processor的kapt优化"><a href="#Processor的kapt优化" class="headerlink" title="Processor的kapt优化"></a>Processor的kapt优化</h3><p>kotlin对apt做了很多优化，内部完成了增量编译。但是对于低版本的autoservice，其增量编译会被关闭。</p>
+<p>这里简单给各位大佬做下这方面的升级就好了。</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs clean">apply plugin: <span class="hljs-string">&#x27;java-library&#x27;</span><br>apply plugin: <span class="hljs-string">&#x27;kotlin&#x27;</span><br>apply plugin: <span class="hljs-string">&#x27;kotlin-kapt&#x27;</span><br><br>dependencies &#123;<br>    <span class="hljs-keyword">implementation</span> <span class="hljs-string">&#x27;com.google.auto.service:auto-service:1.0-rc5&#x27;</span><br>    <span class="hljs-keyword">implementation</span> <span class="hljs-string">&#x27;com.squareup:javapoet:1.10.0&#x27;</span><br>    <span class="hljs-keyword">implementation</span> <span class="hljs-string">&#x27;com.github.leifzhang:RouterAnnotation:0.5.0&#x27;</span><br>    <span class="hljs-keyword">implementation</span> <span class="hljs-string">&quot;org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version&quot;</span><br>    kapt <span class="hljs-string">&quot;com.google.auto.service:auto-service:1.0-rc5&quot;</span><br>&#125;<br>sourceCompatibility = <span class="hljs-number">1.8</span><br>targetCompatibility = <span class="hljs-number">1.8</span><br><br></code></pre></td></tr></table></figure>
+
+<p>简单的说就是把processor 升级到rc5，然后用kapt的方式去把它注册起来就行了。</p>
+<h2 id="缺点和总结"><a href="#缺点和总结" class="headerlink" title="缺点和总结"></a>缺点和总结</h2><p>缺点：apt能做的事情还是比较有限的</p>
+<ol>
+<li>javapoet只能新增一个类，而不能对当前类进行更改。</li>
+<li>proessor在javac执行之前，所以只能对当前moudule生效</li>
+<li>当Module一多，可能会有类名冲突的问题</li>
+</ol>
+<p>但是apt还是能帮助我们解决很多问题的，我们可以把一些机械化的操作，通过anntation的方式去简化，比如butterknife，这样开发就可以有更多的精力去专注做写别的事情。一部分abtest赋值的操作其实也可以用同样的方式去调整。</p>
+<hr>
+<h2 id="一些疑问"><a href="#一些疑问" class="headerlink" title="一些疑问"></a>一些疑问</h2><ul>
+<li>注解处理器processor为什么要在META-INF注册？</li>
+<li>注解处理器processor是如何被系统调用的？</li>
+<li>注解申明和注解处理器为什么要分Module处理？</li>
+<li>apt项目不会增加apk体积？</li>
+</ul>
+<p>先来回顾一下之前项目的部分目录结构</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4134622-6cfb718f3055b89b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>image.png</p>
+<p>先明确一些概念：<br> <code>AbstractProcessor</code>是抽象处理器，开发apt时都必须继承这个类来生成<code>.java</code>文件，实现的这个类后叫做注解处理器，也就是这里的<code>ButterKnifeProcessor</code>。</p>
+<h4 id="Q1-注解处理器processor为什么要在META-INF注册？"><a href="#Q1-注解处理器processor为什么要在META-INF注册？" class="headerlink" title="Q1:注解处理器processor为什么要在META-INF注册？"></a>Q1:注解处理器processor为什么要在META-INF注册？</h4><hr>
+<p><code>META-INF</code>的作用<br> META-INF, 相当于一个信息包，用于存放一些meta information相关的文件。用来配置应用程序、扩展程序、类加载器和服务<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://www.baidu.com/s?wd=manifest.mf&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">manifest.mf</a>文件，在用jar打包时自动生成。</p>
+<p>在之前的文章中说过，通过<code>@AutoService(Processor.class)</code>注解把注解处理器<code>ButterKnifeProcessor</code>注册到META-INF/services中，这里的包名是<code>META-INF/services/javax.annotation.processing.Processor</code>,<br> 这个文件的内容是</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">com<span class="hljs-selector-class">.zx</span><span class="hljs-selector-class">.processor</span><span class="hljs-selector-class">.ButterKnifeProcessor</span><br></code></pre></td></tr></table></figure>
+
+<p>这个包名其实就是<code>@AutoService(Processor.class)</code>里面的<code>Processor</code>类；而文件内容就是注解处理器。</p>
+<p><strong>在编译时，java编译器（javac）会去META-INF中查找实现了的AbstractProcessor的子类，并且调用该类的process函数，最终生成<code>.java</code>文件。</strong>其实就像activity需要注册一样，就是要到META-INF注册 ，javac才知道要给你调用哪个类来处理注解。</p>
+<h4 id="Q2：注解处理器processor是如何被系统调用的？"><a href="#Q2：注解处理器processor是如何被系统调用的？" class="headerlink" title="Q2：注解处理器processor是如何被系统调用的？"></a>Q2：注解处理器processor是如何被系统调用的？</h4><hr>
+<p>一些细心的同学应该发现了这个问题，我们并没有手动调用<code>AbstractProcessor</code>这个注解处理器类，那系统是什么时间调用的？又是如何调用的？这其实就牵扯到apt工作机制。</p>
+<p>在上一问中，我们已经了解到，在编译时javac会查找所有的 在META_INF 中注册的注解处理器来处理注解。</p>
+<p>到这里，好像有点清楚了，大概知道javac会去找到Processor并调用。但是呢还是没找到直接源头，因为它不像我们面向对象编程中可以准确追踪到是哪个对象调用的。</p>
+<p>别着急，先来看这么个东西.<br> 是我项目中使用到注解的<code>app.Gradle</code></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs csharp">dependencies &#123;<br>    <span class="hljs-function">implementation <span class="hljs-title">project</span>(<span class="hljs-params"><span class="hljs-string">&#x27;:annotation&#x27;</span></span>)</span><br><span class="hljs-function">    implementation <span class="hljs-title">project</span>(<span class="hljs-params"><span class="hljs-string">&#x27;:inject_api&#x27;</span></span>)</span><br><span class="hljs-function">    <span class="hljs-comment">//gradle3.0以上apt的实现方式</span></span><br><span class="hljs-function">    annotationProcessor <span class="hljs-title">project</span>(<span class="hljs-params"><span class="hljs-string">&#x27;:processor&#x27;</span></span>)</span><br><span class="hljs-function">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>这里的<code>annotationProcessor</code>有点特别，没错，它是<strong>APT</strong>实现方案的一种。这里简单介绍一下：</p>
+<blockquote>
+<p>APT实现方案<br> <code>android-apt</code>和<code>annotationProcessor</code>功能是一样的，都是apt的实现方案，前者是个人开发者提供，比较早（现在不再维护了），后者是google官方开发的内置在<code>gradle</code>里的apt。</p>
+<p>annotationProcessor是APT工具中的一种，是google开发的内置框架，不需要引入，可以直接在<code>build.gradle</code>文件中使用。</p>
+</blockquote>
+<p>只有在你使用注解的地方引入了<code>annotationProcessor</code>，系统才会主动调用注解处理类<code>Processor</code>,才会最终生成如下的<code>.java</code>文件</p>
+<p><img src="TyporaRaw/java%E6%B3%A8%E8%A7%A3.assets/4134622-86775724faaeaa3e.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>apt生成类.png</p>
+<p>这里先简单总结一下：<br> 2.1、在完成注解处理类<code>Processor</code>之后，需要做2件事情：</p>
+<ul>
+<li>1、在META-INF目录下注册<code>Processor</code>；</li>
+<li>2、在项目中使用注解的地方添加apt工具<code>annotationProcessor</code></li>
+</ul>
+<p>2.2、APT 4要素<br> 　<strong>注解处理器（AbstractProcess）+ 代码处理（javaPoet）+ 处理器注册（AutoService）+ apt（annotationProcessor）</strong></p>
+<p><code>APT(Annotation Processing Tool)总结</code><br> 首先，APT是javac提供的一种工具，它在编译时扫描、解析、处理注解。它会对源代码文件进行检测，找出用户自定义的注解，根据注解、注解处理器和相应的apt工具自动生成代码。这段代码是根据用户编写的注解处理逻辑去生成的。<strong>最终将生成的新的源文件与原来的源文件共同编译（注意：APT并不能对源文件进行修改操作，只能生成新的文件，例如往原来的类中添加方法）</strong>。具体流程图如下图所示：</p>
+<p><img src="TyporaRaw/java%E6%B3%A8%E8%A7%A3.assets/4134622-b1f7494d18e216d1.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>apt工作流程.png</p>
+<p>APT技术的使用，需要我们遵守一定的规则。大家先看一下整个APT项目项目构建的一个规则图，具体如下所示：</p>
+<p><img src="TyporaRaw/java%E6%B3%A8%E8%A7%A3.assets/4134622-55d88199566ac011.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="Q3：注解申明和注解处理器为什么要分Module处理？"><a href="#Q3：注解申明和注解处理器为什么要分Module处理？" class="headerlink" title="Q3：注解申明和注解处理器为什么要分Module处理？"></a>Q3：注解申明和注解处理器为什么要分Module处理？</h4><hr>
+<p>先来回顾一下之前的项目结构：</p>
+<p><img src="TyporaRaw/java%E6%B3%A8%E8%A7%A3.assets/4134622-1a701ad9e6425883.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li><code>annotation</code>：申明注解 （java lib）</li>
+<li><code>processor</code>：注解处理器（java lib）</li>
+<li><code>inject_api</code>：调用处理器中生成的类 （android lib）</li>
+<li><code>app</code>：项目使用 （android lib）</li>
+</ul>
+<p>我们都知道注解处理器都需要继承<code>AbstractProcessor</code>类，但是<code>AbstractProcessor</code>是JDK中的类，不在android sdk中，所以需要放在单独的java lib中；而<code>processor</code>中需要依赖自定义注解，把<code>annotation</code>抽成一个独立的lib，便于维护。</p>
+<p><strong>那注解声明和注解处理为什么要分开呢？可不可以放在一起？</strong><br> 先说结论：可以放在一起，放在一起对功能上没有什么影响；但是一般不放在一起，原因如下：</p>
+<blockquote>
+<p>我们都知道<code>processor</code>的作用是：在编译器解析注解、生成新的<code>.java</code>文件。<strong>这个lib只在编译器用到，是不会被打包进apk的。</strong>对于调用者来说，你只是想使用这个注解，而不希望你已经编译好的项目中引进注解处理器相关的内容，所以为了不引入没必要的文件，我们一般选择将注解声明和注解处理分开处理。</p>
+</blockquote>
+<p>到这里apt相关知识就说完了，我们也可以理解为什么<code>ButterKnife</code>这种注解库不会增加项目体积了。</p>
+<p>想了解更多apt知识，可以参考：<br> <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b6b3283968e0">https://www.jianshu.com/p/b6b3283968e0</a></p>
+<p>感谢<br> <a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://blog.csdn.net/xx326664162/article/details/68490059">你必须知道的APT、annotationProcessor、android-apt、Provided、自定义注解</a></p>
+<p>作者：唠嗑008<br>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/89ac9a2513c4">https://www.jianshu.com/p/89ac9a2513c4</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/12/23/java%E6%B3%A8%E8%A7%A3-%E7%BD%91%E7%BB%9C%E5%8D%9A%E5%AE%A2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">java注解-网络博客</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/22/hello-world/">
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
