@@ -224,6 +224,39 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/12/23/Manjaro%E6%96%87%E6%A1%A3/" target="_self">
+          java注解
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/12/23/Manjaro%E6%96%87%E6%A1%A3/" target="_self">
+          
+          更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  fcitx5安装1sudo pacman -S fcitx5-im fcitx5-chinese-addons   其他一些软件包 1234567fcitx5: 输入法基础框架主程序   fcitx5-chinese-addons: 简体中文输入的支持，云拼音   fcitx5
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-12-23 14:36" pubdate>
+              2021-12-23
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/12/23/hexo/" target="_self">
           hexo整理
         </a>
@@ -356,15 +389,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/02/04/scroll/" target="_self">
-          scroller
+        <a href="/2021/12/20/Aria2/" target="_self">
+          aria2整理
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/02/04/scroll/" target="_self">
+        <a href="/2021/12/20/Aria2/" target="_self">
           
-          Scroller的总结内容来自各个博客  本质及作用：Scroller本质就是一个Helper类，里面保存了目标对象要移动的距离，时间等属性！       Android ViewGroup中的Scroller与computeScroll的有什么关系？ 答：没有直接的关系 1.Scroller到底是什么？ 答：Scroller只是个计算器，提供插值计算，让滚动过程具有动画属性，但它并不是UI，也不
+          1. 安装1sudo pacman -S aria2  2.Aria2 配置说明 创建&#x2F;home&#x2F;用户名&#x2F;.config&#x2F;aria2&#x2F;文件夹，新建一个名为aria2.conf的配置文件，并把下面的配置示例修改后复制进去 创建&#x2F;home&#x2F;用户名&#x2F;.aria2&#x2F;文件夹，用touch命令建立两个文件aria2.session和input.session 第二步里的路径可以自行修改，在配置文件里填写好就行
         </a>
       </p>
 
@@ -372,8 +405,107 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2021-02-04 13:05" pubdate>
-              2021-02-04
+            <time datetime="2021-12-20 20:16" pubdate>
+              2021-12-20
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/12/20/SSH%E4%BD%BF%E7%94%A8/" target="_self">
+          ssh使用
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/12/20/SSH%E4%BD%BF%E7%94%A8/" target="_self">
+          
+          实践原理：读者一定很好奇SSH认证的流程，这里给出一张粗陋的图简单解释一下：  如果我们事先在服务器中存储了USER1的公钥(后面会讲解如何做)，则USER1发起SSH连接服务器的流程如下：  1.USER1发起SSH请求 2.服务器生成随机数R1发给USER1，USER1用私钥加密生成R2。 3.USER1把R2回发给服务器，服务器用公钥解密并对比R1，相同则成功连接。  其实很简单，但是如果还
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-12-20 20:16" pubdate>
+              2021-12-20
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/12/20/git%E5%B8%B8%E7%94%A8/" target="_self">
+          git常用
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/12/20/git%E5%B8%B8%E7%94%A8/" target="_self">
+          
+          常用配置安装完成后，还需要配置git，在命令行输入： 12$ git config --global user.name &quot;Your Name&quot;$ git config --global user.email &quot;email@example.com&quot;  Git 使用一系列配置文件来保存你自定义的行为。 它首先会查找系统级的 &#x2F;etc&#x2F;gitconfig 文件，
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-12-20 20:16" pubdate>
+              2021-12-20
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/12/20/manjaro%E5%8C%85%E7%AE%A1%E7%90%86/" target="_self">
+          pacman包管理
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/12/20/manjaro%E5%8C%85%E7%AE%A1%E7%90%86/" target="_self">
+          
+          pacman包管理安装指定的包安装或者升级单个软件包，或者一列软件包（包含依赖包），使用如下命令： 1# pacman -S package_name1 package_name2 ...  用正则表达式安装多个软件包（参见 这个帖子）： 1# pacman -S $(pacman -Ssq package_regex)  有时候在不同的软件仓库中，一个软件包有多个版本（比如[extra]和[te
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-12-20 20:16" pubdate>
+              2021-12-20
             </time>
           </div>
         
@@ -384,6 +516,12 @@
   </div>
 
 
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
 
 
 

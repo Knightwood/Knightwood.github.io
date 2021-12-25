@@ -1,0 +1,823 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  fcitx5安装1sudo pacman -S fcitx5-im fcitx5-chinese-addons   其他一些软件包 1234567fcitx5: 输入法基础框架主程序   fcitx5-chinese-addons: 简体中文输入的支持，云拼音   fcitx5">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java注解">
+<meta property="og:url" content="https://knightwood.github.io/2021/12/23/Manjaro%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  fcitx5安装1sudo pacman -S fcitx5-im fcitx5-chinese-addons   其他一些软件包 1234567fcitx5: 输入法基础框架主程序   fcitx5-chinese-addons: 简体中文输入的支持，云拼音   fcitx5">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
+<meta property="article:modified_time" content="2021-12-25T12:51:25.811Z">
+<meta property="article:author" content="NightWood">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>java注解 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="java注解">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-23 14:36" pubdate>
+        2021年12月23日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      25k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      205 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">java注解</h1>
+            
+            <div class="markdown-body">
+              <h1 id="更换国内源（可以在软件商店设置里修改）"><a href="#更换国内源（可以在软件商店设置里修改）" class="headerlink" title="更换国内源（可以在软件商店设置里修改）"></a>更换国内源（可以在软件商店设置里修改）</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">sudo pacman-mirrors -<span class="hljs-selector-tag">i</span> -c China -m rank<br></code></pre></td></tr></table></figure>
+
+<h1 id="fcitx5"><a href="#fcitx5" class="headerlink" title="fcitx5"></a>fcitx5</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> pacman -S fcitx<span class="hljs-number">5</span>-im fcitx<span class="hljs-number">5</span>-chinese-addons<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>其他一些软件包</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">fcitx5:</span> <span class="hljs-string">输入法基础框架主程序</span><br>   <span class="hljs-attr">fcitx5-chinese-addons:</span> <span class="hljs-string">简体中文输入的支持，云拼音</span><br>   <span class="hljs-attr">fcitx5-gtk:</span> <span class="hljs-string">GTK程序的支持</span><br>   <span class="hljs-attr">fcitx5-qt:</span> <span class="hljs-string">QT5程序的支持</span><br>   <span class="hljs-attr">fcitx5-pinyin-zhwiki:</span> <span class="hljs-string">肥猫制作的维基百万词库，没有版权风险,</span> <span class="hljs-string">放心使用</span><br>   <span class="hljs-attr">fcitx5-configtool:</span> <span class="hljs-string">图形化配置工具</span><br>   <span class="hljs-attr">kcm-fcitx5:</span> <span class="hljs-string">KDE桌面环境的支持</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>打开系统设置在 设置–区域设置—输入法—添加输入法—拼音—配置—-在程序中显示与编辑文本——启用云拼音 返回 配置附加组件 Classic User Interface 选择主题</p>
+<p>配置fcitx5的环境变量：</p>
+<p> <strong>不要在 fcitx 运行时修改, 因为进程退出后会覆写所有配置文件 (大字才能醒目)</strong></p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">nano ~<span class="hljs-string">/.pam_environment</span><br></code></pre></td></tr></table></figure>
+
+<p>写入以下内容（内容来自manjaro的wiki）</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">GTK_IM_MODULE <span class="hljs-attribute">DEFAULT</span>=fcitx<br>QT_IM_MODULE  <span class="hljs-attribute">DEFAULT</span>=fcitx<br>XMODIFIERS    <span class="hljs-attribute">DEFAULT</span>=\@im=fcitx<br>SDL_IM_MODULE <span class="hljs-attribute">DEFAULT</span>=fcitx<br>最后那行 SDL_IM_MODULE 是为了让一些使用特定版本 SDL2 库的游戏，比如 Dota2 能正常使用输入法。 <br></code></pre></td></tr></table></figure>
+
+<p>使用wps的用户还需要编辑~/.xprofile添加以下内容（在新版中bug被修复了，但是如果有问题的话，可以尝试此方法）</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">QT_IM_MODULE</span>=fcitx5<br></code></pre></td></tr></table></figure>
+
+<p>自启动<br>在设置的开机里设置fcitx5自启动</p>
+<p>输入法的默认设置：</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dos">Ctrl + Space 激活输入法<br>左<span class="hljs-built_in">Shift</span> 临时切换到英文<br>Ctrl + <span class="hljs-built_in">Shift</span> 输入法间切换<br>-/= 向前/向后翻页<br><span class="hljs-built_in">Shift</span> + Space 全角、半角切换<br></code></pre></td></tr></table></figure>
+
+<h2 id="全自动配置"><a href="#全自动配置" class="headerlink" title="全自动配置"></a>全自动配置</h2><p>manjaro的源里的<code>manjaro-asian-input-support</code></p>
+<h2 id="fcitx5主题文件"><a href="#fcitx5主题文件" class="headerlink" title="fcitx5主题文件"></a>fcitx5主题文件</h2><h3 id="fcitx5-material-color-主题"><a href="#fcitx5-material-color-主题" class="headerlink" title="fcitx5-material-color 主题"></a>fcitx5-material-color 主题</h3><ul>
+<li>安装</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">yay</span> -S fcitx<span class="hljs-number">5</span>-material-color<br></code></pre></td></tr></table></figure>
+
+<p>然后修改配置文件 ~/.config/fcitx5/conf/classicui.conf</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 横向候选列表</span><br>Vertical Candidate <span class="hljs-attribute">List</span>=<span class="hljs-literal">False</span><br><br><span class="hljs-comment"># 禁止字体随着DPI缩放，避免界面太大</span><br><span class="hljs-attribute">PerScreenDPI</span>=<span class="hljs-literal">False</span><br><br><span class="hljs-comment"># 字体和大小，可以用 fc-list 命令来查看使用</span><br><span class="hljs-attribute">Font</span>=<span class="hljs-string">&quot;Noto Sans Mono 13&quot;</span><br><br><span class="hljs-comment"># 默认蓝色主题</span><br><span class="hljs-attribute">Theme</span>=Material-Color-Blue<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="pacman常用命令"><a href="#pacman常用命令" class="headerlink" title="pacman常用命令"></a>pacman常用命令</h1><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs applescript">pacman -Ss <span class="hljs-built_in">string</span>             <span class="hljs-comment"># 在包数据库中查询软件</span><br>pacman -S package_name        <span class="hljs-comment"># 安装软件</span><br><br>pacman -S extra/package_name  <span class="hljs-comment"># 安装不同仓库中的版本</span><br>pacman -Syu                   <span class="hljs-comment"># 升级整个系统，y是更新数据库，yy是强制更新，u是升级软件</span><br>pacman -Si package_name       <span class="hljs-comment"># 显示软件的详细信息</span><br>pacman -Sc                    <span class="hljs-comment"># 清除软件缓存，即/var/cache/pacman/pkg目录下的文件</span><br>pacman -R package_name        <span class="hljs-comment"># 删除单个软件</span><br>pacman -Rs package_name       <span class="hljs-comment"># 删除指定软件及其没有被其他已安装软件使用的依赖关系</span><br>pacman -Qs <span class="hljs-built_in">string</span>             <span class="hljs-comment"># 查询已安装的软件包</span><br>pacman -Qi package_name       <span class="hljs-comment"># 查询本地安装包的详细信息</span><br>pacman -Ql package_name       <span class="hljs-comment"># 获取已安装软件所包含的文件的列表</span><br>pacman -U package.tar.zx      <span class="hljs-comment"># 从本地文件安装</span><br>pactree package_name          <span class="hljs-comment"># 显示软件的依赖树</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="manjaro的pamac命令"><a href="#manjaro的pamac命令" class="headerlink" title="manjaro的pamac命令"></a>manjaro的pamac命令</h1><p>他是软件商店的命令版本，也是manjaro自己的包管理命令。类似于ubuntu的apt命令。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs applescript">pamac search <span class="hljs-built_in">name</span> <span class="hljs-comment">#搜索</span><br>pamac info <span class="hljs-built_in">name</span>  <span class="hljs-comment">#详细信息</span><br>pamac install <span class="hljs-built_in">name</span> <span class="hljs-comment">#安装软件</span><br>pamac remove <span class="hljs-built_in">name</span> <span class="hljs-comment">#卸载软件</span><br>pamac checkupdates <span class="hljs-comment">#检查更新</span><br>pamac upgrade <span class="hljs-comment">#安装更新</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="安装字体（废弃）"><a href="#安装字体（废弃）" class="headerlink" title="安装字体（废弃）"></a>安装字体（废弃）</h1><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gauss">sudo pacman -S ttf-roboto noto-<span class="hljs-built_in">fonts</span> ttf-dejavu<br>文泉驿<br>sudo pacman -S wqy-bitmapfont wqy-microhei wqy-microhei-lite wqy-zenhei <br>思源字体<br>sudo pacman -S noto-<span class="hljs-built_in">fonts</span>-cjk adobe-source-han-sans-cn-<span class="hljs-built_in">fonts</span> adobe-source-han-serif-cn-<span class="hljs-built_in">fonts</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="修改火狐滚轮速度"><a href="#修改火狐滚轮速度" class="headerlink" title="修改火狐滚轮速度"></a>修改火狐滚轮速度</h1><ul>
+<li><p>输入在火狐浏览器地址栏输入</p>
+<p>about:config<br>搜索mousewheel<br>其中<code> mousewheel.defalut.delta_multiplier_y</code>越大，每次滚动一下<br>滚轮，屏幕就滑动地越大。<br>除此之外，推测<code>durationMaxMs和durationMinMs</code>参数是<br>完成滚动的时间间隔，以毫秒计算，数值越小，单次滚动越快。factor<br>和鼠标滚轮滚动时，屏幕滚动的加速度有关。</p>
+</li>
+</ul>
+<h1 id="设置界面缩放"><a href="#设置界面缩放" class="headerlink" title="设置界面缩放"></a>设置界面缩放</h1><pre><code>高分屏缩放，比如netease-cloud-music软件：
+可以通过 env QT_SCREEN_SCALE_FACTORS=1.25 netease-cloud-music 启动来解决,也就是在启动文件里添加。
+</code></pre>
+<h1 id="设置快捷键启动的方式："><a href="#设置快捷键启动的方式：" class="headerlink" title="设置快捷键启动的方式："></a>设置快捷键启动的方式：</h1><p>设置 -&gt; 快捷键 -&gt; 自定义快捷键 -&gt; 编辑 -&gt; 新建 -&gt; 全局快捷键 -&gt; 命令/URL</p>
+<p>设置触发器：设置为你习惯的快捷键 -&gt; 动作：命令/URL这填：/usr/bin/flameshot gui</p>
+<h1 id="网络启停"><a href="#网络启停" class="headerlink" title="网络启停"></a>网络启停</h1><p>开机后显示wifi不可用，鼠标放在网络图标上显示<code>Networkmanager未运行</code>，解决方法是在终端执行以下命令</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">systemctl restart <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">NetworkManager</span>.</span></span>service<br>systemctl enable <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">NetworkManager</span>.</span></span>service<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="ZSH"><a href="#ZSH" class="headerlink" title="ZSH"></a>ZSH</h1><ul>
+<li><strong>替换shell</strong></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">yay -Sy zsh  #安装zsh  manjaro现在默认就已经安装了zsh<br>chsh -l  #列出现在安装的shell<br>chsh -s /bin/zsh # 设置zsh为默认  重启生效<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>备注</strong>： <strong>manjaro已经内置zsh,直接在kde设置里修改即可，ohmyzsh在manjaro也内置了，所以如果自己想折腾，可以直接去github把ohmyzsh克隆到任意位置使用。</strong></li>
+</ul>
+<h2 id="PART-1-→-oh-my-zsh"><a href="#PART-1-→-oh-my-zsh" class="headerlink" title="PART 1 → oh-my-zsh"></a>PART 1 → oh-my-zsh</h2><p>默认的 Zsh 配置有点麻烦。因此一个叫 robbyrussel 的用户在 GitHub 上制作了一个配置文件 oh-my-zsh，这是目前为止最流行的 Zsh 配置：</p>
+<p><a href="https://link.zhihu.com/?target=https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh 项目地址（不要吝啬你的 Star）</a></p>
+<p>如果你不想看官方的安装说明，请看这里：</p>
+<p><strong>第一步 → 把 oh-my-zsh 项目 Clone 下来：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh<br></code></pre></td></tr></table></figure>
+
+<p><strong>第二步 → 复制 .zshrc</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc<br></code></pre></td></tr></table></figure>
+
+<p><strong>第三步 → 更改你的默认 Shell</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">chsh -s /bin/zsh<br></code></pre></td></tr></table></figure>
+
+<p>现在，你会看到你的命令提示符变了：</p>
+<p>前往 <a href="https://link.zhihu.com/?target=https://github.com/robbyrussell/oh-my-zsh/wiki/Themes">oh-my-zsh 的 Wiki</a> 就可以看到大多数 oh-my-zsh 的内置主题以及它们的截图。如果你看中的其中的一款，可以重复上面的步骤，编辑~/.zshrc，并更改ZSH_THEME=”xxx”。</p>
+<p>比如你看中了 ys 主题（我的最爱），你可以把 ZSH_THEME 改成 “ys”，然后回到终端，执行 source ~/.zshrc 命令。</p>
+<p>P.S. 这些主题都保存在 “~/.oh-my-zsh/themes” 目录中</p>
+<ul>
+<li><h1 id="powerlevel10k主题"><a href="#powerlevel10k主题" class="headerlink" title="powerlevel10k主题"></a>powerlevel10k主题</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-number">1</span>. 安装 <br>git clone --depth=<span class="hljs-number">1</span> https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/romkatv/</span>powerlevel10k.git <span class="hljs-variable">$&#123;ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom&#125;</span><span class="hljs-regexp">/themes/</span>powerlevel10k<br><span class="hljs-number">2</span>. 傻瓜式配置 终端中输入 p10k configure<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>安装完 powerlevel10k 后你可能会发现有乱码，这是因为你终端字体不支持那么多的字符，这就需要使用扩展字体了。</li>
+</ul>
+</li>
+</ul>
+<h2 id="PART-3-→-插件"><a href="#PART-3-→-插件" class="headerlink" title="PART 3 → 插件"></a>PART 3 → 插件</h2><pre><code>oh-my-zsh 的自带插件都储存在 &quot;~/.oh-my-zsh/plugins&quot; 目录中，如果你希望安装一个插件，可以在 &quot;~/.zshrc&quot; 的 plugins=(xxx, xxx, ...) 这一行里加入插件名称
+
+如果你需要安装第三方插件和主题，你可以在 &quot;~/.zshrc&quot; 的某一行（比如末尾）加入 source /path/to/plugin
+
+比如你希望添加一个 zsh-syntax-highlighting 插件 ↓
+</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh<br><span class="hljs-comment"># 这里要根据你自己的输入目录，而不是抄我的，否则然并卵</span><br></code></pre></td></tr></table></figure>
+
+<p>​    kde主题文件位置</p>
+<p>要么在根目录的usr目录下，要么就在home的.config目录下。</p>
+<p>要删除主题，先把当前使用的主题换成默认的主题，然后根据下面的目录删除即可。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs awk">  AURORAE_DIR=<span class="hljs-string">&quot;/usr/share/aurorae/themes&quot;</span><br>  SCHEMES_DIR=<span class="hljs-string">&quot;/usr/share/color-schemes&quot;</span><br>  PLASMA_DIR=<span class="hljs-string">&quot;/usr/share/plasma/desktoptheme&quot;</span><br>  LOOKFEEL_DIR=<span class="hljs-string">&quot;/usr/share/plasma/look-and-feel&quot;</span><br>  KVANTUM_DIR=<span class="hljs-string">&quot;/usr/share/Kvantum&quot;</span><br>  WALLPAPER_DIR=<span class="hljs-string">&quot;/usr/share/wallpapers&quot;</span><br>或者<br>  AURORAE_DIR=<span class="hljs-string">&quot;$HOME/.local/share/aurorae/themes&quot;</span><br>  SCHEMES_DIR=<span class="hljs-string">&quot;$HOME/.local/share/color-schemes&quot;</span><br>  PLASMA_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/desktoptheme&quot;</span><br>  LOOKFEEL_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/look-and-feel&quot;</span><br>  KVANTUM_DIR=<span class="hljs-string">&quot;$HOME/.config/Kvantum&quot;</span><br>  WALLPAPER_DIR=<span class="hljs-string">&quot;$HOME/.local/share/wallpapers&quot;</span> <br><br>注：<br><span class="hljs-regexp">/home/</span>hzt<span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/plasma/</span>desktoptheme 这是存放plasma主题<br><span class="hljs-regexp">/home/</span>hzt<span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/plasma/</span>look-and-feel/ 存放全局主题<br><span class="hljs-regexp">/home/</span>hzt<span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/plasma/</span>plasmoids/ 存放插件<br><span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/sddm/</span> sddm主题位置<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="重启桌面"><a href="#重启桌面" class="headerlink" title="重启桌面"></a>重启桌面</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">kquitapp5 plasmashell    <span class="hljs-comment"># 退出kde桌面</span><br>kstart5 plasmashell<br></code></pre></td></tr></table></figure>
+
+<h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><h2 id="错误：-Cannot-find-the-fakeroot-binary-gt-错误：-Cannot-find-the-strip-binary"><a href="#错误：-Cannot-find-the-fakeroot-binary-gt-错误：-Cannot-find-the-strip-binary" class="headerlink" title="错误： Cannot find the fakeroot binary. ==&gt; 错误： Cannot find the strip binary"></a>错误： Cannot find the fakeroot binary. ==&gt; 错误： Cannot find the strip binary</h2><p>解决方法：因为没安装 fakeroot、binutils 等打包基本工具，所以<code>sudo pacman -S --needed base-devel</code> 装一下。</p>
+<hr>
+<h2 id="使用数位板"><a href="#使用数位板" class="headerlink" title="使用数位板"></a>使用数位板</h2><p>1.查看系统信息中的内核版本，根据内核版本安装linux-header</p>
+<p>2.安装aur源中的驱动：yay -S digimend-drivers-git-dkms  </p>
+<hr>
+<h2 id="关闭watchdog"><a href="#关闭watchdog" class="headerlink" title="关闭watchdog"></a>关闭watchdog</h2><p>根据 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Watchdog_timer">维基百科：看门狗定时器 </a>： </p>
+<p>由于系统的关键任务（即服务器）或缺少电源重置（即嵌入式设备），许多用户需要此功能。  因此，在某些情况下，此功能是良好操作所必需的。  另一方面，普通用户（例如台式机和笔记本电脑）不需要此功能，可以将其禁用。 </p>
+<p>要禁用看门狗定时器（包括软件和硬件），请附加  <code>nowatchdog</code> 到您的启动参数。 </p>
+<p>要检查新配置，请执行以下操作： </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"># cat <span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/kernel/</span>watchdog<br></code></pre></td></tr></table></figure>
+
+<p>或使用： </p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># wdctl</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>附加启动参数到grub</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs gradle">如果要禁用watchdog，需要在内核启动选项里面添加一个参数：<br><br>nowatchdog<br><br>添加的方法是修改 <span class="hljs-regexp">/etc/</span><span class="hljs-keyword">default</span>/grub 文件加上这个参数（用什么编辑器都可以，只要有root权限修改）<br><br>sudo nano <span class="hljs-regexp">/etc/</span><span class="hljs-keyword">default</span>/grub<br><br>找到其中包含 GRUB_CMDLINE_LINUX_DEFAULT 的一行，等号后面的字符串里面加个空格，加上nowatchdog就行了，比如：<br><br>本来是<br><br>GRUB_CMDLINE_LINUX_DEFAULT=<span class="hljs-string">&quot;quiet splash foo=bar&quot;</span><br><br>改成<br><br>GRUB_CMDLINE_LINUX_DEFAULT=<span class="hljs-string">&quot;quiet splash foo=bar nowatchdog&quot;</span><br><br>修改完毕之后<br>在终端中调用 update-grub<br><br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>禁用看门狗后，您也可以 <em>选择</em> 避免加载负责硬件看门狗的模块。 通过 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Blacklisting">列入黑名单 </a>将相关模块 ，例如 <code>iTCO_wdt</code>. </p>
+<p><strong>注意：</strong> 一些用户 <a target="_blank" rel="noopener" href="https://bbs.archlinux.org/viewtopic.php?id=221239">报告 </a>了 <code>nowatchdog</code> 参数不能按预期工作，但是他们已通过将上述模块列入黑名单而成功禁用了看门狗（至少是硬件之一）。 </p>
+<p>这两种操作都会加快启动和关闭的速度，因为只加载了一个模块。 另外，禁用看门狗定时器可以提高性能并 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Power_management#Disabling_NMI_watchdog">降低功耗 </a>。 </p>
+<p>有关 请参见 [<a target="_blank" rel="noopener" href="https://bbs.archlinux.org/viewtopic.php?id=163768">3] </a>， ， [<a target="_blank" rel="noopener" href="https://bbs.archlinux.org/viewtopic.php?id=165834">4] </a>， [<a target="_blank" rel="noopener" href="http://0pointer.de/blog/projects/watchdog.html">5] </a>和 [<a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/watchdog/watchdog-parameters.html">6] </a>更多信息 。 </p>
+<h3 id="将硬件列入黑名单"><a href="#将硬件列入黑名单" class="headerlink" title="将硬件列入黑名单"></a>将硬件列入黑名单</h3><p>在内核模块的上下文中，黑名单是一种防止内核模块加载的机制。  例如，如果不需要关联的硬件，或者如果加载该模块会导致问题，这可能会很有用：例如，可能有两个内核模块试图控制同一硬件，然后将它们一起加载会导致冲突。 </p>
+<p>有些模块作为 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Initramfs">initramfs</a> 的一部分装入。</p>
+<p><code>mkinitcpio -M</code> 会显示所有自动检测到到模块：要阻止 initramfs 装入某些模块，可以在 <code>/etc/modprobe.d</code>中将它们加入黑名单。并应在映像生成过程中通过<code>modconf</code>挂钩将其添加。 </p>
+<p>运行 <code>mkinitcpio -v</code> 会显示各种钩子(例如 filesystem 钩子, SCSI 钩子等)装入的模块。如果您的<code>HOOKS</code> 数组中没有 <code>modconf</code> 钩子（例如，和默认配置不同）则请将该”.conf”文件添加到<code>/etc/mkinitcpio.conf</code>中的FILES数组中。一旦您将其列入黑名单，请重新生成 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Initramfs">initramfs</a>，然后重新启动。 </p>
+<h4 id="使用-etc-modprobe-d-中的文件"><a href="#使用-etc-modprobe-d-中的文件" class="headerlink" title="使用/etc/modprobe.d/中的文件"></a>使用/etc/modprobe.d/中的文件</h4><p>在 <code>/etc/modprobe.d/</code> 中创建 <code>.conf</code> 文件，使用 <code>blacklist</code> 关键字屏蔽不需要的模块，例如如果不想装入 <code>pcspkr</code> 模块：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/m</span>odprobe.d/nobeep.conf<br><span class="hljs-comment"># Do not load the &#x27;pcspkr&#x27; module on boot.</span><br>blacklist pcspkr<br></code></pre></td></tr></table></figure>
+
+<p><strong>注：</strong> 该 <code>blacklist</code> 该命令会将一个模块列入黑名单，因此不会自动加载该模块，但是如果另一个未列入黑名单的模块依赖该模块或手动加载该模块，则可能会加载该模块。 </p>
+<p>要避免这个行为，可以让 modprobe 使用自定义的 <code>install</code> 命令，而不是像往常一样将模块插入内核，因此您可以通过以下方式强制模块始终无法加载：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-regexp">/etc/m</span>odprobe.d/blacklist.conf<br>...<br>install MODULE <span class="hljs-regexp">/bin/</span><span class="hljs-keyword">true</span><br>...<br></code></pre></td></tr></table></figure>
+
+<p>这样就可以 “屏蔽” 模块及所有依赖它的模块。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">也就是在<span class="hljs-regexp">/etc/m</span>odprobe.d我创建watchdog.conf文件，写入下面两行<br>blacklist iTCO_wdt <br>blacklist iTCO_vendor_support<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="停用-watchdog"><a href="#停用-watchdog" class="headerlink" title="停用 watchdog"></a>停用 watchdog</h2><p>关机时提示：watchdog: watchdog0: watchdog did not stop! 在台式机和笔记本上安装 Manjaro 时可以停用 watchdog 模块<br><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Improving_performance#Watchdogs">提高性能#Watchdogs </a></p>
+<blockquote>
+<p>许多用户由于其系统的关键任务角色（即服务器）或缺乏电源重置（即嵌入式设备）而需要此功能。  因此，在某些情况下，良好的操作需要此功能。  另一方面，普通用户（即台式机和笔记本电脑）不需要此功能，可以禁用它。 </p>
+</blockquote>
+<p>按照 archlinux wiki 上的方法，在启动参数中添加  <code>nowatchdog</code> 不能停用 watchdog </p>
+<blockquote>
+<p>注意：一些用户报告 nowatchdog 参数没有按预期工作，但他们通过将上述模块列入黑名单，成功禁用了看门狗（至少是硬件）。 </p>
+</blockquote>
+<p>另一种方法是在内核启动参数中添加  <code>modprobe.blacklist=iTCO_wdt</code> 来禁用  <code>watchdog</code> 模块。<br>编辑  <code>/etc/default/grub</code> 在  <code>GRUB_CMDLINE_LINUX_DEFAULT</code> 后添加  <code>modprobe.blacklist=iTCO_wdt</code> 保存退出后执行  <code>sudo update-grub</code> 来应用配置。   </p>
+<blockquote>
+<p>编辑 <code>/etc/default/grub</code>并附加 <code>modprobe.blacklist=iTCO_wdt</code>到 <code>GRUB_CMDLINE_LINUX_DEFAULT</code>线 </p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Kernel_parameters#GRUB">内核参数#GRUB </a><br><a target="_blank" rel="noopener" href="https://bbs.archlinux.org/viewtopic.php?id=221239">静音关机。  看门狗：看门狗0：看门狗没有停止！ </a></p>
+<h2 id="开关机显示-dev-nvme0n1p5-clean-…-files-…blocks"><a href="#开关机显示-dev-nvme0n1p5-clean-…-files-…blocks" class="headerlink" title="开关机显示/dev/nvme0n1p5: clean, … files, …blocks"></a>开关机显示/dev/nvme0n1p5: clean, … files, …blocks</h2><p>1.在论坛里有提及这个问题</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">这两条命令显示一些日志信息<br><span class="hljs-keyword">journalctl </span>-<span class="hljs-keyword">b </span>-g nvme0n1p <br><span class="hljs-keyword">journalctl </span>-<span class="hljs-keyword">b </span>-u <span class="hljs-string">&#x27;systemd-fsck*&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>2.实际上根据</p>
+<p>得到结论：系统在检查硬盘有没有问题，显示<code>/dev/nvme0n1p5: clean</code>就表示没有问题，所以没必要理会这条信息</p>
+<h2 id="调整swap分区使用率"><a href="#调整swap分区使用率" class="headerlink" title="调整swap分区使用率"></a>调整swap分区使用率</h2><p>在内核版本为5.8之前，swappiness范围在0-100，内核大于5.8，范围是0-200。</p>
+<p>总的说来，swappiness值越小，越尽可能的使用内存而不是交换分区。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sysctl</span> -q vm.swappiness 显示当前设置<br><span class="hljs-attribute">sudo</span> sysctl -w vm.swappiness=<span class="hljs-number">10</span> 临时设置为<span class="hljs-number">10</span><br></code></pre></td></tr></table></figure>
+
+<p>To set the swappiness value permanently, create a <a target="_blank" rel="noopener" href="https://man.archlinux.org/man/sysctl.d.5">sysctl.d(5)</a> configuration file. For example:</p>
+<p>永久的调整该设置，创建下面的配置文件</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/</span>sysctl.d/<span class="hljs-number">99</span>-swappiness.conf<br>vm.swappiness=<span class="hljs-number">10</span>                              <br></code></pre></td></tr></table></figure>
+
+<h2 id="failed-to-start-pkgfile-database-update"><a href="#failed-to-start-pkgfile-database-update" class="headerlink" title="failed to start pkgfile database update"></a>failed to start pkgfile database update</h2><p>查看<code>pkgfile-update.service</code>和<code>pkgfile-update.timer</code>，我猜测这个任务会每天相隔6小时执行，开机和关机时会因为错过任务而补偿执行，但是开机和关机时没有网络，所以执行失败。在系统设置面板的systemed里找到并修改<code>pkgfile-update.timer</code>，修改为开机后15分钟执行，相隔1天重复执行，就不会看到错误信息了。<br> 这是修改后的<code>pkgfile-update.timer</code>文件。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Unit]</span><br><span class="hljs-attr">Description</span>=pkgfile database update timer<br><br><span class="hljs-section">[Timer]</span><br><span class="hljs-attr">OnBootSec</span>=<span class="hljs-number">15</span>min<br><span class="hljs-attr">OnUnitActiveSec</span>=<span class="hljs-number">1</span>d<br><span class="hljs-attr">Persistent</span>=<span class="hljs-literal">no</span><br><br><span class="hljs-section">[Install]</span><br><span class="hljs-attr">WantedBy</span>=multi-user.target<br></code></pre></td></tr></table></figure>
+
+<h2 id="软件源里没有grub-customer"><a href="#软件源里没有grub-customer" class="headerlink" title="软件源里没有grub-customer"></a>软件源里没有grub-customer</h2><p>去官网下载</p>
+<h1 id="释放内存"><a href="#释放内存" class="headerlink" title="释放内存"></a>释放内存</h1><p>Kernels 2.6.16  and newer provide a mechanism to have the kernel drop the page cache  and/or inode and dentry caches on command, which can help free up a lot  of memory.  Now you can throw away that script that allocated a ton of  memory just to get rid of the cache… </p>
+<p>To use <code>/proc/sys/vm/drop_caches</code>, just echo a number to it. </p>
+<p>To free pagecache: </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"># echo <span class="hljs-number">1</span> &gt; <span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/vm/</span>drop_caches<br></code></pre></td></tr></table></figure>
+
+<p>To free dentries and inodes: </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"># echo <span class="hljs-number">2</span> &gt; <span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/vm/</span>drop_caches<br></code></pre></td></tr></table></figure>
+
+<p>To free pagecache, dentries and inodes: </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">echo <span class="hljs-number">3</span> &gt; <span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/vm/</span>drop_caches<br>echo <span class="hljs-number">3</span> | sudo tee <span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/vm/</span>drop_caches <span class="hljs-regexp">//</span>与上面一个作用<br></code></pre></td></tr></table></figure>
+
+<p>This is a non-destructive operation and will only free things that are  completely unused.  Dirty objects will continue to be in use until  written out to disk and are not freeable.  If you run “sync” first to  flush them out to disk, these drop operations will tend to free more  memory. </p>
+<h1 id="日志管理"><a href="#日志管理" class="headerlink" title="日志管理"></a>日志管理</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo journalctl --disk-usage                #查看日志大小<br>sudo journalctl --vacuum-time=5d                  #超过5天的自动删除<br>sudo journalctl --vacuum-size=500M                #超过500M的自动删除<br>sudo rm /var/lib/systemd/coredump/*             #崩溃日志，文件不多，也不大，删不删随你<br></code></pre></td></tr></table></figure>
+
+<h2 id="清空-var-log-journal-文件的方法"><a href="#清空-var-log-journal-文件的方法" class="headerlink" title="清空 /var/log/journal 文件的方法"></a>清空 /var/log/journal 文件的方法</h2><p>1、用echo命令，将空字符串内容重定向到指定文件中</p>
+<p>echo “” &gt; system.journal</p>
+<p>说明：此方法只会清空一次，一段时间后还要再次手动清空很麻烦，这里可以用以下命令让journalctl 自动维护空间</p>
+<p>2、journalctl 命令自动维护文件大小</p>
+<p>1）只保留近一周的日志</p>
+<p>journalctl –vacuum-time=1w</p>
+<p>2）只保留500MB的日志</p>
+<p>journalctl –vacuum-size=500M</p>
+<p>3）直接删除 <strong>/var/log/journal/</strong> 目录下的日志文件</p>
+<p>rm -rf /var/log/journal/f9d400c5e1e8c3a8209e990d887d4ac1</p>
+<h2 id="问题与分析解决"><a href="#问题与分析解决" class="headerlink" title="问题与分析解决"></a>问题与分析解决</h2><p>执行 journalctl 命令时报错：Error was encountered while opening journal files: Input/output error</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"># journalctl --vacuum-time=1w<br><span class="hljs-built_in">Error</span> was encountered <span class="hljs-keyword">while</span> opening journal files: Input/output error<br></code></pre></td></tr></table></figure>
+
+<p>问题分析：日志文件损坏</p>
+<p>解决方法：删除之前的日志，并重启 journalctl 服务</p>
+<p>mv journal/f9d400c5e1e8c3a8209e990d887d4ac1 journal/f9d400c5e1e8c3a8209e990d887d4ac1_bk_20190122</p>
+<p>systemctl restart systemd-journald.service</p>
+<p>查看 /var/log/journal/ 日志目录如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript">#ll /<span class="hljs-keyword">var</span>/log/journal/<br>drwxr-sr-x  <span class="hljs-number">2</span> root systemd-journal  <span class="hljs-number">4096</span> Jan <span class="hljs-number">22</span> <span class="hljs-number">11</span>:<span class="hljs-number">26</span> f9d400c5e1e8c3a8209e990d887d4ac1<br>drwxr-sr-x+ <span class="hljs-number">2</span> root systemd-journal <span class="hljs-number">12288</span> Jan <span class="hljs-number">14</span> <span class="hljs-number">15</span>:<span class="hljs-number">37</span> f9d400c5e1e8c3a8209e990d887d4ac1_bk_20190122<br></code></pre></td></tr></table></figure>
+
+<p>然后，再执行 journalctl 限制日志的命令：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"># journalctl --vacuum-time=1w<br>Vacuuming done, freed 0B <span class="hljs-keyword">of</span> archived journals on disk.<br># journalctl --vacuum-size=500M<br>Vacuuming done, freed 0B <span class="hljs-keyword">of</span> archived journals on disk.<br></code></pre></td></tr></table></figure>
+
+<h1 id="plasmashell"><a href="#plasmashell" class="headerlink" title="plasmashell"></a>plasmashell</h1><p><strong>可以直接在<code>krunner</code>中运行按 <code>alt+F2 </code>打开<code> krunner</code>。</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># kde4</span><br>killall plasmashell &amp;&amp; kstart plasmashell<br>kquitapp5 plasmashell &amp;&amp; kstart plasmashell<br><span class="hljs-comment"># kde5</span><br>killall plasmashell &amp;&amp; kstart5 plasmashell<br>kquitapp5 plasmashell &amp;&amp; kstart5 plasmashell<br></code></pre></td></tr></table></figure>
+
+<h2 id="重启plasmashell脚本"><a href="#重启plasmashell脚本" class="headerlink" title="重启plasmashell脚本"></a>重启plasmashell脚本</h2><h3 id="脚本文件内容"><a href="#脚本文件内容" class="headerlink" title="脚本文件内容"></a>脚本文件内容</h3><p>具体内容：</p>
+<figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs d">#bash<br><br><span class="hljs-meta">#! /bin/bash</span><br>kquitapp5 plasmashell &amp;&amp; kstart5 plasmashell<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>命名：restart_kde，注意，没有后缀名</li>
+</ul>
+<hr>
+<h1 id="脚本放进环境变量（以上面kde-restart为例）"><a href="#脚本放进环境变量（以上面kde-restart为例）" class="headerlink" title="脚本放进环境变量（以上面kde_restart为例）"></a>脚本放进环境变量（以上面kde_restart为例）</h1><h2 id="赋权"><a href="#赋权" class="headerlink" title="赋权"></a>赋权</h2><p>使用文本工具或者<code>vim</code>进行编写，编写完成后对其进行运行权限的赋权：</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs llvm">sudo chmod +<span class="hljs-keyword">x</span> restart_kde<br></code></pre></td></tr></table></figure>
+
+<h2 id="复制至bin文件夹"><a href="#复制至bin文件夹" class="headerlink" title="复制至bin文件夹"></a>复制至bin文件夹</h2><p>将脚本文件移至<code>path</code>中指定的系统变量路径，可放至<code>/usr/local/sbin</code>、<code>/usr/local/bin</code>，<code>/usr/bin</code>中。</p>
+<p>移动命令：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo cp restart_kde <span class="hljs-regexp">/usr/</span>bin<br></code></pre></td></tr></table></figure>
+
+<h2 id="除了系统目录，也可以自己创建存放脚本的目录"><a href="#除了系统目录，也可以自己创建存放脚本的目录" class="headerlink" title="除了系统目录，也可以自己创建存放脚本的目录"></a><strong>除了系统目录，也可以自己创建存放脚本的目录</strong></h2><h3 id="复制至自定义目录"><a href="#复制至自定义目录" class="headerlink" title="复制至自定义目录"></a>复制至自定义目录</h3><p>1.在任意位置创建任意目录：比如<code>~/存档/Linux/bin </code></p>
+<p>2.然后修改环境变量<code>export PATH=$PATH:路径</code></p>
+<ul>
+<li><p>bash</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#m打开.bashrc文件</span><br>nano ~/.bashrc<br>添加下面一行<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$PATH</span>:~/存档/Linux/bin<br></code></pre></td></tr></table></figure></li>
+<li><p>zsh</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#打开.zshrc文件</span><br>nano ~/.zshrc<br>添加下面一行<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$PATH</span>:~/存档/Linux/bin<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ul>
+<li>用<code>KRunner</code>，<code>Alt</code>+<code>Space</code>唤醒，确保<code>KRunner</code>拥有执行命令的功能</li>
+<li>输入<code>restart_kde</code>即可</li>
+</ul>
+<h1 id="安装多个JDK时"><a href="#安装多个JDK时" class="headerlink" title="安装多个JDK时"></a>安装多个<code>JDK</code>时</h1><p>我这里先安装的 <code>jdk8-openjdk</code>，后安装 <code>jdk16</code></p>
+<p><code>sudo pacman -S jdk-openjdk </code>默认就是16版本</p>
+<p>安装 <code>jdk16</code>时提示：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">Default</span> Java environment <span class="hljs-keyword">is</span> already <span class="hljs-keyword">set</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;java-8-openjdk&#x27;</span><br>See <span class="hljs-string">&#x27;archlinux-java help&#x27;</span> <span class="hljs-keyword">to</span> change it<br><span class="hljs-keyword">when</span> you use a non-reparenting <span class="hljs-keyword">window</span> manager,<br><span class="hljs-keyword">set</span> _JAVA_AWT_WM_NONREPARENTING=<span class="hljs-number">1</span> <span class="hljs-keyword">in</span> /etc/profile.d/jre.sh<br></code></pre></td></tr></table></figure>
+
+<h2 id="切换-JDK-版本"><a href="#切换-JDK-版本" class="headerlink" title="切换 JDK 版本"></a>切换 <code>JDK</code> 版本</h2><h2 id="使用archlinux-java命令切换JDK-版本"><a href="#使用archlinux-java命令切换JDK-版本" class="headerlink" title="使用archlinux-java命令切换JDK 版本"></a>使用<code>archlinux-java</code>命令切换<code>JDK</code> 版本</h2><p><code>archlinux-java help</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">archlinux-java &lt;COMMAND&gt;<br><br>COMMAND:<br>    status      List installed Java environments and enabled one<br>    get     Return the short name of the Java environment <span class="hljs-built_in">set</span> as default<br>    <span class="hljs-built_in">set</span> &lt;JAVA_ENV&gt;  Force &lt;JAVA_ENV&gt; as default<br>    <span class="hljs-built_in">unset</span>       Unset current default Java environment<br>    fix     Fix an invalid/broken default Java environment configuration<br></code></pre></td></tr></table></figure>
+
+<h3 id="set-lt-JAVA-ENV-gt-就是设置默认环境的方法"><a href="#set-lt-JAVA-ENV-gt-就是设置默认环境的方法" class="headerlink" title="set &lt;JAVA_ENV&gt; 就是设置默认环境的方法"></a><code>set &lt;JAVA_ENV&gt;</code> 就是设置默认环境的方法</h3><ul>
+<li>set 之前</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">java -version                                                                            1 ↵ ──(六,10月09)─┘<br>openjdk version <span class="hljs-string">&quot;1.8.0_292&quot;</span><br>OpenJDK Runtime Environment (build 1.8.0_292-b10)<br>OpenJDK 64-Bit Server VM (build 25.292-b10, mixed mode)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>set之后</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">java -version                                                                                ──(六,10月09)─┘<br>openjdk version <span class="hljs-string">&quot;16.0.2&quot;</span> 2021-07-20<br>OpenJDK Runtime Environment (build 16.0.2+7)<br>OpenJDK 64-Bit Server VM (build 16.0.2+7, mixed mode)<br></code></pre></td></tr></table></figure>
+
+<h1 id="ranger"><a href="#ranger" class="headerlink" title="ranger"></a>ranger</h1><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ol>
+<li><p>配置文件</p>
+<p>首先复制配置文件到主目录:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs none">ranger --copy-config=all<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>然后自己到~/.config/ranger中配置各种选项即可</p>
+<ol start="2">
+<li><p>配置ranger<br>在～/.config/ranger中有ranger的配置文件.<br>找到文件<code>scope.sh</code>中, 在externsions部分注释掉不想预览的文件类型, 在那行上面添加”#”注释掉即可. ranger在预览rar等压缩包时会运行得比较慢.<br><code>rc.conf</code>保存着快捷键的说明</p>
+</li>
+<li><p>自动挂载U盘等外部存储位置,需要安装usbmount:</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs none">sudo apt-get install usbmount<br>sudo vim /etc/usbmount/usbmount.conf<br></code></pre></td></tr></table></figure>
+
+<p>在<code>MOUNTOPTIONS</code>那行添加<code>user</code>即可使普通用户也对挂载的U盘拥有写权限, 如下:<br><code>MOUNTOPTIOS=&quot;rw,user,noatime,nodiratime&quot; </code></p>
+<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><p>下面列出常用操作的快捷键</p>
+<p>?  查看帮助</p>
+<h3 id="浏览"><a href="#浏览" class="headerlink" title="浏览:"></a>浏览:</h3><p>H   后退<br>L   前进<br>gg  跳到顶端<br>G   跳到底端<br>gh  go home<br>gn  新建标签<br>f   查找<br>/   搜素<br>g   快速进入目录</p>
+<h3 id="编辑"><a href="#编辑" class="headerlink" title="编辑:"></a>编辑:</h3><p>space   选择<br>uv      取消选择</p>
+<p>yy      复制<br>dd      剪切<br>pp      粘贴<br>delete  删除<br>cw      重命名<br>A       在当前名称基础上重命名<br>I       类似A, 但是光标会跳到起始位置<br>Ctrl-f  向下翻页<br>Ctrl-b  向上翻页</p>
+<h3 id="书签"><a href="#书签" class="headerlink" title="书签:"></a>书签:</h3><p>m       新建书签<br>`       打开书签<br>um      删除书签</p>
+<h3 id="标签"><a href="#标签" class="headerlink" title="标签:"></a>标签:</h3><p>gn / C-n        新建标签<br>TAB / S-TAB     切换标签<br>A-Right, A-Left 切换标签<br>gc / C-w        关闭标签</p>
+<h3 id="排序"><a href="#排序" class="headerlink" title="排序:"></a>排序:</h3><p>on/ob   根据文件名进行排序(natural/basename)<br>oc      根据改变时间进行排序 (Change Time 文件的权限组别和文件自身数据被修改的时间)<br>os      根据文件大小进行排序(Size)<br>ot      根据后缀名进行排序 (Type)</p>
+<p>oa      根据访问时间进行排序 (Access Time 访问文件自身数据的时间)<br>om      根据修改进行排序 (Modify time 文件自身内容被修改的时间)</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他:"></a>其他:</h3><p>zh      显示隐藏文件</p>
+<p>zp      打开/关闭文件预览功能<br>zP      打开目录预览功能</p>
+<h3 id="链接-Link"><a href="#链接-Link" class="headerlink" title="链接(Link):"></a>链接(Link):</h3><p>pl      粘贴绝对路径的链接<br>pL      粘贴相对路径的链接<br>phl     硬链接</p>
+<h3 id="批量改名"><a href="#批量改名" class="headerlink" title="批量改名:"></a>批量改名:</h3><p>批量选择文件后, 键入命令:bulkname, 会打开编辑器, 其中的文件名编辑后保存退出, 再次打开操作确认编辑, 然后就批量改名了, 如果想取消批量改名, 在确认时把文件内容删除即可.</p>
+<h3 id="任务管理"><a href="#任务管理" class="headerlink" title="任务管理:"></a>任务管理:</h3><p>在执行某些操作(比如复制一个大文件)时不能立即完成, 这在 ranger 中就是一个任务. 你可以停止, 启动某个任务, 也可以对某个任务设置优先级.</p>
+<p>w: 打开/关闭任务视图. 在w打开的任务视图中:<br>    dd: 终止一个任务<br>    J: 降低当前任务的优先级<br>    K: 提升当前任务的优先级</p>
+<h3 id="其他-1"><a href="#其他-1" class="headerlink" title="其他:"></a>其他:</h3><ul>
+<li><p>zf      过滤器(如过滤pdf文件, zf+pdf,回车) S       在当前目录打开终端 z(*)    改变设置, <em>表示在弹出选项中的选择 o(</em>)    改变排序方式 ! / s   使用shell命令(！shell -w ls -hl %s,%s代表当前被选中的文件)</p>
+<p>使用ranger命令(3? 查看可用命令) :set colorscheme snow 设置颜色模式</p>
+</li>
+</ul>
+<h2 id="快速预览"><a href="#快速预览" class="headerlink" title="快速预览"></a>快速预览</h2><p>安装一下程序可以实现快速预览:</p>
+<p>elinks, html<br>highlight,text/code<br>img2txt,image<br>atool,压缩包<br>pdf2text,pdf<br>medinfo,audio/video</p>
+<hr>
+<h1 id="字体调整"><a href="#字体调整" class="headerlink" title="字体调整"></a>字体调整</h1><p><strong>提示：</strong> 中文用户在安装思源cjk全集或者noto-cjk全集后，部分文字显示为日文异形字体，可参看<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Arch_Linux_Localization_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E4%BF%AE%E6%AD%A3%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%E6%98%BE%E7%A4%BA%E4%B8%BA%E5%BC%82%E4%BD%93%EF%BC%88%E6%97%A5%E6%96%87%EF%BC%89%E5%AD%97%E5%BD%A2">Arch Linux Localization (简体中文)#修正简体中文显示为异体（日文）字形</a> 进行解决。</p>
+<h2 id="字体安装和配置"><a href="#字体安装和配置" class="headerlink" title="字体安装和配置"></a>字体安装和配置</h2><p><code>noto-fonts-cjk</code>-Google Noto CJK 字体， 提供简体中文、繁体中文、日文、韩文一致的设计和外观。它是基于是<code>adobe-source-han-sans-otc-fonts</code>重贴的商标。所以选择一个安装。</p>
+<h2 id="安装的字体"><a href="#安装的字体" class="headerlink" title="安装的字体"></a>安装的字体</h2><ul>
+<li><p>思源字体（不安装cjk版本，仅安装cn版本，避免火狐异体字问题）：</p>
+<ul>
+<li><code>adobe-source-han-serif-cn-fonts</code></li>
+<li><code>adobe-source-han-sans-cn-fonts</code></li>
+</ul>
+</li>
+<li><p>文泉驿正黑</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=wqy-zenhei">wqy-zenhei</a> - 文泉驿正黑体，黑体 (无衬线) 的中文轮廓字体，附带文泉驿点阵宋体 (也支持部分日韩字符)。</li>
+<li><a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=wqy-bitmapfont">wqy-bitmapfont</a> - 文泉驿点阵宋体 (衬线) 中文字体。</li>
+</ul>
+</li>
+<li><p>文泉驿微米黑</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=wqy-microhei">wqy-microhei</a> - 文泉驿微米黑，无衬线形式字体。</li>
+<li><a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=wqy-microhei-lite">wqy-microhei-lite</a> - 文泉驿微米黑light版（笔画更细）。</li>
+</ul>
+</li>
+<li><p>windows字体</p>
+</li>
+</ul>
+<p>​        把windows的字体复制到<code>~/.local/share/fonts/WindowsFonts</code>目录下</p>
+<h2 id="配置font"><a href="#配置font" class="headerlink" title="配置font"></a>配置font</h2><ul>
+<li>修改<code>~/.config/fontconfig/fonts.conf</code>配置文件</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><code class="hljs xml">原理就是把某些符合条件的字体请求映射到我们定义的字体<br><span class="hljs-meta">&lt;?xml version=&#x27;1.0&#x27;?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">fontconfig</span> <span class="hljs-meta-keyword">SYSTEM</span> <span class="hljs-meta-string">&#x27;urn:fontconfig:fonts.dtd&#x27;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">fontconfig</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">dir</span>&gt;</span>~/.fonts<span class="hljs-tag">&lt;/<span class="hljs-name">dir</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">dir</span>&gt;</span>~/.local/share/fonts/<span class="hljs-tag">&lt;/<span class="hljs-name">dir</span>&gt;</span><br> <span class="hljs-comment">&lt;!-- </span><br><span class="hljs-comment"> Artificial oblique for fonts without an italic or oblique version</span><br><span class="hljs-comment"> --&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;font&quot;</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- check to see if the font is roman --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;slant&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">const</span>&gt;</span>roman<span class="hljs-tag">&lt;/<span class="hljs-name">const</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- check to see if the pattern requested non-roman --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;pattern&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;slant&quot;</span> <span class="hljs-attr">compare</span>=<span class="hljs-string">&quot;not_eq&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">const</span>&gt;</span>roman<span class="hljs-tag">&lt;/<span class="hljs-name">const</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- multiply the matrix to slant the font --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;matrix&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">times</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>matrix<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">matrix</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">double</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">double</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">double</span>&gt;</span>0.2<span class="hljs-tag">&lt;/<span class="hljs-name">double</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">double</span>&gt;</span>0<span class="hljs-tag">&lt;/<span class="hljs-name">double</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">double</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">double</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">matrix</span>&gt;</span><br>   <span class="hljs-tag">&lt;/<span class="hljs-name">times</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- pretend the font is oblique now --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;slant&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">const</span>&gt;</span>oblique<span class="hljs-tag">&lt;/<span class="hljs-name">const</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- and disable embedded bitmaps for artificial oblique --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;embeddedbitmap&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">bool</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment"> Synthetic emboldening for fonts that do not have bold face available</span><br><span class="hljs-comment"> --&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;font&quot;</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- check to see if the weight in the font is less than medium which possibly need emboldening --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;weight&quot;</span> <span class="hljs-attr">compare</span>=<span class="hljs-string">&quot;less_eq&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">const</span>&gt;</span>medium<span class="hljs-tag">&lt;/<span class="hljs-name">const</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- check to see if the pattern requests bold --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;pattern&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;weight&quot;</span> <span class="hljs-attr">compare</span>=<span class="hljs-string">&quot;more_eq&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">const</span>&gt;</span>bold<span class="hljs-tag">&lt;/<span class="hljs-name">const</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">		  set the embolden flag</span><br><span class="hljs-comment">		  needed for applications using cairo, e.g. gucharmap, gedit, ...</span><br><span class="hljs-comment">		--&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;embolden&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">bool</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">		 set weight to bold</span><br><span class="hljs-comment">		 needed for applications using Xft directly, e.g. Firefox, ...</span><br><span class="hljs-comment">		--&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;weight&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">const</span>&gt;</span>bold<span class="hljs-tag">&lt;/<span class="hljs-name">const</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-comment">&lt;!--   自定义开始--&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;font&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;embeddedbitmap&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">bool</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">qual</span>=<span class="hljs-string">&quot;any&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>serif<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">binding</span>=<span class="hljs-string">&quot;strong&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;prepend&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>Noto Serif<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;pattern&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">qual</span>=<span class="hljs-string">&quot;any&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>sans-serif<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">binding</span>=<span class="hljs-string">&quot;strong&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;prepend&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>Roboto<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;pattern&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">qual</span>=<span class="hljs-string">&quot;any&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>monospace<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">binding</span>=<span class="hljs-string">&quot;strong&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;prepend&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>DejaVu Sans Mono<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;lang&quot;</span> <span class="hljs-attr">compare</span>=<span class="hljs-string">&quot;contains&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>zh<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>serif<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;prepend&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>Source Han Serif CN<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;lang&quot;</span> <span class="hljs-attr">compare</span>=<span class="hljs-string">&quot;contains&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>zh<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>sans-serif<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;prepend&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>Source Han Sans CN<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;lang&quot;</span> <span class="hljs-attr">compare</span>=<span class="hljs-string">&quot;contains&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>zh<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>monospace<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;prepend&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>WenQuanYi Micro Hei Mono<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-comment">&lt;!--WenQuanYi Zen Hei -&gt; WenQuanYi Micro Hei --&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;pattern&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">qual</span>=<span class="hljs-string">&quot;any&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>WenQuanYi Zen Hei<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">binding</span>=<span class="hljs-string">&quot;same&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>WenQuanYi Micro Hei<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;pattern&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">qual</span>=<span class="hljs-string">&quot;any&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>WenQuanYi Zen Hei Lite<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">binding</span>=<span class="hljs-string">&quot;same&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>WenQuanYi Micro Hei Lite<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;pattern&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">test</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">qual</span>=<span class="hljs-string">&quot;any&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>WenQuanYi Zen Hei Mono<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">test</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">binding</span>=<span class="hljs-string">&quot;same&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;family&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>WenQuanYi Micro Hei Mono<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-comment">&lt;!--   自定义结束--&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;font&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hinting&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">bool</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">match</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;font&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">edit</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hintstyle&quot;</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;assign&quot;</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">const</span>&gt;</span>hintslight<span class="hljs-tag">&lt;/<span class="hljs-name">const</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">edit</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">match</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">fontconfig</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<h2 id="修正简体中文显示为异体（日文）字形"><a href="#修正简体中文显示为异体（日文）字形" class="headerlink" title="修正简体中文显示为异体（日文）字形"></a>修正简体中文显示为异体（日文）字形</h2><ul>
+<li><p>上面安装了windows字体，要禁用或删除windows字体中的<code>Candara</code>字体，因为它会显示异体字。</p>
+<hr>
+</li>
+</ul>
+<p>安装的 Noto Sans CJK 或 <a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=adobe-source-han-sans-otc-fonts">adobe-source-han-sans-otc-fonts</a>（思源黑体）或 <a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=adobe-source-han-serif-otc-fonts">adobe-source-han-serif-otc-fonts</a>（思源宋体）后，在某些情况下（框架未定义地区）汉字字形与标准形态不符，例如门、关、复等字字形与规范中文不符。</p>
+<p>这是因为每个程序中可以设置不同的默认字体，比如 Arial 或者 Tohamo，而这些字体的属性由 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Fontconfig_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">fontconfig</a> 控制，其使用顺序是据地区代码以 A-Z 字母表顺序成默认排序，由于 <code>ja-JP</code> 在 <code>zh_&#123;CN,HK,SG,TW&#125;</code> 之前，故优先显示日文字形。</p>
+<p><strong>提示：</strong> Chromium/Chrome/Firefox 浏览器的设置中可单独设置字体，例如将字体选项调成 Noto xxx CJK SC。</p>
+<p>可选用以下方法解决（以简体中文为例）：</p>
+<ul>
+<li><p>只安装 cjk 中的简体中文字体，例如思源黑体简体中文包 <a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=adobe-source-han-sans-cn-fonts">adobe-source-han-sans-cn-fonts</a>、<a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=adobe-source-han-serif-cn-fonts">adobe-source-han-serif-cn-fonts</a> 或者 <a target="_blank" rel="noopener" href="https://aur.archlinux.org/packages/noto-fonts-sc/">noto-fonts-sc</a>AUR。</p>
+</li>
+<li><p>在 <code>locale.conf</code> 中添加 <code>LANG=zh_CN.UTF-8</code>，以将简体中文设置为默认语言。由于对 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Locale_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">Locale</a> 定义了框架内地区（即 CJK 优先度），使得默认的优先级被忽略。</p>
+</li>
+<li><p>手动调整优先级，将中文字形调整到日文字形之前。[<a target="_blank" rel="noopener" href="https://tieba.baidu.com/p/4879946717">3]</a>在 <code>/etc/fonts/conf.d/</code> 或 <code>/etc/fonts/conf.avail/</code> 下创建文件，例如 <code>64-language-selector-prefer.conf</code>，也可以修改或创建 <code>~/.fonts.conf</code>或在<code>~/.config/fontconfig/conf.d/</code>创建后缀为.conf的文件（仅对该用户生效）。例如针对<a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=noto-fonts-cjk">noto-fonts-cjk</a>的规则，写入：</p>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">fontconfig</span> <span class="hljs-meta-keyword">SYSTEM</span> <span class="hljs-meta-string">&quot;fonts.dtd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">fontconfig</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">alias</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>sans-serif<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">prefer</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Noto Sans CJK SC<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Noto Sans CJK TC<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Noto Sans CJK JP<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">prefer</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">alias</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">alias</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>monospace<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">prefer</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Noto Sans Mono CJK SC<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Noto Sans Mono CJK TC<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Noto Sans Mono CJK JP<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">prefer</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">alias</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">fontconfig</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果安装的是 <a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=adobe-source-han-sans-otc-fonts">adobe-source-han-sans-otc-fonts</a>，写入：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">fontconfig</span> <span class="hljs-meta-keyword">SYSTEM</span> <span class="hljs-meta-string">&quot;fonts.dtd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">fontconfig</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">alias</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>sans-serif<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">prefer</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Source Han Sans SC<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Source Han Sans TC<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Source Han Sans HW<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Source Han Sans K<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">prefer</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">alias</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">alias</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>monospace<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">prefer</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Source Han Sans SC<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Source Han Sans TC<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Source Han Sans HW<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Source Han Sans K<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">prefer</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">alias</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">fontconfig</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>注意，如果你是在 <code>/etc/fonts/conf.avail</code> 目录下创建的 xml 文件，则将该 xml 文件软链接到 <code>/etc/fonts/conf.d</code> 下，例如：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"># ln -s <span class="hljs-regexp">/etc/</span>fonts<span class="hljs-regexp">/conf.avail/</span><span class="hljs-number">64</span>-language-selector-prefer.conf <span class="hljs-regexp">/etc/</span>fonts<span class="hljs-regexp">/conf.d/</span><span class="hljs-number">64</span>-language-selector-prefer.conf<br></code></pre></td></tr></table></figure>
+
+<p>然后更新字体缓存即可生效：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># fc-cache -fv</span><br></code></pre></td></tr></table></figure>
+
+<p>执行以下命令检查，如果出现 <code>NotoSansCJK-Regular.ttc: &quot;Noto Sans CJK SC&quot; &quot;Regular&quot;</code> 则表示设置成功：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim"># fc-<span class="hljs-keyword">match</span> -s | <span class="hljs-keyword">grep</span> <span class="hljs-string">&#x27;Noto Sans CJK&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="kde-美化"><a href="#kde-美化" class="headerlink" title="kde 美化"></a>kde 美化</h1><h2 id="安装主题管理"><a href="#安装主题管理" class="headerlink" title="安装主题管理"></a>安装主题管理</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> pacman -S kvantum-qt<span class="hljs-number">5</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="主题位置"><a href="#主题位置" class="headerlink" title="主题位置"></a>主题位置</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs awk">AURORAE_DIR=<span class="hljs-string">&quot;$HOME/.local/share/aurorae/themes&quot;</span><span class="hljs-regexp">//</span>窗口装饰元素<br>PLASMA_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/desktoptheme&quot;</span><span class="hljs-regexp">//</span>plasma样式<br>LAYOUT_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/layout-templates&quot;</span><span class="hljs-regexp">//</span>无<br>LOOKFEEL_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/look-and-feel&quot;</span>总体的预览/全局主题<br>SCHEMES_DIR=<span class="hljs-string">&quot;$HOME/.local/share/color-schemes&quot;</span><span class="hljs-regexp">//</span>颜色<br>KVANTUM_DIR=<span class="hljs-string">&quot;$HOME/.config/Kvantum&quot;</span><br>WALLPAPER_DIR=<span class="hljs-string">&quot;$HOME/.local/share/wallpapers&quot;</span><br>   				<span class="hljs-variable">$HOME</span><span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/icons/</span> <span class="hljs-regexp">//</span>存放鼠标或图标<br><span class="hljs-variable">$HOME</span><span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/plasma/</span>plasmoids/ 存放插件<br>以上目录如果没有就自行创建。<br><br>壁纸位置在<span class="hljs-regexp">/home/</span>kiylx<span class="hljs-regexp">/.local/</span>share/wallpapers 更改为此文件夹下的文件就可以改壁纸<br><span class="hljs-number">1</span>.更换登录壁纸 :菜单-系统设置-工作区-工作空间行为-锁屏-外观-接下来选取你喜欢的图片即可<br><span class="hljs-number">2</span>.更换锁屏壁纸 :菜单-系统设置-工作区-工作空间行为-锁屏-外观-接下来选取你喜欢的图片即可<br><span class="hljs-number">3</span>.更换登录屏幕的壁纸：菜单-系统设置-工作区-开机和关机-登录屏幕-接下来选取你喜欢的动画即可<br><span class="hljs-number">4</span>.更换开机动画：菜单-系统设置-工作区-开机和关机-欢迎屏幕<br><span class="hljs-number">5</span>.设置双击打开文件夹，单击选择：菜单-系统设置-工作区-工作空间行为-常规行为-点击行为<br></code></pre></td></tr></table></figure>
+
+<h2 id="重启plasmashell"><a href="#重启plasmashell" class="headerlink" title="重启plasmashell"></a>重启plasmashell</h2><h3 id="直接杀死并重启"><a href="#直接杀死并重启" class="headerlink" title="直接杀死并重启"></a>直接杀死并重启</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sh">killall plasmashell    <span class="hljs-comment"># 杀死 kde plasma 的进程</span><br><span class="hljs-comment"># kde4</span><br>kstart plasmashell    <span class="hljs-comment"># 重新启动 plasma 桌面会话</span><br><span class="hljs-comment"># kde5</span><br>kstart5 plasmashell    <span class="hljs-comment"># 重新启动 plasma 桌面会话</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="退出并重启"><a href="#退出并重启" class="headerlink" title="退出并重启"></a>退出并重启</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sh">kquitapp5 plasmashell    <span class="hljs-comment"># 退出kde桌面</span><br><span class="hljs-comment"># kde4</span><br>kstart plasmashell    <span class="hljs-comment"># 重新启动 plasma 桌面会话</span><br><span class="hljs-comment"># kde5</span><br>kstart5 plasmashell    <span class="hljs-comment"># 重新启动 plasma 桌面会话</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="主题推荐"><a href="#主题推荐" class="headerlink" title="主题推荐"></a>主题推荐</h2><h2 id="图标"><a href="#图标" class="headerlink" title="图标"></a>图标</h2><p><a target="_blank" rel="noopener" href="https://gitlab.gnome.org/GNOME/adwaita-icon-theme">adwaita</a></p>
+<h2 id="鼠标指针："><a href="#鼠标指针：" class="headerlink" title="鼠标指针："></a>鼠标指针：</h2><h2 id="整体样式"><a href="#整体样式" class="headerlink" title="整体样式"></a>整体样式</h2><ul>
+<li>应用商店搜索：materia-kde</li>
+</ul>
+<ul>
+<li>gtk样式：orchis</li>
+</ul>
+<h2 id="应用程序样式"><a href="#应用程序样式" class="headerlink" title="应用程序样式"></a>应用程序样式</h2><ul>
+<li>更现代化的样式 <a target="_blank" rel="noopener" href="https://github.com/Luwx/Lightly">lightly-qt</a></li>
+<li>gnome的样式 <a target="_blank" rel="noopener" href="https://github.com/FedoraQt/adwaita-qt">adwaita-qt</a></li>
+</ul>
+<h2 id="dock栏"><a href="#dock栏" class="headerlink" title="dock栏"></a>dock栏</h2><ul>
+<li>latte dock</li>
+</ul>
+<h2 id="顶栏"><a href="#顶栏" class="headerlink" title="顶栏"></a>顶栏</h2><ul>
+<li><p>applet-window-appmenu</p>
+<p>提供了顶栏的全局菜单，比自带的好用</p>
+<p>应用商店搜索<code>plasma5-applets-window-appmenu-git</code></p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs subunit">github： https://github.com/psifidotos/applet-window-appmenu<br>调用 sh install.sh安装，安装之前应该查看INSTALLATION.md安装编译环境，但是可以在<br>应用商店查找plasma5-applets-window-appmenu-git，安装别人做好的。<br>构建依赖：<br>[2021<span class="hljs-string">-08</span><span class="hljs-string">-14</span>T22:20:17<span class="hljs-string">+0800</span>] [ALPM] installed plasma5-applets-window-appmenu-git (0.7.1.r0.gcdbc943<span class="hljs-string">-1</span>)<br>[2021<span class="hljs-string">-08</span><span class="hljs-string">-14</span>T22:19:48<span class="hljs-string">+0800</span>] [ALPM] installed extra-cmake-modules (5.84.0<span class="hljs-string">-1</span>)<br>[2021<span class="hljs-string">-08</span><span class="hljs-string">-14</span>T22:19:48<span class="hljs-string">+0800</span>] [ALPM] installed cmake (3.21.1<span class="hljs-string">-1</span>)<br>[2021<span class="hljs-string">-08</span><span class="hljs-string">-14</span>T22:19:47<span class="hljs-string">+0800</span>] [ALPM] installed libuv (1.42.0<span class="hljs-string">-1</span>)<br>[2021<span class="hljs-string">-08</span><span class="hljs-string">-14</span>T22:19:47<span class="hljs-string">+0800</span>] [ALPM] installed jsoncpp (1.9.4<span class="hljs-string">-1</span>)<br>[2021<span class="hljs-string">-08</span><span class="hljs-string">-14</span>T22:19:47<span class="hljs-string">+0800</span>] [ALPM] installed rhash (1.4.2<span class="hljs-string">-1</span>)<br></code></pre></td></tr></table></figure></li>
+<li><p>applet-window-buttons</p>
+<p>提供窗口管理按钮</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">github：https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/psifidotos/</span>applet-window-buttons<br>上面的菜单使用应用商店安装好后，编译环境还没被卸载，可以直接clone这个applet-window-buttons库下来，调用sh install.sh安装这个button插件<br><br></code></pre></td></tr></table></figure></li>
+<li><p>[顶栏显示应用的标题和图标]: <a target="_blank" rel="noopener" href="https://github.com/psifidotos/applet-window-title">https://github.com/psifidotos/applet-window-title</a></p>
+</li>
+</ul>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><h3 id="kwin脚本"><a href="#kwin脚本" class="headerlink" title="kwin脚本"></a>kwin脚本</h3><h3 id="applet"><a href="#applet" class="headerlink" title="applet"></a>applet</h3><ul>
+<li>日历插件<code>plasma5-applets-eventcalendar</code>，可直接在应用商店搜索</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/12/25/idea%20%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">idea配置java注解处理器</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/23/hexo/">
+                        <span class="hidden-mobile">hexo整理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
