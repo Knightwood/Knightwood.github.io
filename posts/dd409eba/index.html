@@ -1,0 +1,853 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="pacman包管理安装指定的包安装或者升级单个软件包，或者一列软件包（包含依赖包），使用如下命令： 1# pacman -S package_name1 package_name2 ...  用正则表达式安装多个软件包（参见 这个帖子）： 1# pacman -S $(pacman -Ssq package_regex)  有时候在不同的软件仓库中，一个软件包有多个版本（比如[extra]和[te">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pacman包管理">
+<meta property="og:url" content="https://knightwood.github.io/posts/dd409eba/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="pacman包管理安装指定的包安装或者升级单个软件包，或者一列软件包（包含依赖包），使用如下命令： 1# pacman -S package_name1 package_name2 ...  用正则表达式安装多个软件包（参见 这个帖子）： 1# pacman -S $(pacman -Ssq package_regex)  有时候在不同的软件仓库中，一个软件包有多个版本（比如[extra]和[te">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-20T12:16:09.000Z">
+<meta property="article:modified_time" content="2021-12-29T01:33:23.361Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="pacman">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>pacman包管理 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="pacman包管理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-20 20:16" pubdate>
+        2021年12月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      77 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">pacman包管理</h1>
+            
+            <div class="markdown-body">
+              <h1 id="pacman包管理"><a href="#pacman包管理" class="headerlink" title="pacman包管理"></a>pacman包管理</h1><h4 id="安装指定的包"><a href="#安装指定的包" class="headerlink" title="安装指定的包"></a>安装指定的包</h4><p>安装或者升级单个软件包，或者一列软件包（包含依赖包），使用如下命令：</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gcode"><span class="hljs-attr"># pacman -S package_name1</span> package_<span class="hljs-symbol">name2</span> ...<br></code></pre></td></tr></table></figure>
+
+<p>用正则表达式安装多个软件包（参见 <a target="_blank" rel="noopener" href="https://bbs.archlinux.org/viewtopic.php?id=7179">这个帖子</a>）：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"># pacman -S <span class="hljs-constructor">$(<span class="hljs-params">pacman</span> -Ssq <span class="hljs-params">package_regex</span>)</span><br></code></pre></td></tr></table></figure>
+
+<p>有时候在不同的软件仓库中，一个软件包有多个版本（比如[extra]和[testing]）。可以选择一个来安装：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -S extra/package_name</span><br></code></pre></td></tr></table></figure>
+
+<p>安装多个含有相似名称的软件包，而并非整个包组或全部匹配的软件包； 例如，<a target="_blank" rel="noopener" href="https://archlinux.org/groups/x86_64/plasma/">plasma</a>:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -S plasma-&#123;desktop,mediacenter,nm&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>当然，可以多层扩展，并不作限制：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -S plasma-&#123;workspace&#123;,-wallpapers&#125;,pa&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="虚包"><a href="#虚包" class="headerlink" title="虚包"></a>虚包</h5><p>虚拟软件包是一个特殊的软件包，它本身并不存在，但由一或多个其它软件包提供。虚拟软件包允许其它软件包不以某一个特定的包为依赖，以应对有多个候选的情况。虚包不能用它们的名称安装，相反它们会在你安装<em>提供</em>虚包的软件包时被安装到你的系统中。</p>
+<h4 id="安装包组"><a href="#安装包组" class="headerlink" title="安装包组"></a>安装包组</h4><p>一些包属于一个可以同时安装的<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Meta_package_and_package_group_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">软件包组</a>。例如，运行下面的命令</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -S gnome</span><br></code></pre></td></tr></table></figure>
+
+<p>会提醒用户选择 <code>gnome</code> 内需要安装的包。</p>
+<p>有的包组包含大量的软件包，有时用户只需其中几个。除了逐一键入序号外，pacman 还支持选择或排除某个区间内的的软件包：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Enter</span> a selection (default=<span class="hljs-literal">all</span>): <span class="hljs-number">1</span>-<span class="hljs-number">10</span> <span class="hljs-number">15</span><br></code></pre></td></tr></table></figure>
+
+<p>这将选中序号 1 至 10 和 15 的软件包。而</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Enter</span> a selection (default=<span class="hljs-literal">all</span>): ^<span class="hljs-number">5</span>-<span class="hljs-number">8</span> ^<span class="hljs-number">2</span><br></code></pre></td></tr></table></figure>
+
+<p>将会选中除了序号 5 至 8 和 2 之外的所有软件包。</p>
+<p>想要查看哪些包属于 gnome 组，运行：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Sg gnome</span><br></code></pre></td></tr></table></figure>
+
+<p>也可以访问 <a target="_blank" rel="noopener" href="https://archlinux.org/groups/">https://archlinux.org/groups/</a> 查看可用的包组。</p>
+<p><strong>注意：</strong> 如果列表中的包已经安装在系统中，它会被重新安装，即使它已经是最新的。可以用 <code>--needed</code> 选项覆盖这种行为。</p>
+<h3 id="删除软件包"><a href="#删除软件包" class="headerlink" title="删除软件包"></a>删除软件包</h3><p>删除单个软件包，保留其全部已经安装的依赖关系</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -R package_name</span><br></code></pre></td></tr></table></figure>
+
+<p>删除指定软件包，及其所有没有被其他已安装软件包使用的依赖关系：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Rs package_name</span><br></code></pre></td></tr></table></figure>
+
+<p>上面这条命令在移除包含其他所需包的组时有时候会拒绝运行。这种情况下可以尝试</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Rsu package_name</span><br></code></pre></td></tr></table></figure>
+
+<p>要删除软件包和所有依赖这个软件包的程序:</p>
+<p><strong>警告：</strong> 此操作是递归的，请小心检查，可能会一次删除大量的软件包。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Rsc package_name</span><br></code></pre></td></tr></table></figure>
+
+<p>要删除一个被其他软件包依赖的软件包，但是不删除依赖这个软件包的其他软件包：</p>
+<p><strong>警告：</strong> 此操作有破坏系统的能力，应该尽量避免使用。详情请看 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/System_maintenance#Avoid_certain_pacman_commands">避免某些 Pacman 命令</a>。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Rdd package_name</span><br></code></pre></td></tr></table></figure>
+
+<p><em>pacman</em> 删除某些程序时会备份重要配置文件，在其后面加上*.pacsave扩展名。-n 选项可以避免备份这些文件：</p>
+<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ceylon">pacman -Rn <span class="hljs-keyword">package</span><span class="hljs-number">_n</span>ame<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> <em>pacman</em> 不会删除软件自己创建的文件（例如主目录中的“点文件”不会被删除。）</p>
+<h3 id="升级软件包"><a href="#升级软件包" class="headerlink" title="升级软件包"></a>升级软件包</h3><p><strong>警告：</strong></p>
+<ul>
+<li>建议用户遵守<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/System_maintenance_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F">System maintenance (简体中文)#更新系统</a>的指导，定期更新系统，并不盲目地执行这些命令。</li>
+<li>Arch 只支持系统完整升级，详细参见<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/System_maintenance_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E4%B8%8D%E6%94%AF%E6%8C%81%E9%83%A8%E5%88%86%E5%8D%87%E7%BA%A7">System maintenance (简体中文)#不支持部分升级</a>和<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E5%8C%85">#安装软件包</a>。</li>
+</ul>
+<p>一个 <em>pacman</em> 命令就可以升级整个系统。花费的时间取决于系统有多老。这个命令会同步非本地(local)软件仓库并升级系统的软件包：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Syu</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="查询包数据库"><a href="#查询包数据库" class="headerlink" title="查询包数据库"></a>查询包数据库</h3><p><em>pacman</em> 使用 <code>-Q</code> 参数查询本地软件包数据库， <code>-S</code> 查询同步数据库，以及 <code>-F</code>查询文件数据库。要了解每个参数的子选项，分别参见 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php?title=Template:Pacman_-Q_--help&action=edit&redlink=1">Template:Pacman -Q –help</a>，<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php?title=Template:Pacman_-S_--help&action=edit&redlink=1">Template:Pacman -S –help</a>和<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php?title=Template:Pacman_-F_--help&action=edit&redlink=1">Template:Pacman -F –help</a>。</p>
+<p><em>pacman</em> 可以在包数据库中查询软件包，查询位置包含了软件包的名字和描述：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">$ pacman -Ss <span class="hljs-built_in">string</span>1 <span class="hljs-built_in">string</span>2 ...<br></code></pre></td></tr></table></figure>
+
+<p>有时，<code>-s</code>的内置正则会匹配很多不需要的结果，所以应当指定仅搜索包名，而非描述或其他子段:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pacman -Ss <span class="hljs-string">&#x27;^vim-&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>要查询已安装的软件包：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">$ pacman -Qs <span class="hljs-built_in">string</span>1 <span class="hljs-built_in">string</span>2 ...<br></code></pre></td></tr></table></figure>
+
+<p>按文件名查找软件库：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">$ pacman -F <span class="hljs-built_in">string</span>1 <span class="hljs-built_in">string</span>2 ...<br></code></pre></td></tr></table></figure>
+
+<p>显示软件包的详尽的信息：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pacman -Si package_name<br></code></pre></td></tr></table></figure>
+
+<p>查询本地安装包的详细信息：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pacman -Qi package_name<br></code></pre></td></tr></table></figure>
+
+<p>使用两个 <code>-i</code> 将同时显示备份文件和修改状态：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pacman -Qii package_name<br></code></pre></td></tr></table></figure>
+
+<p>要获取已安装软件包所包含文件的列表：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pacman -Ql package_name<br></code></pre></td></tr></table></figure>
+
+<p>查询远程库中软件包包含的文件：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pacman -Fl package_name<br></code></pre></td></tr></table></figure>
+
+<p>检查软件包安装的文件是否都存在：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pacman -Qk package_name<br></code></pre></td></tr></table></figure>
+
+<p>两个参数<code>k</code>将会执行一次更彻底的检查。 查询数据库获取某个文件属于哪个软件包：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ pacman -Qo <span class="hljs-regexp">/path/</span>to/file_name<br></code></pre></td></tr></table></figure>
+
+<p>查询文件属于远程数据库中的哪个软件包：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ pacman -F <span class="hljs-regexp">/path/</span>to/file_name<br></code></pre></td></tr></table></figure>
+
+<p>要罗列所有不再作为依赖的软件包(孤立orphans)：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pacman -Qdt<br></code></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong> 将上述命令添加到 pacman 的一个处理后 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#Hooks">hook</a>用于在如果有处理产生孤立包后获得提示。这在当有软件包被仓库放弃时是有用的，因为任何被抛弃的包都会成为本地的一个孤立包（除非它是被显式安装的）。要避免在没有找到孤立包时”failed to execute command”的错误，在你的 hook 中为<code>Exec</code>使用如下的指令: <code>/usr/bin/bash -c &quot;/usr/bin/pacman -Qtd || /usr/bin/echo &#39;=&gt; None found.&#39;&quot;</code></p>
+<p>要罗列所有明确安装而且不被其它包依赖的软件包：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pacman -Qet<br></code></pre></td></tr></table></figure>
+
+<p>更多例子查看<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman_tips">pacman tips</a>。</p>
+<h4 id="Pactree"><a href="#Pactree" class="headerlink" title="Pactree"></a>Pactree</h4><p><strong>注意：</strong> <a target="_blank" rel="noopener" href="https://man.archlinux.org/man/pactree.8">pactree(8)</a>不再是<a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=pacman">pacman</a>的一部分。它现在在<a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=pacman-contrib">pacman-contrib</a>中。</p>
+<p>要显示软件包的依赖树：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>pactree package_name<br></code></pre></td></tr></table></figure>
+
+<p>检查一个<em>安装</em>的软件包被那些包依赖，将递归标识<code>-r</code>传递给 <em>pactree</em>，或者使用 <a target="_blank" rel="noopener" href="https://aur.archlinux.org/packages/pkgtools/">pkgtools</a>AUR中的<em>whoneeds</em></p>
+<h4 id="数据库结构"><a href="#数据库结构" class="headerlink" title="数据库结构"></a>数据库结构</h4><p>pacman数据库通常位于 <code>/var/lib/pacman/sync</code>. 对于每一个在<code>/etc/pacman.conf</code>中指定的软件仓库， 这里都有一个一致的数据库。数据库文件夹里每个tar.gz文件都包含着一个仓库的软件包信息。例如<a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=which">which</a> 包:</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs subunit">$ tree which<span class="hljs-string">-2</span>.21<span class="hljs-string">-5</span><br>which<span class="hljs-string">-2</span>.21<span class="hljs-string">-5</span><br>|-- desc<br></code></pre></td></tr></table></figure>
+
+<p>这个 <code>depends</code> 项列出了该软件的依赖包， 而<code>desc</code>有该包的介绍，例如文件大小和MD5值 。</p>
+<h3 id="清理软件包缓存"><a href="#清理软件包缓存" class="headerlink" title="清理软件包缓存"></a>清理软件包缓存</h3><p><em>pacman</em> 将下载的软件包保存在 <code>/var/cache/pacman/pkg/</code> 并且不会自动移除旧的和未安装版本的软件包。这样做有一些好处：</p>
+<ol>
+<li>这样允许<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Downgrading_packages_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">降级</a>软件包而不需要通过其他方式提取旧版本，例如 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Arch_Linux_Archive_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">Arch Linux Archive</a>.</li>
+<li>被卸载的软件包可以轻易地直接从缓存文件夹重新安装，不需要重新从软件仓库下载。</li>
+</ol>
+<p>然而，需要定期手动清理缓存来避免该文件夹无限制增大。</p>
+<p><a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=pacman-contrib">pacman-contrib</a> 提供的 <a target="_blank" rel="noopener" href="https://man.archlinux.org/man/paccache.8">paccache(8)</a> 脚本默认会删除所有缓存的版本和已卸载的软件包，除了最近的3个会被保留：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># paccache -r</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Enable">启用</a> 和 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Start">启动</a> <code>paccache.timer</code>来每周删除不使用的包。</p>
+<p><strong>提示：</strong> 可以使用 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#Hooks">hook</a> 自动执行清理，参考[<a target="_blank" rel="noopener" href="https://bbs.archlinux.org/viewtopic.php?pid=1694743#p1694743">1]</a>和<a target="_blank" rel="noopener" href="https://aur.archlinux.org/packages/pacman-cleanup-hook/">pacman-cleanup-hook</a>AUR。</p>
+<p>也可以自己设置保留最近几个版本：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># paccache -rk1</span><br></code></pre></td></tr></table></figure>
+
+<p>添加<code>-u</code>/<code>--uninstalled</code>开关来限制<em>paccache</em>的行为只作用于卸载的包。例如清理所有卸载的包的缓存版本，可以用以下命令:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># paccache -ruk0</span><br></code></pre></td></tr></table></figure>
+
+<p>或者你可以将安装其结合，同时作用于安装的和卸载的包，例如想要保留最近两个安装的包但是移除所有卸载的包的缓存版本，使用以下命令：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># paccache -rk2 -ruk0</span><br></code></pre></td></tr></table></figure>
+
+<p>更多参数参见<code>paccache -h</code>。</p>
+<p><em>pacman</em>也有一些内建参数用于清除缓存和那些不再在<code>/etc/pacman.conf</code>配置文件中列出的软件仓库残留数据库文件。然而<em>pacman</em>并不提供保留一定数量的过去版本的功能，因此它比<em>paccache</em>的默认选项更加激进。</p>
+<p>要删除目前没有安装的所有缓存的包，和没有被使用的同步数据库，执行：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Sc</span><br></code></pre></td></tr></table></figure>
+
+<p>要删除缓存中的全部文件，使用两次<code>-c</code>开关。这是最为激进的方式，将会清空缓存文件夹：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Scc</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>警告：</strong> 应当避免从缓存中删除所有过去版本和卸载的包，除非需要更多磁盘空间。这样会导致无法降级或重新安装包而不再次下载他们</p>
+<p><a target="_blank" rel="noopener" href="https://aur.archlinux.org/packages/pkgcacheclean/">pkgcacheclean</a>AUR以及<a target="_blank" rel="noopener" href="https://aur.archlinux.org/packages/pacleaner/">pacleaner</a>AUR是两个进一步清理缓存的替代工具</p>
+<h3 id="其它命令"><a href="#其它命令" class="headerlink" title="其它命令"></a>其它命令</h3><p>升级系统时安装其他软件包：</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gcode"><span class="hljs-attr"># pacman -Syu package_name1</span> package_<span class="hljs-symbol">name2</span> ...<br></code></pre></td></tr></table></figure>
+
+<p>下载包而不安装它：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Sw package_name</span><br></code></pre></td></tr></table></figure>
+
+<p>安装一个<strong>本地</strong>包(不从源里下载）：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"># pacman -U <span class="hljs-regexp">/path/</span>to<span class="hljs-regexp">/package/</span>package_name-version.pkg.tar.xz<br></code></pre></td></tr></table></figure>
+
+<p>要将本地包保存至缓存，可执行：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"># pacman -U file:///<span class="hljs-type">path</span>/<span class="hljs-keyword">to</span>/package/package_name-<span class="hljs-keyword">version</span>.pkg.tar.xz<br></code></pre></td></tr></table></figure>
+
+<p>安装一个<strong>远程</strong>包（不在 <em>pacman</em> 配置的源里面）：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-meta"># pacman -U http:<span class="hljs-comment">//www.example.com/repo/example.pkg.tar.xz</span></span><br></code></pre></td></tr></table></figure>
+
+<p>要禁用 <code>-S</code>, <code>-U</code> 和 <code>-R</code> 动作，可以使用 <code>-p</code> 选项.</p>
+<p><em>pacman</em> 会列出需要安装和删除的软件，并在执行动作前要求需要的权限。</p>
+<h3 id="安装原因"><a href="#安装原因" class="headerlink" title="安装原因"></a>安装原因</h3><p><em>pacman</em>数据库按照软件包被安装的原因，将其分为两类：</p>
+<ul>
+<li><strong>显式安装</strong>：那些真正地被传递给通用<em>pacman</em><code>-S</code>和<code>-U</code>命令的包；</li>
+<li><strong>依赖</strong>：那些虽然（一般）从未被传递给<em>pacman</em>安装命令，但由于被其它显式安装的包<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Dependency">需要</a>从而被隐式安装的包</li>
+</ul>
+<p>当安装软件包时，可以把安装原因强制设为<strong>依赖</strong>:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -S --asdeps package_name</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong> 用<code>--asdeps</code>安装可选依赖将导致如果你<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman/Tips_and_tricks#Removing_unused_packages_.28orphans.29">移除孤立包</a>，<em>pacman</em>将会一同移除剩下的可选依赖。</p>
+<p>但是当重新安装该软件包时，安装原因将会被设为软件包所默认的。</p>
+<p>显式安装的软件包列表可用<code>pacman -Qe</code>获取, 与之互补的已安装的依赖包可用<code>pacman -Qd</code>获取。</p>
+<p>改变某个已安装软件包的安装原因，可以执行：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -D --asdeps package_name</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> 在升级时使用<code>--asdeps</code>和<code>--asexplicit</code>选项，例如<code>pacman -Syu *package_name* --asdeps</code>，是不被推荐的。这会导致不仅改变要被安装的软件包的安装原因，也会改变被升级的软件包的安装原因。</p>
+<h3 id="查询一个包含具体文件的包名"><a href="#查询一个包含具体文件的包名" class="headerlink" title="查询一个包含具体文件的包名"></a>查询一个包含具体文件的包名</h3><p>同步文件数据库:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># pacman -Fy</span><br></code></pre></td></tr></table></figure>
+
+<p>查询包含某个文件的包名，比如:</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># pacman -F pacman</span><br>core/pacman <span class="hljs-number">5.0</span>.<span class="hljs-number">1</span>-<span class="hljs-number">4</span><br>    usr<span class="hljs-regexp">/bin/</span>pacman<br>    usr<span class="hljs-regexp">/share/</span>bash-completion<span class="hljs-regexp">/completions/</span>pacman<br>extra/xscreensaver <span class="hljs-number">5.36</span>-<span class="hljs-number">1</span><br>    usr<span class="hljs-regexp">/lib/</span>xscreensaver/pacman<br></code></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong>  可以设置一个 <code>crontab</code> 或者 <code>systemd timer</code> 来定期同步文件信息数据库。</p>
+<p>如果需要高级功能请安装 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pkgfile">pkgfile</a>，它使用一个单独的数据库来保存文件和它们所关联的软件包的信息。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p><em>pacman</em> 的配置文件位于<code>/etc/pacman.conf</code>。 <a target="_blank" rel="noopener" href="https://archlinux.org/pacman/pacman.conf.5.html">man pacman.conf</a> 可以查看配置文件的进一步信息。</p>
+<h3 id="通用选项"><a href="#通用选项" class="headerlink" title="通用选项"></a>通用选项</h3><p>通用选项都在<code>[options]</code>段。阅读 man 手册或者查看默认的 pacman.conf 可以获得有关信息和用法。</p>
+<h3 id="升级前对比版本"><a href="#升级前对比版本" class="headerlink" title="升级前对比版本"></a>升级前对比版本</h3><p>要查看旧版和新版的有效安装包，请取消<code>/etc/pacman.conf</code>中”VerbosePkgLists”的注释。修改后的<code>pacman -Syu</code>输出如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Package</span> (<span class="hljs-number">6</span>)             Old Version  New Version  Net Change  Download Size<br><br><span class="hljs-attribute">extra</span>/libmariadbclient  <span class="hljs-number">10</span>.<span class="hljs-number">1</span>.<span class="hljs-number">9</span>-<span class="hljs-number">4</span>     <span class="hljs-number">10</span>.<span class="hljs-number">1</span>.<span class="hljs-number">10</span>-<span class="hljs-number">1</span>      <span class="hljs-number">0</span>.<span class="hljs-number">03</span> MiB       <span class="hljs-number">4</span>.<span class="hljs-number">35</span> MiB<br><span class="hljs-attribute">extra</span>/libpng            <span class="hljs-number">1</span>.<span class="hljs-number">6</span>.<span class="hljs-number">19</span>-<span class="hljs-number">1</span>     <span class="hljs-number">1</span>.<span class="hljs-number">6</span>.<span class="hljs-number">20</span>-<span class="hljs-number">1</span>       <span class="hljs-number">0</span>.<span class="hljs-number">00</span> MiB       <span class="hljs-number">0</span>.<span class="hljs-number">23</span> MiB<br><span class="hljs-attribute">extra</span>/mariadb           <span class="hljs-number">10</span>.<span class="hljs-number">1</span>.<span class="hljs-number">9</span>-<span class="hljs-number">4</span>     <span class="hljs-number">10</span>.<span class="hljs-number">1</span>.<span class="hljs-number">10</span>-<span class="hljs-number">1</span>      <span class="hljs-number">0</span>.<span class="hljs-number">26</span> MiB      <span class="hljs-number">13</span>.<span class="hljs-number">80</span> MiB<br></code></pre></td></tr></table></figure>
+
+<h4 id="在升级时跳过软件包"><a href="#在升级时跳过软件包" class="headerlink" title="在升级时跳过软件包"></a>在升级时跳过软件包</h4><p><strong>警告：</strong> 在跳过软件包时要小心，因为<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/System_maintenance_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E4%B8%8D%E6%94%AF%E6%8C%81%E9%83%A8%E5%88%86%E5%8D%87%E7%BA%A7">部分升级不受支持</a></p>
+<p>要想在<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E5%8D%87%E7%BA%A7%E8%BD%AF%E4%BB%B6%E5%8C%85">升级</a>系统时跳过特定的软件包，用像如下的命令指明：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">IgnorePkg</span>=linux<br></code></pre></td></tr></table></figure>
+
+<p>多软件包可以用空格隔开，或者用另外的<code>IgnorePkg</code>行。也可使用 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/glob_(programming)">glob</a> 模式。如果只打算忽略一次升级，可以使用 <code>--ignore</code> 选项，这时使用逗号隔开的列表。</p>
+<p>忽略了的软件包依然可通过 <code>pacman -S</code> 升级。这种情况下<em>pacman</em>会提醒你这些软件包已经被包含在<code>IgnorePkg</code>声明中。</p>
+<h4 id="在升级时跳过软件包组"><a href="#在升级时跳过软件包组" class="headerlink" title="在升级时跳过软件包组"></a>在升级时跳过软件包组</h4><p><strong>警告：</strong> 在跳过软件包时要小心，因为<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/System_maintenance_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E4%B8%8D%E6%94%AF%E6%8C%81%E9%83%A8%E5%88%86%E5%8D%87%E7%BA%A7">部分升级不受支持</a></p>
+<p>和软件包一样，也可以不升级某个软件包组：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">IgnoreGroup</span> = gnome<br></code></pre></td></tr></table></figure>
+
+<h4 id="在升级时跳过文件"><a href="#在升级时跳过文件" class="headerlink" title="在升级时跳过文件"></a>在升级时跳过文件</h4><p>所有在<code>NoUpgrade</code>指令中列出的文件都会在软件包被安装/升级时不会被更改，并且新文件会以带有*.pacnew*后缀名的形式安装</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">NoUpgrade=path<span class="hljs-regexp">/to/</span><span class="hljs-keyword">file</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> 这个路径指软件包中的文件，所以不要包括开头的斜线。</p>
+<h4 id="在安装时跳过文件"><a href="#在安装时跳过文件" class="headerlink" title="在安装时跳过文件"></a>在安装时跳过文件</h4><p>要总是跳过某些文件夹的安装，可以将它们放到 <code>NoExtract</code> 中，例如不想安装 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Systemd">systemd</a> 模块：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">NoExtract=usr<span class="hljs-regexp">/lib/</span>systemd<span class="hljs-regexp">/system/</span>*<br></code></pre></td></tr></table></figure>
+
+<p>后面的规则覆盖前面的规则，加上 <code>!</code> 可以取消跳过效果。</p>
+<p><strong>提示：</strong> <em>pacman</em>会在更新locales已经被<em>localepurge</em>或者<em>bleachbit</em>清除的包时发出警告。将<code>CheckSpace</code>参数加入<code>pacman.conf</code>能够抑制这种警告，但是要意识到space-check功能将会对所有软件包禁用。</p>
+<h3 id="保留多个配置文件"><a href="#保留多个配置文件" class="headerlink" title="保留多个配置文件"></a>保留多个配置文件</h3><p>如果你有多个配置文件（比如，主配置和启用了<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Official_repositories_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#testing_%E4%BB%93%E5%BA%93">测试仓库</a>的配置文件），需要共享一些设置，你可以在配置文件中使用<code>Include</code>选项，例如：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">Include</span> = <span class="hljs-regexp">/path/</span>to<span class="hljs-regexp">/common/</span>settings<br></code></pre></td></tr></table></figure>
+
+<p><code>*/path/to/common/settings*</code>文件中是两个配置文件共享的相同配置。</p>
+<h3 id="Hooks"><a href="#Hooks" class="headerlink" title="Hooks"></a>Hooks</h3><p><em>pacman</em>可以在处理前后，运行<code>/usr/share/libalpm/hooks/</code>文件夹下的hooks，更多的hooks文件夹可以通过<code>HooDir</code>选项在<code>pacman.conf</code>中指明，默认<code>/etc/pacman.d/hooks</code>。Hook文件必须以*.hook*为后缀。Pacman hooks不是交互式的。</p>
+<p><em>pacman</em> hooks用于，比如说，和<code>systemd-sysusers</code>和<code>systemd-tmpfiles</code>结合来在安装包时自动创建系统用户和文件。例如，<a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=tomcat8">tomcat8</a>指明它想要创建一个叫做<code>tomcat8</code>的系统用户和一些属于该用户的文件。当<em>pacman</em>确定<a target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=tomcat8">tomcat8</a>包含文件指明用户和临时文件时，<em>pacman</em> hooks <code>systemd-sysusers.hook</code>和<code>systemd-tmpfiles.hook</code>唤起<code>systemd-sysusers</code>和<code>systemd-tmpfiles</code>。</p>
+<p>有关 alpm hooks 的更多信息，参见<a target="_blank" rel="noopener" href="https://man.archlinux.org/man/alpm-hooks.5">alpm-hooks(5)</a>。</p>
+<h3 id="软件仓库"><a href="#软件仓库" class="headerlink" title="软件仓库"></a>软件仓库</h3><p>除了特殊的<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E9%80%9A%E7%94%A8%E9%80%89%E9%A1%B9">通用选项</a>节, 每个<code>pacman.conf</code>中的<code>[section]</code>都定义了一个使用的软件包仓库，<em>仓库</em>是多个软件包的<em>逻辑</em>上的集合，他们<em>物理</em>上存储在一个或多个服务器：这也是为什么每一个服务器都叫做这个仓库的<em>镜像</em>。</p>
+<p>仓库区分为<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Official_repositories_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">官方仓库</a>与<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Unofficial_user_repositories_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">非官方仓库</a>。配置文件中仓库的顺序十分重要；当几个仓库出现同名安装包，不管版本号如何，<em>pacman</em>将使用配置文件中排前的仓库。要在添加后使用某个仓库，你需要先<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E5%8D%87%E7%BA%A7%E8%BD%AF%E4%BB%B6%E5%8C%85">升级</a>整个系统</p>
+<p>每个仓库节都可以直接指定镜像列表或者<code>Include</code>引用其他的文件：例如，官方镜像引用了<code>/etc/pacman.d/mirrorlist/</code>。具体查看<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Mirrors_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">Mirrors (简体中文)</a>。</p>
+<h3 id="软件包的安全性"><a href="#软件包的安全性" class="headerlink" title="软件包的安全性"></a>软件包的安全性</h3><p><em>pacman</em> 支持软件包签名，会为软件包提供额外的安全性。默认配置，<code>SigLevel = Required DatabaseOptional</code> 将启用全局签名验证，但会被每个软件仓库的 <code>SigLevel</code> 行所覆盖。有关软件包签名和签名验证的更多细节，参见 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman-key_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">pacman-key</a>。</p>
+<hr>
+<h2 id="Manjaro包管理常用命令"><a href="#Manjaro包管理常用命令" class="headerlink" title="Manjaro包管理常用命令"></a>Manjaro包管理常用命令</h2><ul>
+<li>对整个系统进行更新</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -Syu   <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>升级软件包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -Syu<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>安装或者升级单个软件包，或者一列软件包（包含依赖包），使用如下命令：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -S package_name1 package_name2 ...<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>与上面命令不同的是，该命令将在同步包数据库后再执行安装</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -Sy package_name<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>安装本地包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -U local_package_name#其扩展名为pkg.tar.gz或pkg.tar.xz<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>安装一个远程包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -U url#不在 pacman 配置的源里面，例：pacman -U http://www.example.com/repo/example.pkg.tar.xz<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>在仓库中搜索含关键字的包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -Ss keyword<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>查看已安装软件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -Qs keyword     <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>删除单个软件包，保留其全部已经安装的依赖关系</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -R package_name<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>删除指定软件包，及其所有没有被其他已安装软件包使用的依赖关系：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -Rs package_name#要删除软件包和所有依赖这个软件包的程序，警告: 此操作是递归的，请小心检查，可能会一次删除大量的软件包。<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>清理软件包缓存</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -Sc<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>清理所有的缓存文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -Scc<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>清除系统中无用的包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo pacman -R $(pacman -Qdtq)<br></code></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><strong>从 AUR 安装软件包</strong>  </li>
+<li>yay 安装命令不需要加 sudo</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">yay -S package <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>yay删除包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">yay -Rns package <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>升级所有已安装的包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">yay -Syu<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>打印系统统计信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">yay -Ps<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>检查安装的版本</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">yay -Qi package<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="AUR国内源"><a href="#AUR国内源" class="headerlink" title="AUR国内源"></a>AUR国内源</h1><p>笔者在写这篇文章的时候，网上的资料并不多。毕竟选择Arch的用户较少，而选择<strong>Yay</strong>的用户更少。<strong>Yay</strong>默认使用法国的aur.archlinux.org作为AUR源，这样的速度显然不是我们可以接受的，因此我们需要切换为国内的tuna源</p>
+<p><strong>Yay</strong>在安装好以后是默认不生成配置文件的。这就难以去更改默认源。笔者搜罗GIthub上的issue，根据 <a target="_blank" rel="noopener" href="https://github.com/Jguer/yay/issues/697">#697</a> Issue，运行以下命令更新软件源和系统，顺便创建配置文件</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">yay</span> <span class="hljs-literal">-</span><span class="hljs-comment">Syu</span> --<span class="hljs-comment">devel</span> --<span class="hljs-comment">combinedupgrade</span> --<span class="hljs-comment">save</span><br></code></pre></td></tr></table></figure>
+
+<p>然后编辑<code>~/.config/yay/config.json</code>文件，就可以看到熟悉的aururl参数啦，那么把它替换为<code>https://aur.tuna.tsinghua.edu.cn</code>即可</p>
+<hr>
+<h1 id="yay命令"><a href="#yay命令" class="headerlink" title="yay命令"></a>yay命令</h1><table>
+<thead>
+<tr>
+<th align="left"><code>yay &lt;Search Term&gt;</code></th>
+<th>Present package-installation selection menu.</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>yay -Ps</code></td>
+<td>Print system statistics.</td>
+</tr>
+<tr>
+<td align="left"><code>yay -Yc</code></td>
+<td>Clean unneeded dependencies.</td>
+</tr>
+<tr>
+<td align="left"><code>yay -G &lt;AUR Package&gt;</code></td>
+<td>Download PKGBUILD from ABS or AUR.</td>
+</tr>
+<tr>
+<td align="left"><code>yay -Y --gendb</code></td>
+<td>Generate development package database used for devel update.</td>
+</tr>
+<tr>
+<td align="left"><code>yay -Syu --devel --timeupdate</code></td>
+<td>Perform system upgrade, but also check for development package  updates and use PKGBUILD modification time (not version number) to  determine update.</td>
+</tr>
+</tbody></table>
+<p>使用 yay：</p>
+<p>搜索：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">yay -Ss &lt;package-name&gt;<br></code></pre></td></tr></table></figure>
+
+<p>安装：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">yay -S &lt;package-name&gt;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="有关yay的基本用法，请参阅下面的示例。"><a href="#有关yay的基本用法，请参阅下面的示例。" class="headerlink" title="有关yay的基本用法，请参阅下面的示例。"></a>有关yay的基本用法，请参阅下面的示例。</h1><p>示例1：使用yay安装包</p>
+<p>使用选项-S使用yay从AUR安装软件包：</p>
+<p>$ yay -S package</p>
+<p>示例2：使用yay删除包</p>
+<p>要删除包，请使用-Rns选项：</p>
+<p>$ yay -Rns package</p>
+<p>示例3：启动包选择菜单</p>
+<p>使用：</p>
+<p>$ yay <Search Term></p>
+<p>示例4：使用yay升级已安装的软件包</p>
+<p>要升级所有已安装的包，请使用以下选项：</p>
+<p>$ yay -Syu</p>
+<p> 要包含开发包，请使用：</p>
+<p>$ yay -Syu –devel –timeupdate</p>
+<p>示例5：使用yay清除不需要的依赖项</p>
+<p>使用选项可删除系统上所有不需要的依赖项：</p>
+<p>$ yay -Yc</p>
+<p>示例6：使用yay打印系统统计信息</p>
+<p>要打印系统统计信息，请使用-Ps：</p>
+<p>$ yay -Ps</p>
+<p>示例7：生成用于开发更新的开发包DB</p>
+<p>$ yay -Y –gendb</p>
+<p>至此，yay基本使用方法就讲到这了。</p>
+<hr>
+<h1 id="snap"><a href="#snap" class="headerlink" title="snap"></a>snap</h1><h3 id="如何使用snap"><a href="#如何使用snap" class="headerlink" title="如何使用snap"></a>如何使用snap</h3><p>列出计算机上所有snap安装情况：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">sudo snap list</span><br></code></pre></td></tr></table></figure>
+
+<p>在应用商店中查找snap：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">sudo snap <span class="hljs-builtin-name">find</span> &lt;软件包名&gt;<br></code></pre></td></tr></table></figure>
+
+<p>安装Snap软件：</p>
+<figure class="highlight bnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bnf">sudo snap install <span class="hljs-attribute">&lt;snap软件包名&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>更新Snap软件：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">sudo snap <span class="hljs-built_in">ref</span>resh &lt;snap软件包名&gt;<br></code></pre></td></tr></table></figure>
+
+<p>更新所有的snap软件包：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">sudo snap <span class="hljs-keyword">refresh</span> <span class="hljs-keyword">all</span><br></code></pre></td></tr></table></figure>
+
+<p>要将Snap还原到以前安装的版本：</p>
+<figure class="highlight bnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bnf">sudo snap revert <span class="hljs-attribute">&lt;snap软件包名&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>卸载snap软件：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">sudo snap <span class="hljs-builtin-name">remove</span> &lt;snap软件包名&gt;<br></code></pre></td></tr></table></figure>
+
+<hr>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/linux/">linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/pacman/">pacman</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/f4bf1653/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ssh使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/bc52529d/">
+                        <span class="hidden-mobile">manjaro常用命令</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

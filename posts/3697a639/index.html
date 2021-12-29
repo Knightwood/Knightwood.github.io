@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Scroller的总结内容来自各个博客  本质及作用：Scroller本质就是一个Helper类，里面保存了目标对象要移动的距离，时间等属性！       Android ViewGroup中的Scroller与computeScroll的有什么关系？ 答：没有直接的关系 1.Scroller到底是什么？ 答：Scroller只是个计算器，提供插值计算，让滚动过程具有动画属性，但它并不是UI，也不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scroller">
+<meta property="og:url" content="https://knightwood.github.io/posts/3697a639/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="Scroller的总结内容来自各个博客  本质及作用：Scroller本质就是一个Helper类，里面保存了目标对象要移动的距离，时间等属性！       Android ViewGroup中的Scroller与computeScroll的有什么关系？ 答：没有直接的关系 1.Scroller到底是什么？ 答：Scroller只是个计算器，提供插值计算，让滚动过程具有动画属性，但它并不是UI，也不">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-04T05:05:06.000Z">
+<meta property="article:modified_time" content="2021-12-29T01:35:19.913Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="scroll">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>scroller - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="scroller">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-04 13:05" pubdate>
+        2021年2月4日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      14k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      121 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">scroller</h1>
+            
+            <div class="markdown-body">
+              <p>Scroller的总结<br>内容来自各个博客</p>
+<ul>
+<li>本质及作用：<br>Scroller本质就是一个Helper类，里面保存了目标对象要移动的距离，时间等属性！     </li>
+</ul>
+<p>Android ViewGroup中的Scroller与computeScroll的有什么关系？</p>
+<p>答：没有直接的关系</p>
+<p>1.Scroller到底是什么？</p>
+<p>答：Scroller只是个计算器，提供插值计算，让滚动过程具有动画属性，但它并不是UI，也不是辅助UI滑动，反而是单纯地为滑动提供计算。</p>
+<p>无论从构造方法还是其他方法，以及Scroller的属性可知，其并不会持有View，辅助ViewGroup滑动</p>
+<p>2.Scroller只是提供计算，那谁来调用computeScroll使得ViewGroup滑动</p>
+<p>答：computeScroll也不是来让ViewGroup滑动的，真正让ViewGroup滑动的是scrollTo,scrollBy。computeScroll的作用是计算ViewGroup如何滑动。而computeScroll是通过draw来调用的。</p>
+<p>3.computeScroll和Scroller都是计算，两者有啥关系？</p>
+<p>答：文章开始已作答，没有直接的关系。computeScroll和Scroller要是飞得拉关系的话，那就是computeScroll可以参考Scroller计算结果来影响scrollTo,scrollBy,从而使得滑动发生改变。也就是Scroller不会调用computeScroll，反而是computeScroll调用Scroller。</p>
+<p>4.滑动时连续的，如何让Scroller的计算也是连续的？</p>
+<p>这个就问到了什么时候调用computeScroll了，如上所说computeScroll调用Scroller，只要computeScroll调用连续，Scroller也会连续，实质上computeScroll的连续性又invalidate方法控制，scrollTo,scrollBy都会调用invalidate，而invalidate回去触发draw,从而computeScroll被连续调用，综上，Scroller也会被连续调用，除非invalidate停止调用。</p>
+<p>5.computeScroll如何和Scroller的调用过程保持一致。</p>
+<p>computeScroll参考Scroller影响scrollTo,scrollBy，实质上，为了不重复影响scrollTo,scrollBy，那么Scroller必须终止计算currX，currY。要知道计算有没有终止，需要通过mScroller.computeScrollOffset()</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">computeScroll</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-keyword">super</span>.computeScroll();<br><span class="hljs-keyword">if</span>(!mScroll.computeScrollOffset())&#123;<br><span class="hljs-comment">//计算currX,currY,并检测是否已完成&quot;滚动&quot;</span><br><span class="hljs-keyword">return</span>;<br>&#125;<br><span class="hljs-keyword">int</span> tempX=mScroll.getCurrX();<br>scrollTo(tempX,<span class="hljs-number">0</span>);<span class="hljs-comment">//会重复调用invalidate</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p><code>注意：在移动平台中，要明确知道“滑动”与“滚动”的不同，具体来说，滑动和滚动的方向总是相反的。</code></p>
+<p>再来看一下scrollTo,scrollBy这两个方法的区别, scrollTo()方法是让View相对于初始的位置滚动某段距离，由于View的初始位置是不变的，因此不管我们点击多少次scrollTo按钮滚动到的都将是同一个位置。而scrollBy()方法则是让View相对于当前的位置滚动某段距离，那每当我们点击一次scrollBy按钮，View的当前位置都进行了变动，因此不停点击会一直移动。</p>
+<p>通过这个例子来理解，相信大家已经把scrollTo()和scrollBy()这两个方法的区别搞清楚了，但是现在还有一个问题，目前使用这两个方法完成的滚动效果是跳跃式的，没有任何平滑滚动的效果。没错，只靠scrollTo()和scrollBy()这两个方法是很难完成ViewPager这样的效果的，因此我们还需要借助另外一个关键性的工具，也就我们今天的主角Scroller。<br>Scroller的基本用法其实还是比较简单的，主要可以分为以下几个步骤：</p>
+<p>1.创建Scroller的实例<br>2.调用startScroll()方法来初始化滚动数据并刷新界面<br>3.重写computeScroll()方法，并在其内部完成平滑滚动的逻辑<br>那么下面我们就按照上述的步骤，通过一个模仿ViewPager的简易例子来学习和理解一下Scroller的用法。<br>新建一个ScrollerLayout并让它继承自ViewGroup来作为我们的简易ViewPager布局，代码如下所示：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Created by guolin on 16/1/12.</span><br><span class="hljs-comment"> */</span><br>public <span class="hljs-keyword">class</span> ScrollerLayout extends ViewGroup &#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 用于完成滚动操作的实例</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> Scroller mScroller;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 判定为拖动的最小移动像素数</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> mTouchSlop;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 手机按下时的屏幕坐标</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span> mXDown;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 手机当时所处的屏幕坐标</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span> mXMove;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 上次触发ACTION_MOVE事件时的屏幕坐标</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span> mXLastMove;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 界面可滚动的左边界</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> leftBorder;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 界面可滚动的右边界</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> rightBorder;<br><br>    public <span class="hljs-constructor">ScrollerLayout(Context <span class="hljs-params">context</span>, AttributeSet <span class="hljs-params">attrs</span>)</span> &#123;<br>        super(context, attrs);<br>        <span class="hljs-comment">// 第一步，创建Scroller的实例</span><br>        mScroller = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Scroller(<span class="hljs-params">context</span>)</span>;<br>        ViewConfiguration configuration = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ViewConfiguration</span>.</span></span>get(context);<br>        <span class="hljs-comment">// 获取TouchSlop值</span><br>        mTouchSlop = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ViewConfigurationCompat</span>.</span></span>get<span class="hljs-constructor">ScaledPagingTouchSlop(<span class="hljs-params">configuration</span>)</span>;<br>    &#125;<br><br>    @Override<br>    protected void on<span class="hljs-constructor">Measure(<span class="hljs-params">int</span> <span class="hljs-params">widthMeasureSpec</span>, <span class="hljs-params">int</span> <span class="hljs-params">heightMeasureSpec</span>)</span> &#123;<br>        super.on<span class="hljs-constructor">Measure(<span class="hljs-params">widthMeasureSpec</span>, <span class="hljs-params">heightMeasureSpec</span>)</span>;<br>        <span class="hljs-built_in">int</span> childCount = get<span class="hljs-constructor">ChildCount()</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; childCount; i++) &#123;<br>            View childView = get<span class="hljs-constructor">ChildAt(<span class="hljs-params">i</span>)</span>;<br>            <span class="hljs-comment">// 为ScrollerLayout中的每一个子控件测量大小</span><br>            measure<span class="hljs-constructor">Child(<span class="hljs-params">childView</span>, <span class="hljs-params">widthMeasureSpec</span>, <span class="hljs-params">heightMeasureSpec</span>)</span>;<br>        &#125;<br>    &#125;<br><br>    @Override<br>    protected void on<span class="hljs-constructor">Layout(<span class="hljs-params">boolean</span> <span class="hljs-params">changed</span>, <span class="hljs-params">int</span> <span class="hljs-params">l</span>, <span class="hljs-params">int</span> <span class="hljs-params">t</span>, <span class="hljs-params">int</span> <span class="hljs-params">r</span>, <span class="hljs-params">int</span> <span class="hljs-params">b</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span> (changed) &#123;<br>            <span class="hljs-built_in">int</span> childCount = get<span class="hljs-constructor">ChildCount()</span>;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; childCount; i++) &#123;<br>                View childView = get<span class="hljs-constructor">ChildAt(<span class="hljs-params">i</span>)</span>;<br>                <span class="hljs-comment">// 为ScrollerLayout中的每一个子控件在水平方向上进行布局</span><br>                childView.layout(i<span class="hljs-operator"> * </span>childView.get<span class="hljs-constructor">MeasuredWidth()</span>, <span class="hljs-number">0</span>, (i + <span class="hljs-number">1</span>)<span class="hljs-operator"> * </span>childView.get<span class="hljs-constructor">MeasuredWidth()</span>, childView.get<span class="hljs-constructor">MeasuredHeight()</span>);<br>            &#125;<br>            <span class="hljs-comment">// 初始化左右边界值</span><br>            leftBorder = get<span class="hljs-constructor">ChildAt(0)</span>.get<span class="hljs-constructor">Left()</span>;<br>            rightBorder = get<span class="hljs-constructor">ChildAt(<span class="hljs-params">getChildCount</span>()</span> - <span class="hljs-number">1</span>).get<span class="hljs-constructor">Right()</span>;<br>        &#125;<br>    &#125;<br><br>    @Override<br>    public boolean on<span class="hljs-constructor">InterceptTouchEvent(MotionEvent <span class="hljs-params">ev</span>)</span> &#123;<br>        switch (ev.get<span class="hljs-constructor">Action()</span>) &#123;<br>            case MotionEvent.ACTION_DOWN:<br>                mXDown = ev.get<span class="hljs-constructor">RawX()</span>;<br>                mXLastMove = mXDown;<br>                break;<br>            case MotionEvent.ACTION_MOVE:<br>                mXMove = ev.get<span class="hljs-constructor">RawX()</span>;<br>                <span class="hljs-built_in">float</span> diff = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Math</span>.</span></span>abs(mXMove - mXDown);<br>                mXLastMove = mXMove;<br>                <span class="hljs-comment">// 当手指拖动值大于TouchSlop值时，认为应该进行滚动，拦截子控件的事件</span><br>                <span class="hljs-keyword">if</span> (diff &gt; mTouchSlop) &#123;<br>                    return <span class="hljs-literal">true</span>;<br>                &#125;<br>                break;<br>        &#125;<br>        return super.on<span class="hljs-constructor">InterceptTouchEvent(<span class="hljs-params">ev</span>)</span>;<br>    &#125;<br><br>    @Override<br>    public boolean on<span class="hljs-constructor">TouchEvent(MotionEvent <span class="hljs-params">event</span>)</span> &#123;<br>        switch (event.get<span class="hljs-constructor">Action()</span>) &#123;<br>            case MotionEvent.ACTION_MOVE:<br>                mXMove = event.get<span class="hljs-constructor">RawX()</span>;<br>                <span class="hljs-built_in">int</span> scrolledX = (<span class="hljs-built_in">int</span>) (mXLastMove - mXMove);<br>                <span class="hljs-keyword">if</span> (get<span class="hljs-constructor">ScrollX()</span> + scrolledX &lt; leftBorder) &#123;<br>                    scroll<span class="hljs-constructor">To(<span class="hljs-params">leftBorder</span>, 0)</span>;<br>                    return <span class="hljs-literal">true</span>;<br>                &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (get<span class="hljs-constructor">ScrollX()</span> + get<span class="hljs-constructor">Width()</span> + scrolledX &gt; rightBorder) &#123;<br>                    scroll<span class="hljs-constructor">To(<span class="hljs-params">rightBorder</span> - <span class="hljs-params">getWidth</span>()</span>, <span class="hljs-number">0</span>);<br>                    return <span class="hljs-literal">true</span>;<br>                &#125;<br>                scroll<span class="hljs-constructor">By(<span class="hljs-params">scrolledX</span>, 0)</span>;<br>                mXLastMove = mXMove;<br>                break;<br>            case MotionEvent.ACTION_UP:<br>                <span class="hljs-comment">// 当手指抬起时，根据当前的滚动值来判定应该滚动到哪个子控件的界面</span><br>                <span class="hljs-built_in">int</span> targetIndex = (get<span class="hljs-constructor">ScrollX()</span> + get<span class="hljs-constructor">Width()</span><span class="hljs-operator"> / </span><span class="hljs-number">2</span>)<span class="hljs-operator"> / </span>get<span class="hljs-constructor">Width()</span>;<br>                <span class="hljs-built_in">int</span> dx = targetIndex<span class="hljs-operator"> * </span>get<span class="hljs-constructor">Width()</span> - get<span class="hljs-constructor">ScrollX()</span>;<br>                <span class="hljs-comment">// 第二步，调用startScroll()方法来初始化滚动数据并刷新界面</span><br>                mScroller.start<span class="hljs-constructor">Scroll(<span class="hljs-params">getScrollX</span>()</span>, <span class="hljs-number">0</span>, dx, <span class="hljs-number">0</span>);<br>                invalidate<span class="hljs-literal">()</span>;<br>                break;<br>        &#125;<br>        return super.on<span class="hljs-constructor">TouchEvent(<span class="hljs-params">event</span>)</span>;<br>    &#125;<br><br>    @Override<br>    public void compute<span class="hljs-constructor">Scroll()</span> &#123;<br>        <span class="hljs-comment">// 第三步，重写computeScroll()方法，并在其内部完成平滑滚动的逻辑</span><br>        <span class="hljs-keyword">if</span> (mScroller.compute<span class="hljs-constructor">ScrollOffset()</span>) &#123;<br>            scroll<span class="hljs-constructor">To(<span class="hljs-params">mScroller</span>.<span class="hljs-params">getCurrX</span>()</span>, mScroller.get<span class="hljs-constructor">CurrY()</span>);<br>            invalidate<span class="hljs-literal">()</span>;<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>整个Scroller用法的代码都在这里了，代码并不长，一共才100多行，我们一点点来看。<br>首先在ScrollerLayout的构造函数里面我们进行了上述步骤中的第一步操作，即创建Scroller的实例，由于Scroller的实例只需创建一次，因此我们把它放到构造函数里面执行。另外在构建函数中我们还初始化的TouchSlop的值，这个值在后面将用于判断当前用户的操作是否是拖动。</p>
+<p>接着重写onMeasure()方法和onLayout()方法，在onMeasure()方法中测量ScrollerLayout里的每一个子控件的大小，在onLayout()方法中为ScrollerLayout里的每一个子控件在水平方向上进行布局。</p>
+<p>接着重写onInterceptTouchEvent()方法， 在这个方法中我们记录了用户手指按下时的X坐标位置，以及用户手指在屏幕上拖动时的X坐标位置，当两者之间的距离大于TouchSlop值时，就认为用户正在拖动布局，然后我们就将事件在这里拦截掉，阻止事件传递到子控件当中。</p>
+<p>那么当我们把事件拦截掉之后，就会将事件交给ScrollerLayout的onTouchEvent()方法来处理。如果当前事件是ACTION_MOVE，说明用户正在拖动布局，那么我们就应该对布局内容进行滚动从而影响拖动事件，实现的方式就是使用我们刚刚所学的scrollBy()方法，用户拖动了多少这里就scrollBy多少。另外为了防止用户拖出边界这里还专门做了边界保护，当拖出边界时就调用scrollTo()方法来回到边界位置。</p>
+<p>如果当前事件是ACTION_UP时，说明用户手指抬起来了，但是目前很有可能用户只是将布局拖动到了中间，我们不可能让布局就这么停留在中间的位置，因此接下来就需要借助Scroller来完成后续的滚动操作。首先这里我们先根据当前的滚动位置来计算布局应该继续滚动到哪一个子控件的页面，然后计算出距离该页面还需滚动多少距离。接下来我们就该进行上述步骤中的第二步操作，调用startScroll()方法来初始化滚动数据并调用invalidate()来刷新界面。startScroll()方法接收四个参数，第一个参数是滚动开始时X的坐标，第二个参数是滚动开始时Y的坐标，第三个参数是横向滚动的距离，正值表示向左滚动，第四个参数是纵向滚动的距离，正值表示向上滚动。紧接着调用invalidate()方法来刷新界面。</p>
+<p>现在前两步都已经完成了，最后我们还需要进行第三步操作，即重写computeScroll()方法，并在其内部完成平滑滚动的逻辑 。在整个后续的平滑滚动过程中，computeScroll()方法是会一直被调用的，因此我们需要不断调用Scroller的computeScrollOffset()方法来进行判断滚动操作是否已经完成了，如果还没完成的话，那就继续调用scrollTo()方法，并把Scroller的curX和curY坐标传入，然后刷新界面从而完成平滑滚动的操作。</p>
+<hr>
+<p>实现惯性滚动 (Scroller的妙用)<br><a href="%22https://blog.csdn.net/u011387817/article/details/80313184%22">Android实现圆弧滑动效果之ArcSlidingHelper篇</a><br>说到Scroller，相信大家第一时间想到要配合View中的computeScroll方法来使用对吧，但是呢，我们这篇文章的主题是辅助类，并不打算继承View，而且不持有Context引用，这个时候，可能有同学就会有以下疑问了：</p>
+<ul>
+<li>这种情况下，Scroller还能正常工作吗？</li>
+<li>调用它的startScroll或fling方法后，不是还要调用View中的invalidate方法来触发的吗？</li>
+<li>不继承View，哪来的 invalidate方法？  </li>
+<li>不继承View，怎么重写computeScroll方法？在哪里处理惯性滚动？  </li>
+<li>哈哈，其实Scroller是完全可以脱离View来使用的，既然说是妙用，妙在哪里呢？在开始之前，我们先来了解一下Scroller：  </li>
+</ul>
+<p>1.它看上去更像是一个ValueAnimator，但它跟ValueAnimator有个明显的区别就是：它不会主动更新动画的值。我们在获取最新值之前，总是要先调用computeScrollOffset方法来刷新内部的mCurrX、mCurrY的值，如果是惯性滚动模式(调用fling方法)，还会刷新mCurrVelocity的值。  </p>
+<p>2.在这里先分享大家一个理解源码调用顺序的方法：<br>比如我们想知道是哪个方法调用了computeScroll：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@Override<br>public void compute<span class="hljs-constructor">Scroll()</span> &#123;<br>    StackTraceElement<span class="hljs-literal">[]</span> elements = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Thread</span>.</span></span>current<span class="hljs-constructor">Thread()</span>.get<span class="hljs-constructor">StackTrace()</span>;<br>    <span class="hljs-keyword">for</span> (StackTraceElement element : elements) &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>i(<span class="hljs-string">&quot;computeScroll&quot;</span>, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">String</span>.</span></span>format(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Locale</span>.</span></span>get<span class="hljs-constructor">Default()</span>, <span class="hljs-string">&quot;%s-----&gt;%s\tline: %d&quot;</span>,<br>                element.get<span class="hljs-constructor">ClassName()</span>, element.get<span class="hljs-constructor">MethodName()</span>, element.get<span class="hljs-constructor">LineNumber()</span>));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>日志输出：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">com.wuyr.testview.MyView<span class="hljs-comment">-----&gt;computeScroll	line: 141</span><br>android.<span class="hljs-keyword">view</span>.<span class="hljs-keyword">View</span><span class="hljs-comment">-----&gt;updateDisplayListIfDirty	line: 15361</span><br>android.<span class="hljs-keyword">view</span>.<span class="hljs-keyword">View</span><span class="hljs-comment">-----&gt;draw	line: 16182</span><br>android.<span class="hljs-keyword">view</span>.ViewGroup<span class="hljs-comment">-----&gt;drawChild	line: 3777</span><br>android.<span class="hljs-keyword">view</span>.ViewGroup<span class="hljs-comment">-----&gt;dispatchDraw	line: 3567</span><br>android.<span class="hljs-keyword">view</span>.<span class="hljs-keyword">View</span><span class="hljs-comment">-----&gt;updateDisplayListIfDirty	line: 15373</span><br>android.<span class="hljs-keyword">view</span>.<span class="hljs-keyword">View</span><span class="hljs-comment">-----&gt;draw	line: 16182</span><br>android.<span class="hljs-keyword">view</span>.ViewGroup<span class="hljs-comment">-----&gt;drawChild	line: 3777</span><br>android.<span class="hljs-keyword">view</span>.ViewGroup<span class="hljs-comment">-----&gt;dispatchDraw	line: 3567</span><br>android.<span class="hljs-keyword">view</span>.<span class="hljs-keyword">View</span><span class="hljs-comment">-----&gt;updateDisplayListIfDirty	line: 15373</span><br>android.<span class="hljs-keyword">view</span>.<span class="hljs-keyword">View</span><span class="hljs-comment">-----&gt;draw	line: 16182</span><br></code></pre></td></tr></table></figure>
+<p>这样我们就能够很清晰的看到它的调用链了。</p>
+<p>回到正题，所谓的调用invalidate方法来触发，是这样的：我们都知道，调用了这个方法之后，onDraw方法就会回调，而调用onDraw的那个方法，是draw(Canvas canvas)，再上一级，是draw(Canvas canvas, ViewGroup parent, long drawingTime)，重点来了：<br>computeScroll也是在这个方法中回调的，现在可以得出一个结论：<br>我们在View中调用invalidate方法，也就是间接地调用computeScroll，而computeScroll中，是我们处理滚动的方法，在使用Scroller时，我们都会重写这个方法，并在里面调用Scroller的computeScrollOffset方法，然后调用getCurrX或getCurrY来获取到最新的值。(好像我前面说的都是多余的) 但是！有没有发现，这个过程，我们完全可以不依赖View来做到的？</p>
+<p>3.现在思路就很清晰了，invalidate方法？对于Scroller来说，它的作用只是回调computeScroll从而更新x和y的值而已。</p>
+<p>4.所以完全可以自己写两个方法来实现Scroller在View中的效果，我们这次打算利用Hanlder来帮我们处理异步的问题，这样的话，我们就不用自己新开线程去不断的调用方法啦。</p>
+<p>好了，现在我们所遇到的问题，都已经有解决方案了，可以动手咯！</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"> <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 处理触摸事件</span><br><span class="hljs-comment">     */</span><br>    public void handle<span class="hljs-constructor">Movement(MotionEvent <span class="hljs-params">event</span>)</span> &#123;<br>     .....<br>        mVelocityTracker.add<span class="hljs-constructor">Movement(<span class="hljs-params">event</span>)</span>;<br>        switch (event.get<span class="hljs-constructor">Action()</span>) &#123;<br>            case MotionEvent.ACTION_DOWN:<br>             .....<br>                break;<br>            case MotionEvent.ACTION_MOVE:<br>                handle<span class="hljs-constructor">ActionMove(<span class="hljs-params">x</span>, <span class="hljs-params">y</span>)</span>;<br>                break;<br>            case MotionEvent.ACTION_UP:<br>            case MotionEvent.ACTION_CANCEL:<br>            case MotionEvent.ACTION_OUTSIDE:<br>                <span class="hljs-keyword">if</span> (isInertialSlidingEnable) &#123;<br>                    mVelocityTracker.compute<span class="hljs-constructor">CurrentVelocity(1000)</span>;<br>                    mScroller.fling(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, (<span class="hljs-built_in">int</span>) mVelocityTracker.get<span class="hljs-constructor">XVelocity()</span>, (<span class="hljs-built_in">int</span>) mVelocityTracker.get<span class="hljs-constructor">YVelocity()</span>,Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE); <br>                    <span class="hljs-comment">//我们在调用Scroller的fling方法之后，并没有调用invalidate方法，而是我们自定义的startFling方法. </span><br>                    start<span class="hljs-constructor">Fling()</span>;<br>                &#125;<br>                break;<br>           .....<br>        &#125;<br> .....<br>    &#125;<br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 处理惯性滚动</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> void compute<span class="hljs-constructor">InertialSliding()</span> &#123;<br>        check<span class="hljs-constructor">IsRecycled()</span>;<br>        <span class="hljs-keyword">if</span> (mScroller.compute<span class="hljs-constructor">ScrollOffset()</span>) &#123;<br>            <span class="hljs-built_in">float</span> y = ((isShouldBeGetY ? mScroller.get<span class="hljs-constructor">CurrY()</span> : mScroller.get<span class="hljs-constructor">CurrX()</span>)<span class="hljs-operator"> * </span>mScrollAvailabilityRatio);<br>            <span class="hljs-keyword">if</span> (mLastScrollOffset != <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-built_in">float</span> offset = fix<span class="hljs-constructor">Angle(Math.<span class="hljs-params">abs</span>(<span class="hljs-params">y</span> - <span class="hljs-params">mLastScrollOffset</span>)</span>);<br>                mSlidingListener.on<span class="hljs-constructor">Sliding(<span class="hljs-params">isClockwiseScrolling</span> ? <span class="hljs-params">offset</span> : -<span class="hljs-params">offset</span>)</span>;<br>            &#125;<br>            mLastScrollOffset = y;<br>            start<span class="hljs-constructor">Fling()</span>;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mScroller.is<span class="hljs-constructor">Finished()</span>) &#123;<br>            mLastScrollOffset = <span class="hljs-number">0</span>;<br>            <span class="hljs-keyword">if</span> (mSlideFinishListener != null) &#123;<br>                mSlideFinishListener.on<span class="hljs-constructor">SlideFinished()</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 开始惯性滚动</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> void start<span class="hljs-constructor">Fling()</span> &#123;<br>        mHandler.send<span class="hljs-constructor">EmptyMessage(0)</span>;<br>    &#125;<br>    <br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 主线程回调惯性滚动</span><br><span class="hljs-comment">     *Handler来处理异步的问题，这样就不用自己去新开线程了。</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> static <span class="hljs-keyword">class</span> InertialSlidingHandler extends Handler &#123;<br><br>        ArcSlidingHelper mHelper;<br><br>        <span class="hljs-constructor">InertialSlidingHandler(ArcSlidingHelper <span class="hljs-params">helper</span>)</span> &#123;<br>            mHelper = helper;<br>        &#125;<br><br>        @Override<br>        public void handle<span class="hljs-constructor">Message(Message <span class="hljs-params">msg</span>)</span> &#123;<br>            mHelper.compute<span class="hljs-constructor">InertialSliding()</span>;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>我们用computeInertialSliding来代替了View中的computeScroll方法，用startFling代替了invalidate，可以说是完全脱离了View来使用Scroller，妙就妙在这里啦，嘻嘻。</p>
+<hr>
+<p>Scroller主要使用的滚动方法有：startScroll、fling。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">start<span class="hljs-constructor">Scroll(<span class="hljs-params">int</span> <span class="hljs-params">startX</span>, <span class="hljs-params">int</span> <span class="hljs-params">startY</span>, <span class="hljs-params">int</span> <span class="hljs-params">dx</span>, <span class="hljs-params">int</span> <span class="hljs-params">dy</span>, <span class="hljs-params">int</span> <span class="hljs-params">duration</span>)</span>：<br>指定起点（startX，startY），从起点平滑变化（dx，dy），耗时duration，通常用于：知道起点与需要改变的距离的平滑滚动等。<br><br>fling(<span class="hljs-built_in">int</span> startX, <span class="hljs-built_in">int</span> startY, <span class="hljs-built_in">int</span> velocityX, <span class="hljs-built_in">int</span> velocityY, <span class="hljs-built_in">int</span> minX, <span class="hljs-built_in">int</span> maxX, <span class="hljs-built_in">int</span> minY, <span class="hljs-built_in">int</span> maxY)：<br>惯性滑动。  给定一个初始速度（ velocityX， velocityY ），该方法内部会根据这个速度去计算需要滑动的距离以及需要耗费的时间。通常用于：界面的惯性滑动等。<br></code></pre></td></tr></table></figure>
+<p>scroller的实例化：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Scroller mScroller = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Scroller(Context <span class="hljs-params">mContext</span>)</span>&#123;&#125;; :采用默认插值器<br>Scroller mScroller = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Scroller(Context <span class="hljs-params">mContext</span>，Interpolator <span class="hljs-params">interpolator</span>)</span>&#123;&#125;;采用指定的插值器<br></code></pre></td></tr></table></figure>
+<p>调用过程：</p>
+<pre><code>   public void startScroll( int startX, int startY, int dx,int dy)&#123;&#125;;
+</code></pre>
+<p>这方法并不是真正意义上的开始Scroll，它的作用是为Scroller做一些准备工作,比如设置移动的初始位置，滑动的位移以及持续时间等。</p>
+<pre><code>   public boolean computeScrollOffset()&#123;&#125;
+</code></pre>
+<p>这方法用于判断移动过程是否完成</p>
+<pre><code>   getCurrX、getCurrY、getFinalX、getFinalY、
+</code></pre>
+<p>这些方法用于获取scroll的一些位置信息</p>
+<ul>
+<li>Scroller与View结合使用：</li>
+</ul>
+<p>首先需要在自定义的View中定义一个私有成员 mScroller，用于记录view滚动的位置，然后再重写View的<code>computeScroll（）</code>方法来实现具体移动</p>
+<p>注意：Scroller的作用只是保存一些信息，以及判断是否移动完成，所以我们得知道<code>computeScroll（）</code>这个方法的调用流程，在查看Android源码时发现<br>View.java中的<code>computeScroll（）</code>方法是一个空函数，所以我们需要在自定义的View中重写这个方法来实现我们想要的功能，那么<code>computeScroll（）</code>是怎么样被调用的呢？</p>
+<p>调用<code>invalidate()</code>（UI线程）或者<code>postInvalidate（）</code>使View（Viewgroup）树重绘.<br>重绘分成两种情况：</p>
+<p>1、Viewgroup的重绘<br><code>ViewGroup的绘制流程：onDraw（）--&gt;dispatchDraw()--&gt;drawChild()--&gt;child.computeScroll()</code></p>
+<p>2、View的重绘：</p>
+<p>View没有子view所以在View的源码中看到<code>dispatchDraw（）</code>方法是一个空方法，那么其调用流程就和ViewGroup是不一样的，那么View是怎样调用<code>computeScroll（）</code>的呢？</p>
+<p>我们注意到invalidate是重绘整个View树或者ViewGroup树，所以当View重绘时其所在父容器也会重绘，so，父容器就会经历<code>onDraw（）--&gt;dispatchDraw()--&gt;drawChild() --&gt;child.computeScroll()</code>流程，这时候自定义View中重写的computeScroll（）方法就会被调用。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"> <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ViewGroup</span>.</span></span>java：<br><br>@Override  <br>protected void dispatch<span class="hljs-constructor">Draw(Canvas <span class="hljs-params">canvas</span>)</span>&#123; <br><br>            <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; count; i++) &#123;  <br>            final View child = children<span class="hljs-literal">[<span class="hljs-identifier">i</span>]</span>;  <br>            <span class="hljs-keyword">if</span> ((child.mViewFlags &amp; VISIBILITY_MASK)<span class="hljs-operator"> == </span>VISIBLE<span class="hljs-operator"> || </span>child.get<span class="hljs-constructor">Animation()</span> != null)  <br>  <br>            &#123;  <br>                more <span class="hljs-pattern-match">|= draw<span class="hljs-constructor">Child(<span class="hljs-params">canvas</span>, <span class="hljs-params">child</span>, <span class="hljs-params">drawingTime</span>)</span>;  </span><br><span class="hljs-pattern-match">            &#125;  </span><br><span class="hljs-pattern-match">draw<span class="hljs-constructor">Child</span>函数：</span><br><span class="hljs-pattern-match"></span><br><span class="hljs-pattern-match">protected boolean draw<span class="hljs-constructor">Child(Canvas <span class="hljs-params">canvas</span>, View <span class="hljs-params">child</span>, <span class="hljs-params">long</span> <span class="hljs-params">drawingTime</span>)</span> &#123;</span><br><span class="hljs-pattern-match"></span><br><span class="hljs-pattern-match">                  ----------</span><br><span class="hljs-pattern-match"></span><br><span class="hljs-pattern-match">child.compute<span class="hljs-constructor">Scroll()</span>;</span><br><span class="hljs-pattern-match"></span><br><span class="hljs-pattern-match">              -----------------</span><br><span class="hljs-pattern-match"></span><br><span class="hljs-pattern-match"> <span class="hljs-keyword">if</span> ((child.m<span class="hljs-constructor">PrivateFlags</span> &amp; <span class="hljs-constructor">SKIP_DRAW</span>) <span class="hljs-operator">==</span> <span class="hljs-constructor">SKIP_DRAW</span>) &#123;</span><br><span class="hljs-pattern-match">        <span class="hljs-keyword">if</span> (<span class="hljs-constructor">ViewDebug</span>.<span class="hljs-constructor">TRACE_HIERARCHY</span>) &#123;</span><br><span class="hljs-pattern-match">            <span class="hljs-constructor">ViewDebug</span>.trace(this, <span class="hljs-constructor">ViewDebug</span>.<span class="hljs-constructor">HierarchyTraceType</span>.<span class="hljs-constructor">DRAW</span>);</span><br><span class="hljs-pattern-match">        &#125;</span><br><span class="hljs-pattern-match">        child.dispatch<span class="hljs-constructor">Draw(<span class="hljs-params">canvas</span>)</span>;</span><br><span class="hljs-pattern-match">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="hljs-pattern-match">        child.draw(canvas);</span><br><span class="hljs-pattern-match">    &#125;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>自定义View：</li>
+</ul>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> CustomView extends View &#123;  <br>  <br>    <span class="hljs-keyword">private</span> Scroller mScroller;  <br> <br>    public <span class="hljs-constructor">CustomView(Context <span class="hljs-params">context</span>, AttributeSet <span class="hljs-params">attrs</span>)</span> &#123;  <br>        super(context, attrs);  <br>        mScroller = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Scroller(<span class="hljs-params">context</span>)</span>;  <br>    &#125;  <br>  <br>    <span class="hljs-comment">//调用此方法滚动到目标位置  </span><br>    public void smooth<span class="hljs-constructor">ScrollTo(<span class="hljs-params">int</span> <span class="hljs-params">fx</span>, <span class="hljs-params">int</span> <span class="hljs-params">fy</span>)</span> &#123;  <br>        <span class="hljs-built_in">int</span> dx = fx - mScroller.get<span class="hljs-constructor">FinalX()</span>;  <br>        <span class="hljs-built_in">int</span> dy = fy - mScroller.get<span class="hljs-constructor">FinalY()</span>;  <br>        smooth<span class="hljs-constructor">ScrollBy(<span class="hljs-params">dx</span>, <span class="hljs-params">dy</span>)</span>;  <br>    &#125;  <br>  <br>    <span class="hljs-comment">//调用此方法设置滚动的相对偏移  </span><br>    public void smooth<span class="hljs-constructor">ScrollBy(<span class="hljs-params">int</span> <span class="hljs-params">dx</span>, <span class="hljs-params">int</span> <span class="hljs-params">dy</span>)</span> &#123;  <br>        <span class="hljs-comment">//设置mScroller的滚动偏移量  </span><br>        mScroller.start<span class="hljs-constructor">Scroll(<span class="hljs-params">mScroller</span>.<span class="hljs-params">getFinalX</span>()</span>, mScroller.get<span class="hljs-constructor">FinalY()</span>, dx, dy);  <br>        invalidate<span class="hljs-literal">()</span>;<span class="hljs-comment">//这里必须调用invalidate()才能保证computeScroll()会被调用，否则不一定会刷新界面，看不到滚动效果  </span><br>    &#125;  <br>      <br>    @Override  <br>    public void compute<span class="hljs-constructor">Scroll()</span> &#123;  <br>        <span class="hljs-comment">//先判断mScroller滚动是否完成  </span><br>        <span class="hljs-keyword">if</span> (mScroller.compute<span class="hljs-constructor">ScrollOffset()</span>) &#123;  <br>            <span class="hljs-comment">//这里调用View的scrollTo()完成实际的滚动  </span><br>            scroll<span class="hljs-constructor">To(<span class="hljs-params">mScroller</span>.<span class="hljs-params">getCurrX</span>()</span>, mScroller.get<span class="hljs-constructor">CurrY()</span>);  <br>              <br>            <span class="hljs-comment">//必须调用该方法，否则不一定能看到滚动效果  </span><br>            post<span class="hljs-constructor">Invalidate()</span>;  <br>        &#125;  <br>        super.compute<span class="hljs-constructor">Scroll()</span>;  <br>    &#125;  <br>&#125;  <br></code></pre></td></tr></table></figure>
+
+<hr>
+<p>android.view.VelocityTracker主要用跟踪触摸屏事件（flinging事件和其他gestures手势事件）的速率。用addMovement(MotionEvent)函数将Motion event加入到VelocityTracker类实例中.你可以使用getXVelocity() 或getXVelocity()获得横向和竖向的速率到速率时，但是使用它们之前请先调用computeCurrentVelocity(int)来初始化速率的单位 。  </p>
+<p>示例： </p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">private</span> VelocityTracker mVelocityTracker;<span class="hljs-comment">//生命变量 </span><br><span class="hljs-comment">//在onTouchEvent(MotionEvent ev)中 </span><br><span class="hljs-keyword">if</span> (mVelocityTracker<span class="hljs-operator"> == </span>null) &#123; <br>        mVelocityTracker = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">VelocityTracker</span>.</span></span>obtain<span class="hljs-literal">()</span>;<span class="hljs-comment">//获得VelocityTracker类实例 </span><br>&#125; <br>mVelocityTracker.add<span class="hljs-constructor">Movement(<span class="hljs-params">ev</span>)</span>;<span class="hljs-comment">//将事件加入到VelocityTracker类实例中 </span><br><span class="hljs-comment">//判断当ev事件是MotionEvent.ACTION_UP时：计算速率 </span><br>final VelocityTracker velocityTracker = mVelocityTracker; <br><span class="hljs-comment">// 1000 provides pixels per second </span><br>velocityTracker.compute<span class="hljs-constructor">CurrentVelocity(1, (<span class="hljs-params">float</span>)</span><span class="hljs-number">0.01</span>); <span class="hljs-comment">//设置maxVelocity值为0.1时，速率大于0.01时，显示的速率都是0.01,速率小于0.01时，显示正常 </span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>i(<span class="hljs-string">&quot;test&quot;</span>,<span class="hljs-string">&quot;velocityTraker&quot;</span>+velocityTracker.get<span class="hljs-constructor">XVelocity()</span>);                     <br>velocityTracker.compute<span class="hljs-constructor">CurrentVelocity(1000)</span>; <span class="hljs-comment">//设置units的值为1000，意思为一秒时间内运动了多少个像素 </span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>i(<span class="hljs-string">&quot;test&quot;</span>,<span class="hljs-string">&quot;velocityTraker&quot;</span>+velocityTracker.get<span class="hljs-constructor">XVelocity()</span>); <br></code></pre></td></tr></table></figure>
+
+<p>大体的使用是这样的：<br>当你需要跟踪触摸屏事件的速度的时候,使用obtain()方法来获得VelocityTracker类的一个实例对象<br>在onTouchEvent回调函数中，使用addMovement(MotionEvent)函数将当前的移动事件传递给VelocityTracker对象<br>使用computeCurrentVelocity  (int units)函数来计算当前的速度，使用 getXVelocity  ()、 getYVelocity  ()函数来获得当前的速度</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/android/">android</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/android/">android</a>
+                    
+                      <a class="hover-with-bg" href="/tags/scroll/">scroll</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/c43f5235/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">软件整理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

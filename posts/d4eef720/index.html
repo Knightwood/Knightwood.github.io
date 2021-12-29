@@ -1,0 +1,516 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="安装fbterm:1pamac install fbterm 设置将用户加入video组,并更改fbterm权限:12345678&#x3D;&#x3D;&gt; 若想使用非根用户运行fbterm，需要把用户加入video组：#username为用户名，video为fbterm所在组sudo gpasswd -a YOUR_USERNAME video&#x3D;&#x3D;&gt; 若想非根用户可使用键盘快捷方式，需要：sudo se">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装fbterm">
+<meta property="og:url" content="https://knightwood.github.io/posts/d4eef720/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="安装fbterm:1pamac install fbterm 设置将用户加入video组,并更改fbterm权限:12345678&#x3D;&#x3D;&gt; 若想使用非根用户运行fbterm，需要把用户加入video组：#username为用户名，video为fbterm所在组sudo gpasswd -a YOUR_USERNAME video&#x3D;&#x3D;&gt; 若想非根用户可使用键盘快捷方式，需要：sudo se">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
+<meta property="article:modified_time" content="2021-12-29T01:35:48.557Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="软件，终端">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>安装fbterm - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="安装fbterm">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-23 14:36" pubdate>
+        2021年12月23日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">安装fbterm</h1>
+            
+            <div class="markdown-body">
+              <h1 id="安装fbterm"><a href="#安装fbterm" class="headerlink" title="安装fbterm:"></a>安装fbterm:</h1><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">pamac <span class="hljs-keyword">install</span> fbterm<br></code></pre></td></tr></table></figure>
+<h1 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h1><h2 id="将用户加入video组-并更改fbterm权限"><a href="#将用户加入video组-并更改fbterm权限" class="headerlink" title="将用户加入video组,并更改fbterm权限:"></a>将用户加入video组,并更改fbterm权限:</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk">==&gt; 若想使用非根用户运行fbterm，需要把用户加入video组：<br><span class="hljs-comment">#username为用户名，video为fbterm所在组</span><br>sudo gpasswd -a YOUR_USERNAME video<br><br>==&gt; 若想非根用户可使用键盘快捷方式，需要：<br>sudo setcap <span class="hljs-string">&#x27;cap_sys_tty_config+ep&#x27;</span> <span class="hljs-regexp">/usr/</span>bin/fbterm<br>或者：<br>sudo chmod u+s <span class="hljs-regexp">/usr/</span>bin/fbterm<br></code></pre></td></tr></table></figure>
+
+<h2 id="tty自动进入fbterm"><a href="#tty自动进入fbterm" class="headerlink" title="tty自动进入fbterm"></a>tty自动进入fbterm</h2><p>修改用户配置文件“<del>/.bashrc”或“</del>/.zshrc”。在.bashrc或.zshrc最后中添加如下判断:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#进入tty自动启动fbterm</span><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$TERM</span>&quot;</span> = <span class="hljs-string">&quot;linux&quot;</span> ]; <span class="hljs-keyword">then</span><br><span class="hljs-comment"># 此处使用了别名,如此当我们退出fbterm后,便能够通过简单的命令:fbterm,</span><br><span class="hljs-comment"># 重新启动fbterm了,而不用再指定LANG.</span><br><span class="hljs-built_in">alias</span> fbterm=<span class="hljs-string">&#x27;LANG=zh_CN.UTF-8 fbterm&#x27;</span><br>fbterm<br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="创建fbterm的配置文件"><a href="#创建fbterm的配置文件" class="headerlink" title="创建fbterm的配置文件"></a>创建fbterm的配置文件</h1><p><strong>在~/.config/位置创建fbterm文件夹，在此文件夹下创建fbtermrc文件</strong></p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs arcade">mkdir ~<span class="hljs-regexp">/.config/</span>fbterm<br>cd ~<span class="hljs-regexp">/.config/</span>fbterm<br>touch fbtermrc<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h3><p>配置文件在 ~/.config/fbterm/fbtermrc</p>
+<p>首先注意，konsole/gnome-terminal 等 X11 环境的终端模拟器的字体拿到 fbterm 中百分之百会走形。因此一些很漂亮的比如 consolas，monaco，andale 等都很丑。你可以在 .fbtermrc 中自己试验。原因是 fbterm 使用 fontconfig 挑字体，freetype 渲染，但是 <strong>freetype 中依赖 libxft 的部分它作为一个终端无法使用</strong>。</p>
+<p>中文字体测试过文泉驿微米黑、正黑、点阵宋和 unibit，都不行。其中点阵宋显示很清晰，但是宽度太大，其他完全就不清晰。微软、苹果家的字体都是要求 freetype 渲染的，就不要想了。我摸索出的最佳字体配置如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">font-names</span>=DejaVu Sans Mo<span class="hljs-literal">no</span>,Droid Sans Fallback<br><span class="hljs-attr">font-size</span>=<span class="hljs-number">20</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">text-encodings</span>=UTF-<span class="hljs-number">8</span><br></code></pre></td></tr></table></figure>
+
+<p>也在 .fbtermrc 中配置。</p>
+<h3 id="键盘快捷键"><a href="#键盘快捷键" class="headerlink" title="键盘快捷键"></a>键盘快捷键</h3><p>启动提示：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stata">[<span class="hljs-keyword">input</span>] can&#x27;t change kernel keymap <span class="hljs-keyword">table</span>, all shortcuts will NOT work,  see SECURITY <span class="hljs-keyword">NOTES</span> section of <span class="hljs-keyword">man</span> page <span class="hljs-keyword">for</span> solution.<br></code></pre></td></tr></table></figure>
+
+<p>原因：fbterm 需要设置内核键盘映射表来设定快捷键。这就需要 fbterm 是一个 setuid 0 的程序（不然普通用户还是设置不了快捷键因为没权限操作内核）。fbterm 也只在设置快捷键时会自动转为 root。因此安全上是可以放心的。</p>
+<p>解决：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo chmod u+s <span class="hljs-regexp">/usr/</span>bin/fbterm<br></code></pre></td></tr></table></figure>
+
+<h3 id="背景图片"><a href="#背景图片" class="headerlink" title="背景图片"></a>背景图片</h3><p>安装 home:MargueriteSu 源的 fbv 软件，把下面脚本保存成 cfbterm</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">    #!/bin/bash<br><br>    # fbterm-bi: a <span class="hljs-keyword">wrapper</span> script <span class="hljs-keyword">to</span>  <span class="hljs-keyword">enable</span>  background<br>image <span class="hljs-keyword">with</span> fbterm<br>    # <span class="hljs-keyword">usage</span>: fbterm-bi /<span class="hljs-type">path</span>/<span class="hljs-keyword">to</span>/image fbterm-<span class="hljs-keyword">options</span><br><br>    echo -ne &quot;\e[?25l&quot; # hide <span class="hljs-keyword">cursor</span><br><br>    fbv -ciuker &quot;这里是你的图片的完整路径&quot; &lt;&lt; EOF<br>    q<br>    EOF<br><br>    shift<br>    export FBTERM_BACKGROUND_IMAGE=<span class="hljs-number">1</span><br>    exec fbterm &quot;$@&quot;<br></code></pre></td></tr></table></figure>
+
+<p>然后：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo cp -r cfbterm <span class="hljs-regexp">/usr/</span>bin<br></code></pre></td></tr></table></figure>
+
+<p>以后每次都用 cfbterm 命令启动控制台。图片支持 png/jpeg/jpg/bmp 格式，建议用 png，jpeg 的颜色渐变在终端下显示很丑。</p>
+<h3 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h3><p>安装 fcitx-fbterm。然后在 /home/marguerite/.fbtermrc 的最后：</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs oxygene">input-<span class="hljs-function"><span class="hljs-keyword">method</span>=<span class="hljs-title">fcitx</span>-<span class="hljs-title">fbterm</span></span><br></code></pre></td></tr></table></figure>
+
+<p>网上有说 fcitx 和 fbterm 的进终端自动启动，但那个不支持背景图片。如果你不需要背景图片，可以把：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs lua"># If you <span class="hljs-keyword">do</span> console login, it will start fbterm <span class="hljs-keyword">and</span> fcitx-fbterm by default.<br><br><span class="hljs-string">[[ $(tty) == \/dev\/tty[0-9]* ]]</span> &amp;&amp; fcitx-fbterm-helper<br></code></pre></td></tr></table></figure>
+
+<p>写入到 /home/marguerite/.bashrc。</p>
+<p>使用背景图片的启动方法是：</p>
+<ul>
+<li>登录终端</li>
+<li>cfbterm 启动 fbterm</li>
+<li>在 fbterm 中运行 fcitx -d 启动 fcitx</li>
+</ul>
+<h3 id="256-色"><a href="#256-色" class="headerlink" title="256 色"></a>256 色</h3><p>fbterm 支持 256 色，使用：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">TERM</span>=fbterm vim .fbtermrc<br></code></pre></td></tr></table></figure>
+
+<p>这样的命令来启动程序即可。不想每次都这么做，在 .fbtermrc 的最后写入：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">TERM</span>=fbterm<br></code></pre></td></tr></table></figure>
+
+<p>即可。</p>
+<h3 id="灰白改纯白"><a href="#灰白改纯白" class="headerlink" title="灰白改纯白"></a>灰白改纯白</h3><p>fbterm 里面默认的白色实际上是灰白，不习惯的可以在 .fbtermrc 的最后写入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># restore white color</span><br><span class="hljs-built_in">echo</span> -ne <span class="hljs-string">&quot;\e]P7ffffff&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>即可。</p>
+<h3 id="鼠标"><a href="#鼠标" class="headerlink" title="鼠标"></a>鼠标</h3><p>要先设置 gpm。使用：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">sudo yast mouse</span> <br></code></pre></td></tr></table></figure>
+
+<p>来选择你想在终端中使用的鼠标。然后，</p>
+<p>在终端登录后<strong>默认的 bash</strong> 中，使用：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo <span class="hljs-regexp">/etc/i</span>nit.d/gpm start <br></code></pre></td></tr></table></figure>
+
+<p>启动 gpm 鼠标服务器。之后正常进入 fbterm 用鼠标。</p>
+<h3 id="终端截图"><a href="#终端截图" class="headerlink" title="终端截图"></a>终端截图</h3><p>安装 home:MargueriteSu 源中的 fbshot。使用：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">fbshot</span> -s 读秒 图片保存路径<br></code></pre></td></tr></table></figure>
+
+<p>来截图。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/linux/">linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%BD%AF%E4%BB%B6%EF%BC%8C%E7%BB%88%E7%AB%AF/">软件，终端</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/3f6454bb/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">java注解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/4a17b156/">
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
