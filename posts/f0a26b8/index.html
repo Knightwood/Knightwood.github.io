@@ -1,0 +1,699 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Overview-概述Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson是一个用于将java对象转换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gson的github文档翻译">
+<meta property="og:url" content="https://knightwood.github.io/posts/f0a26b8/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="Overview-概述Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson是一个用于将java对象转换">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-28T06:15:09.000Z">
+<meta property="article:modified_time" content="2021-12-29T06:17:12.118Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="gson">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Gson的github文档翻译 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Gson的github文档翻译">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-28 14:15" pubdate>
+        2021年12月28日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      28k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      235 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Gson的github文档翻译</h1>
+            
+            <div class="markdown-body">
+              <h2 id="Overview-概述"><a href="#Overview-概述" class="headerlink" title="Overview-概述"></a>Overview-概述</h2><p>Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object.</p>
+<p>Gson是一个用于将java对象转换为json表示的java库。他也可以用于将json字符串转换为等效的java对象。</p>
+<p>Gson can work with arbitrary Java objects including pre-existing objects that you do not have source code of.</p>
+<p>Gson 可以处理任意 Java 对象，包括您没有源代码的预先存在的对象。</p>
+<h2 id="Goals-for-Gson-Gson-的目标"><a href="#Goals-for-Gson-Gson-的目标" class="headerlink" title="Goals for Gson -Gson 的目标"></a>Goals for Gson -Gson 的目标</h2><ul>
+<li>Provide easy to use mechanisms like <code>toString()</code> and constructor (factory method) to convert Java to JSON and vice-versa -提供易于使用的机制，如<code>toString()</code>构造函数（工厂方法）将 Java 转换为 JSON，反之亦然</li>
+<li>Allow pre-existing unmodifiable objects to be converted to and from JSON -允许预先存在的不可修改对象与 JSON 相互转换</li>
+<li>Allow custom representations for objects -允许对象的自定义表示</li>
+<li>Support arbitrarily complex objects -支持任意复杂的对象</li>
+<li>Generate compact and readable JSON output -生成紧凑且可读的 JSON 输出</li>
+</ul>
+<h2 id="Gson-Performance-and-Scalability-Gson-性能和可扩展性"><a href="#Gson-Performance-and-Scalability-Gson-性能和可扩展性" class="headerlink" title="Gson Performance and Scalability -Gson 性能和可扩展性"></a>Gson Performance and Scalability -Gson 性能和可扩展性</h2><p>Here are some metrics that we obtained on a desktop (dual opteron, 8GB RAM, 64-bit Ubuntu) running lots of other things along-with the tests. You can rerun these tests by using the class <a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/gson/src/test/java/com/google/gson/metrics/PerformanceTest.java"><code>PerformanceTest</code></a>.</p>
+<ul>
+<li>Strings: Deserialized strings of over 25MB without any problems (see <code>disabled_testStringDeserializationPerformance</code> method in <code>PerformanceTest</code>)</li>
+<li>Large collections:<ul>
+<li>Serialized a collection of 1.4 million objects (see <code>disabled_testLargeCollectionSerialization</code> method in <code>PerformanceTest</code>)</li>
+<li>Deserialized a collection of 87,000 objects (see <code>disabled_testLargeCollectionDeserialization</code> in <code>PerformanceTest</code>)</li>
+</ul>
+</li>
+<li>Gson 1.4 raised the deserialization limit for byte arrays and collection to over 11MB from 80KB.</li>
+</ul>
+<p>Note: Delete the <code>disabled_</code> prefix to run these tests. We use this prefix to prevent running these tests every time we run JUnit tests.</p>
+<h2 id="Gson-Users"><a href="#Gson-Users" class="headerlink" title="Gson Users"></a>Gson Users</h2><p>Gson was originally created for use inside Google where it is currently used in a number of projects. It is now used by a number of public projects and companies.</p>
+<h2 id="Using-Gson-使用-Gson"><a href="#Using-Gson-使用-Gson" class="headerlink" title="Using Gson -使用 Gson"></a>Using Gson -使用 Gson</h2><p>The primary class to use is <a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/Gson.java"><code>Gson</code></a> which you can just create by calling <code>new Gson()</code>. There is also a class <a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/GsonBuilder.java"><code>GsonBuilder</code></a> available that can be used to create a Gson instance with various settings like version control and so on.</p>
+<p>要使用的主要类是<a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/Gson.java"><code>Gson</code></a>您可以通过调用创建的类<code>new Gson()</code>。还有一个<a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/GsonBuilder.java"><code>GsonBuilder</code></a>可用的类可用于创建具有各种设置（如版本控制等）的 Gson 实例。</p>
+<p>The Gson instance does not maintain any state while invoking Json operations. So, you are free to reuse the same object for multiple Json serialization and deserialization operations.</p>
+<p>Gson 实例在调用 Json 操作时不维护任何状态。因此，您可以自由地为多个 Json 序列化和反序列化操作重用同一个对象。</p>
+<h2 id="Using-Gson-with-Gradle-Android-在-Gradle-Android-中使用-Gson"><a href="#Using-Gson-with-Gradle-Android-在-Gradle-Android-中使用-Gson" class="headerlink" title="Using Gson with Gradle/Android -在 Gradle/Android 中使用 Gson"></a>Using Gson with Gradle/Android -在 Gradle/Android 中使用 Gson</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">dependencies</span> &#123;<br>    <span class="hljs-attribute">implementation</span> <span class="hljs-string">&#x27;com.google.code.gson:gson:2.8.9&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="Using-Gson-with-Maven-在-Maven-中使用-Gson"><a href="#Using-Gson-with-Maven-在-Maven-中使用-Gson" class="headerlink" title="Using Gson with Maven -在 Maven 中使用 Gson"></a>Using Gson with Maven -在 Maven 中使用 Gson</h2><p>To use Gson with Maven2/3, you can use the Gson version available in Maven Central by adding the following dependency:</p>
+<p>要将 Gson 与 Maven2/3 一起使用，您可以通过添加以下依赖项来使用 Maven Central 中可用的 Gson 版本：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--  Gson: Java to Json conversion --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.google.code.gson<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>gson<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.8.9<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>compile<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>That is it, now your maven project is Gson enabled.</p>
+<p>现在您的 Maven 项目启用了 Gson。</p>
+<h3 id="Primitives-Examples-基本类型示例"><a href="#Primitives-Examples-基本类型示例" class="headerlink" title="Primitives Examples -基本类型示例"></a>Primitives Examples -基本类型示例</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// Serialization 序列化</span><br>Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Gson()</span>;<br>gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(1)</span>;            <span class="hljs-comment">// ==&gt; 1</span><br>gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-string">&quot;abcd&quot;</span>)</span>;       <span class="hljs-comment">// ==&gt; &quot;abcd&quot;</span><br>gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">new</span> Long(10)</span>); <span class="hljs-comment">// ==&gt; 10</span><br><span class="hljs-built_in">int</span><span class="hljs-literal">[]</span> values = &#123; <span class="hljs-number">1</span> &#125;;<br>gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">values</span>)</span>;       <span class="hljs-comment">// ==&gt; [1]</span><br><br><span class="hljs-comment">// Deserialization 反序列化</span><br><span class="hljs-built_in">int</span> one = gson.from<span class="hljs-constructor">Json(<span class="hljs-string">&quot;1&quot;</span>, <span class="hljs-params">int</span>.<span class="hljs-params">class</span>)</span>;<br>Integer one = gson.from<span class="hljs-constructor">Json(<span class="hljs-string">&quot;1&quot;</span>, Integer.<span class="hljs-params">class</span>)</span>;<br>Long one = gson.from<span class="hljs-constructor">Json(<span class="hljs-string">&quot;1&quot;</span>, Long.<span class="hljs-params">class</span>)</span>;<br>Boolean <span class="hljs-literal">false</span> = gson.from<span class="hljs-constructor">Json(<span class="hljs-string">&quot;false&quot;</span>, Boolean.<span class="hljs-params">class</span>)</span>;<br>String str = gson.from<span class="hljs-constructor">Json(<span class="hljs-string">&quot;\&quot;abc\&quot;&quot;</span>, String.<span class="hljs-params">class</span>)</span>;<br>String<span class="hljs-literal">[]</span> anotherStr = gson.from<span class="hljs-constructor">Json(<span class="hljs-string">&quot;[\&quot;abc\&quot;]&quot;</span>, String[].<span class="hljs-params">class</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Object-Examples-对象示例"><a href="#Object-Examples-对象示例" class="headerlink" title="Object Examples -对象示例"></a>Object Examples -对象示例</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">class</span> BagOfPrimitives &#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> value1 = <span class="hljs-number">1</span>;<br>  <span class="hljs-keyword">private</span> String value2 = <span class="hljs-string">&quot;abc&quot;</span>;<br>  <span class="hljs-keyword">private</span> transient <span class="hljs-built_in">int</span> value3 = <span class="hljs-number">3</span>;<br>  <span class="hljs-constructor">BagOfPrimitives()</span> &#123;<br>    <span class="hljs-comment">// no-args constructor</span><br>  &#125;<br>&#125;<br><br><span class="hljs-comment">// Serialization</span><br>BagOfPrimitives obj = <span class="hljs-keyword">new</span> <span class="hljs-constructor">BagOfPrimitives()</span>;<br>Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Gson()</span>;<br>String json = gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">obj</span>)</span>;  <br><br><span class="hljs-comment">// ==&gt; json is &#123;&quot;value1&quot;:1,&quot;value2&quot;:&quot;abc&quot;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>Note that you can not serialize objects with circular references since that will result in infinite recursion.</p>
+<p>请注意，您不能使用循环引用序列化对象，因为这会导致无限递归。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// Deserialization</span><br>BagOfPrimitives obj2 = gson.from<span class="hljs-constructor">Json(<span class="hljs-params">json</span>, BagOfPrimitives.<span class="hljs-params">class</span>)</span>;<br><span class="hljs-comment">// ==&gt; obj2 is just like obj</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="Finer-Points-with-Objects-更精细的点与对象"><a href="#Finer-Points-with-Objects-更精细的点与对象" class="headerlink" title="Finer Points with Objects -更精细的点与对象"></a><strong>Finer Points with Objects</strong> -<strong>更精细的点与对象</strong></h4><ul>
+<li>It is perfectly fine (and recommended) to use private fields.使用私有字段非常好（并且推荐）。</li>
+<li>There is no need to use any annotations to indicate a field is to be included for serialization and deserialization. All fields in the current class (and from all super classes) are included by default.不需要使用任何注释来指示要包含的字段以进行序列化和反序列化。默认情况下包含当前类（以及所有超类）中的所有字段。</li>
+<li>If a field is marked transient, (by default) it is ignored and not included in the JSON serialization or deserialization.如果字段被标记为瞬态，（默认情况下）它将被忽略并且不包含在 JSON 序列化或反序列化中。</li>
+<li>This implementation handles nulls correctly.此实现正确处理空值。<ul>
+<li>While serializing, a null field is omitted from the output.序列化时，输出中会省略空字段。</li>
+<li>While deserializing, a missing entry in JSON results in setting the corresponding field in the object to its default value: null for object types, zero for numeric types, and false for booleans.反序列化时，JSON 中缺少条目会导致将对象中的相应字段设置为其默认值：对象类型为 null，数字类型为零，布尔值为 false。</li>
+</ul>
+</li>
+<li>If a field is <em>synthetic</em>, it is ignored and not included in JSON serialization or deserialization.如果一个字段是<em>合成的</em>，它将被忽略并且不包含在 JSON 序列化或反序列化中。</li>
+<li>Fields corresponding to the outer classes in inner classes, anonymous classes, and local classes are ignored and not included in serialization or deserialization.内部类、匿名类和本地类中对应于外部类的字段将被忽略，不包括在序列化或反序列化中</li>
+</ul>
+<h3 id="Nested-Classes-including-Inner-Classes-嵌套类（包括内部类）"><a href="#Nested-Classes-including-Inner-Classes-嵌套类（包括内部类）" class="headerlink" title="Nested Classes (including Inner Classes)嵌套类（包括内部类）"></a>Nested Classes (including Inner Classes)嵌套类（包括内部类）</h3><p>Gson can serialize static nested classes quite easily.</p>
+<p>Gson 可以很容易地序列化静态嵌套类。</p>
+<p>Gson can also deserialize static nested classes. However, Gson can <strong>not</strong> automatically deserialize the <strong>pure inner classes since their no-args constructor also need a reference to the containing Object</strong> which is not available at the time of deserialization. You can address this problem by either making the inner class static or by providing a custom InstanceCreator for it. Here is an example:</p>
+<p>Gson 还可以反序列化静态嵌套类。但是，Gson<strong>不能</strong>自动反序列化<strong>纯内部类，因为它们的无参数构造函数还需要</strong>对反序列化时不可用<strong>的包含对象的引用</strong>。您可以通过将内部类设为静态或为其提供自定义 InstanceCreator 来解决此问题。下面是一个例子：</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>&#123; <br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> a; <br><br>  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> </span>&#123; <br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> b; <br><br>    <span class="hljs-keyword">public</span> B() &#123;<br>      <span class="hljs-comment">// No args constructor for B</span><br>    &#125;<br>  &#125; <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>NOTE</strong>: The above class B can not (by default) be serialized with Gson.</p>
+<p><strong>注意</strong>：上面的 B 类不能（默认情况下）用 Gson 序列化。</p>
+<p>Gson can not deserialize <code>&#123;&quot;b&quot;:&quot;abc&quot;&#125;</code> into an instance of B since the class B is an inner class. If it was defined as static class B then Gson would have been able to deserialize the string. Another solution is to write a custom instance creator for B.</p>
+<p>Gson 无法反序列<code>&#123;&quot;b&quot;:&quot;abc&quot;&#125;</code>化为 B 的实例，因为 B 类是内部类。如果它被定义为静态 B 类，那么 Gson 将能够反序列化字符串。另一种解决方案是为 B 编写自定义实例创建者。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InstanceCreatorForB</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">InstanceCreator</span>&lt;<span class="hljs-title">A</span>.<span class="hljs-title">B</span>&gt; </span>&#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> A a;<br>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">InstanceCreatorForB</span><span class="hljs-params">(A a)</span>  </span>&#123;<br>    <span class="hljs-keyword">this</span>.a = a;<br>  &#125;<br>  <span class="hljs-keyword">public</span> A.<span class="hljs-function">B <span class="hljs-title">createInstance</span><span class="hljs-params">(Type type)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a.<span class="hljs-function"><span class="hljs-keyword">new</span> <span class="hljs-title">B</span><span class="hljs-params">()</span></span>;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>The above is possible, but not recommended.以上是可以的，但不推荐。</p>
+<h3 id="Array-Examples数组示例"><a href="#Array-Examples数组示例" class="headerlink" title="Array Examples数组示例"></a>Array Examples数组示例</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Gson()</span>;<br><span class="hljs-built_in">int</span><span class="hljs-literal">[]</span> ints = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;;<br>String<span class="hljs-literal">[]</span> strings = &#123;<span class="hljs-string">&quot;abc&quot;</span>, <span class="hljs-string">&quot;def&quot;</span>, <span class="hljs-string">&quot;ghi&quot;</span>&#125;;<br><br><span class="hljs-comment">// Serialization</span><br>gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">ints</span>)</span>;     <span class="hljs-comment">// ==&gt; [1,2,3,4,5]</span><br>gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">strings</span>)</span>;  <span class="hljs-comment">// ==&gt; [&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;]</span><br><br><span class="hljs-comment">// Deserialization</span><br><span class="hljs-built_in">int</span><span class="hljs-literal">[]</span> ints2 = gson.from<span class="hljs-constructor">Json(<span class="hljs-string">&quot;[1,2,3,4,5]&quot;</span>, <span class="hljs-params">int</span>[].<span class="hljs-params">class</span>)</span>; <br><span class="hljs-comment">// ==&gt; ints2 will be same as ints</span><br></code></pre></td></tr></table></figure>
+
+<p>We also support multi-dimensional arrays, with arbitrarily complex element types.</p>
+<p>我们还支持具有任意复杂元素类型的多维数组。</p>
+<h3 id="Collections-Examples集合示例"><a href="#Collections-Examples集合示例" class="headerlink" title="Collections Examples集合示例"></a>Collections Examples集合示例</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Gson()</span>;<br>Collection&lt;Integer&gt; ints = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Lists</span>.</span></span>immutable<span class="hljs-constructor">List(1,2,3,4,5)</span>;<br><br><span class="hljs-comment">// Serialization</span><br>String json = gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">ints</span>)</span>;  <span class="hljs-comment">// ==&gt; json is [1,2,3,4,5]</span><br><br><span class="hljs-comment">// Deserialization</span><br>Type collectionType = <span class="hljs-keyword">new</span> TypeToken&lt;Collection&lt;Integer&gt;&gt;<span class="hljs-literal">()</span>&#123;&#125;.get<span class="hljs-constructor">Type()</span>;<br>Collection&lt;Integer&gt; ints2 = gson.from<span class="hljs-constructor">Json(<span class="hljs-params">json</span>, <span class="hljs-params">collectionType</span>)</span>;<br><span class="hljs-comment">// ==&gt; ints2 is same as ints</span><br></code></pre></td></tr></table></figure>
+
+<p>Fairly hideous: note how we define the type of collection. Unfortunately, there is no way to get around this in Java.</p>
+<p>相当可怕：注意我们如何定义集合的类型。不幸的是，在 Java 中没有办法解决这个问题。</p>
+<h4 id="Collections-Limitations集合限制"><a href="#Collections-Limitations集合限制" class="headerlink" title="Collections Limitations集合限制"></a>Collections Limitations集合限制</h4><p>Gson can serialize collection of arbitrary objects but can not deserialize from it, because there is no way for the user to indicate the type of the resulting object. Instead, while deserializing, the Collection must be of a specific, generic type. This makes sense, and is rarely a problem when following good Java coding practices.</p>
+<p>Gson 可以序列化任意对象的集合，但不能反序列化，因为用户无法指示结果对象的类型。相反，在反序列化时，集合必须是特定的泛型类型。这是有道理的，并且在遵循良好的 Java 编码实践时很少会成为问题。</p>
+<h3 id="Serializing-and-Deserializing-Generic-Types"><a href="#Serializing-and-Deserializing-Generic-Types" class="headerlink" title="Serializing and Deserializing Generic Types"></a>Serializing and Deserializing Generic Types</h3><p>When you call <code>toJson(obj)</code>, Gson calls <code>obj.getClass()</code> to get information on the fields to serialize. Similarly, you can typically pass <code>MyClass.class</code> object in the <code>fromJson(json, MyClass.class)</code> method. This works fine if the object is a non-generic type. However, if the object is of a generic type, then the Generic type information is lost because of Java Type Erasure. Here is an example illustrating the point:</p>
+<p>当您调用 时<code>toJson(obj)</code>，Gson 会调用<code>obj.getClass()</code>以获取有关要序列化的字段的信息。同样，您通常可以<code>MyClass.class</code>在<code>fromJson(json, MyClass.class)</code>方法中传递对象。如果对象是非泛型类型，这可以正常工作。但是，如果对象是泛型类型，那么由于 Java 类型擦除，泛型类型信息将丢失。这是一个说明这一点的例子：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">class</span> Foo&lt;T&gt; &#123;<br>  T value;<br>&#125;<br>Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Gson()</span>;<br>Foo&lt;Bar&gt; foo = <span class="hljs-keyword">new</span> Foo&lt;Bar&gt;<span class="hljs-literal">()</span>;<br>gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">foo</span>)</span>; <span class="hljs-comment">// May not serialize foo.value correctly</span><br><br>gson.from<span class="hljs-constructor">Json(<span class="hljs-params">json</span>, <span class="hljs-params">foo</span>.<span class="hljs-params">getClass</span>()</span>); <span class="hljs-comment">// Fails to deserialize foo.value as Bar</span><br></code></pre></td></tr></table></figure>
+
+<p>The above code fails to interpret value as type Bar because Gson invokes <code>foo.getClass()</code> to get its class information, but this method returns a raw class, <code>Foo.class</code>. This means that Gson has no way of knowing that this is an object of type <code>Foo&lt;Bar&gt;</code>, and not just plain <code>Foo</code>.</p>
+<p>上面的代码无法将 value 解释为 Bar 类型，因为 Gson 调用<code>foo.getClass()</code>以获取其类信息，但此方法返回一个原始类<code>Foo.class</code>. 这意味着 Gson 无法知道这是一个类型的对象<code>Foo&lt;Bar&gt;</code>，而不仅仅是普通的<code>Foo</code>。</p>
+<p>You can solve this problem by specifying the correct parameterized type for your generic type. You can do this by using the <a target="_blank" rel="noopener" href="https://static.javadoc.io/com.google.code.gson/gson/2.8.5/com/google/gson/reflect/TypeToken.html"><code>TypeToken</code></a> class.</p>
+<p>您可以通过为泛型类型指定正确的参数化类型来解决此问题。您可以通过使用<a target="_blank" rel="noopener" href="https://static.javadoc.io/com.google.code.gson/gson/2.8.5/com/google/gson/reflect/TypeToken.html"><code>TypeToken</code></a>该类来做到这一点。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Type fooType = <span class="hljs-keyword">new</span> TypeToken&lt;Foo&lt;Bar&gt;&gt;<span class="hljs-literal">()</span> &#123;&#125;.get<span class="hljs-constructor">Type()</span>;<br>gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">foo</span>, <span class="hljs-params">fooType</span>)</span>;<br><br>gson.from<span class="hljs-constructor">Json(<span class="hljs-params">json</span>, <span class="hljs-params">fooType</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>The idiom used to get <code>fooType</code> actually defines an anonymous local inner class containing a method <code>getType()</code> that returns the fully parameterized type.</p>
+<p>用于 get 的习惯用法<code>fooType</code>实际上定义了一个匿名本地内部类，其中包含一个<code>getType()</code>返回完全参数化类型的方法。</p>
+<h3 id="Serializing-and-Deserializing-Collection-with-Objects-of-Arbitrary-Types使用任意类型的对象序列化和反序列化集合"><a href="#Serializing-and-Deserializing-Collection-with-Objects-of-Arbitrary-Types使用任意类型的对象序列化和反序列化集合" class="headerlink" title="Serializing and Deserializing Collection with Objects of Arbitrary Types使用任意类型的对象序列化和反序列化集合"></a>Serializing and Deserializing Collection with Objects of Arbitrary Types使用任意类型的对象序列化和反序列化集合</h3><p>Sometimes you are dealing with JSON array that contains mixed types. For example: <code>[&#39;hello&#39;,5,&#123;name:&#39;GREETINGS&#39;,source:&#39;guest&#39;&#125;]</code></p>
+<p> <code>有时您正在处理包含混合类型的 JSON 数组。例如： </code>[‘hello’,5,{name:’GREETINGS’,source:’guest’}]</p>
+<p>The equivalent <code>Collection</code> containing this is:</p>
+<p><code>Collection</code>包含此内容的等效项是：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros">Collection collection = new ArrayList();<br>collection.<span class="hljs-builtin-name">add</span>(<span class="hljs-string">&quot;hello&quot;</span>);<br>collection.<span class="hljs-builtin-name">add</span>(5);<br>collection.<span class="hljs-builtin-name">add</span>(new Event(<span class="hljs-string">&quot;GREETINGS&quot;</span>, <span class="hljs-string">&quot;guest&quot;</span>));<br></code></pre></td></tr></table></figure>
+
+<p>where the <code>Event</code> class is defined as:</p>
+<p>其中<code>Event</code>类定义为：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Event</span> </span>&#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-built_in">String</span> name;<br>  <span class="hljs-keyword">private</span> <span class="hljs-built_in">String</span> source;<br>  <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-title">Event</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> name, <span class="hljs-built_in">String</span> source</span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.name = name;<br>    <span class="hljs-built_in">this</span>.source = source;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>You can serialize the collection with Gson without doing anything specific: <code>toJson(collection)</code> would write out the desired output.</p>
+<p>您可以使用 Gson 序列化集合，而无需执行任何特定操作：<code>toJson(collection)</code>将写出所需的输出。</p>
+<p>However, deserialization with <code>fromJson(json, Collection.class)</code> will not work since Gson has no way of knowing how to map the input to the types. Gson requires that you provide a genericised version of collection type in <code>fromJson()</code>. So, you have three options:</p>
+<p>但是，反序列化<code>fromJson(json, Collection.class)</code>不会起作用，因为 Gson 无法知道如何将输入映射到类型。Gson 要求您在<code>fromJson()</code>. 所以，你有三个选择：</p>
+<ol>
+<li>Use Gson’s parser API (low-level streaming parser or the DOM parser JsonParser) to parse the array elements and then use <code>Gson.fromJson()</code> on each of the array elements.This is the preferred approach. <a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/extras/src/main/java/com/google/gson/extras/examples/rawcollections/RawCollectionsExample.java">Here is an example</a> that demonstrates how to do this.使用 Gson 的解析器 API（低级流解析器或 DOM 解析器 JsonParser）解析数组元素，然后<code>Gson.fromJson()</code>在每个数组元素上使用。这是首选方法。<a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/extras/src/main/java/com/google/gson/extras/examples/rawcollections/RawCollectionsExample.java">这是一个</a>演示如何执行此操作<a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/extras/src/main/java/com/google/gson/extras/examples/rawcollections/RawCollectionsExample.java">的示例</a>。</li>
+<li>Register a type adapter for <code>Collection.class</code> that looks at each of the array members and maps them to appropriate objects. The disadvantage of this approach is that it will screw up deserialization of other collection types in Gson.注册一个类型适配器，用于<code>Collection.class</code>查看每个数组成员并将它们映射到适当的对象。这种方法的缺点是它会搞砸 Gson 中其他集合类型的反序列化。</li>
+<li>Register a type adapter for <code>MyCollectionMemberType</code> and use <code>fromJson()</code> with <code>Collection&lt;MyCollectionMemberType&gt;</code>.注册一个类型的适配器<code>MyCollectionMemberType</code>和使用<code>fromJson()</code>有<code>Collection&lt;MyCollectionMemberType&gt;</code>。</li>
+</ol>
+<p>This approach is practical only if the array appears as a top-level element or if you can change the field type holding the collection to be of type <code>Collection&lt;MyCollectionMemberType&gt;</code>.</p>
+<p>仅当数组显示为顶级元素或者您可以将保存集合的字段类型更改为 type 时，此方法才实用<code>Collection&lt;MyCollectionMemberType&gt;</code>。</p>
+<h3 id="Built-in-Serializers-and-Deserializers内置序列化器和反序列化器"><a href="#Built-in-Serializers-and-Deserializers内置序列化器和反序列化器" class="headerlink" title="Built-in Serializers and Deserializers内置序列化器和反序列化器"></a>Built-in Serializers and Deserializers内置序列化器和反序列化器</h3><p>Gson has built-in serializers and deserializers for commonly used classes whose default representation may be inappropriate, for instance</p>
+<p>例如，Gson 为常用类内置了序列化器和反序列化器，这些类的默认表示可能不合适</p>
+<ul>
+<li><code>java.net.URL</code> to match it with strings like <code>&quot;https://github.com/google/gson/&quot; 翻译：</code>java.net.URL<code>将它与字符串匹配</code>“<a target="_blank" rel="noopener" href="https://github.com/google/gson/&quot;%60%60">https://github.com/google/gson/&quot;``</a></li>
+<li><code>java.net.URI</code> to match it with strings like <code>&quot;/google/gson/&quot; 翻译：</code>java.net.URI<code>将它与字符串匹配</code>“/google/gson/“``</li>
+</ul>
+<p>For many more, see the internal class <a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java"><code>TypeAdapters</code></a>.</p>
+<p>有关更多信息，请参阅内部类<a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java"><code>TypeAdapters</code></a>。</p>
+<p>You can also find source code for some commonly used classes such as JodaTime at <a target="_blank" rel="noopener" href="https://sites.google.com/site/gson/gson-type-adapters-for-common-classes-1">this page</a>.</p>
+<p>您还可以在<a target="_blank" rel="noopener" href="https://sites.google.com/site/gson/gson-type-adapters-for-common-classes-1">此页面</a>找到一些常用类的源代码，例如 JodaTime 。</p>
+<h3 id="Custom-Serialization-and-Deserialization自定义序列化和反序列化"><a href="#Custom-Serialization-and-Deserialization自定义序列化和反序列化" class="headerlink" title="Custom Serialization and Deserialization自定义序列化和反序列化"></a>Custom Serialization and Deserialization自定义序列化和反序列化</h3><p>Sometimes default representation is not what you want. This is often the case when dealing with library classes (DateTime, etc). Gson allows you to register your own custom serializers and deserializers. This is done by defining two parts:</p>
+<p>有时默认表示不是您想要的。在处理库类（DateTime 等）时，通常就是这种情况。Gson 允许您注册自己的自定义序列化器和反序列化器。这是通过定义两个部分来完成的：</p>
+<ul>
+<li>Json Serializers: Need to define custom serialization for an object需要为对象定义自定义序列化</li>
+<li>Json Deserializers: Needed to define custom deserialization for a type需要为类型定义自定义反序列化</li>
+<li>Instance Creators: Not needed if no-args constructor is available or a deserializer is registered如果无参数构造函数可用或注册了反序列化器，则不需要</li>
+</ul>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">GsonBuilder gson = <span class="hljs-keyword">new</span> <span class="hljs-constructor">GsonBuilder()</span>;<br>gson.register<span class="hljs-constructor">TypeAdapter(MyType2.<span class="hljs-params">class</span>, <span class="hljs-params">new</span> MyTypeAdapter()</span>);<br>gson.register<span class="hljs-constructor">TypeAdapter(MyType.<span class="hljs-params">class</span>, <span class="hljs-params">new</span> MySerializer()</span>);<br>gson.register<span class="hljs-constructor">TypeAdapter(MyType.<span class="hljs-params">class</span>, <span class="hljs-params">new</span> MyDeserializer()</span>);<br>gson.register<span class="hljs-constructor">TypeAdapter(MyType.<span class="hljs-params">class</span>, <span class="hljs-params">new</span> MyInstanceCreator()</span>);<br></code></pre></td></tr></table></figure>
+
+<p><code>registerTypeAdapter</code> call checks if the type adapter implements more than one of these interfaces and register it for all of them.</p>
+<p><code>registerTypeAdapter</code> call 检查类型适配器是否实现了多个这些接口并为所有这些接口注册它。</p>
+<h4 id="Writing-a-Serializer-编写序列化程序"><a href="#Writing-a-Serializer-编写序列化程序" class="headerlink" title="Writing a Serializer 编写序列化程序"></a>Writing a Serializer 编写序列化程序</h4><p>Here is an example of how to write a custom serializer for JodaTime <code>DateTime</code> class.</p>
+<p>以下是如何为 JodaTime<code>DateTime</code>类编写自定义序列化程序的示例。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateTimeSerializer</span> <span class="hljs-keyword"><span class="hljs-keyword">implements</span> <span class="hljs-type">JsonSerializer</span></span>&lt;<span class="hljs-title">DateTime</span>&gt; </span>&#123;<br>  <span class="hljs-keyword">public</span> JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext context) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">JsonPrimitive</span>(src.toString());<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Gson calls <code>serialize()</code> when it runs into a <code>DateTime</code> object during serialization.</p>
+<p>Gson在序列化过程中<code>serialize()</code>遇到<code>DateTime</code>对象时调用。</p>
+<h4 id="Writing-a-Deserializer编写反序列化器"><a href="#Writing-a-Deserializer编写反序列化器" class="headerlink" title="Writing a Deserializer编写反序列化器"></a>Writing a Deserializer编写反序列化器</h4><p>Here is an example of how to write a custom deserializer for JodaTime DateTime class.</p>
+<p>以下是如何为 JodaTime DateTime 类编写自定义反序列化器的示例。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateTimeDeserializer</span> <span class="hljs-keyword"><span class="hljs-keyword">implements</span> <span class="hljs-type">JsonDeserializer</span></span>&lt;<span class="hljs-title">DateTime</span>&gt; </span>&#123;<br>  <span class="hljs-keyword">public</span> DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)<br>      throws JsonParseException &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">DateTime</span>(json.getAsJsonPrimitive().getAsString());<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Gson calls <code>deserialize</code> when it needs to deserialize a JSON string fragment into a DateTime object</p>
+<p>Gson<code>deserialize</code>在需要将 JSON 字符串片段反序列化为 DateTime 对象时调用</p>
+<p><strong>Finer points with Serializers and Deserializers</strong>序列化器和反序列化器的精髓****</p>
+<p>Often you want to register a single handler for all generic types corresponding to a raw type</p>
+<p>通常，您希望为与原始类型对应的所有泛型类型注册单个处理程序</p>
+<ul>
+<li>For example, suppose you have an <code>Id</code> class for id representation/translation (i.e. an internal vs. external representation).例如，假设您有一个<code>Id</code>用于 id 表示/翻译的类（即内部与外部表示）。</li>
+</ul>
+<ul>
+<li>Id<T>type that has same serialization for all generic types 翻译：<code>Id&lt;T&gt;</code> 对所有泛型类型具有相同序列化的类型<ul>
+<li>Essentially write out the id value本质上写出id值</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>Deserialization is very similar but not exactly the same反序列化非常相似但不完全相同<ul>
+<li>Need to call <code>new Id(Class&lt;T&gt;, String)</code> which returns an instance of <code>Id&lt;T&gt;</code> 需要调用<code>new Id(Class&lt;T&gt;, String)</code>它返回一个实例<code>Id&lt;T&gt;</code></li>
+</ul>
+</li>
+</ul>
+<p>Gson supports registering a single handler for this. You can also register a specific handler for a specific generic type (say <code>Id&lt;RequiresSpecialHandling&gt;</code> needed special handling). The <code>Type</code> parameter for the <code>toJson()</code> and <code>fromJson()</code> contains the generic type information to help you write a single handler for all generic types corresponding to the same raw type.</p>
+<p>Gson 支持为此注册单个处理程序。您还可以为特定的泛型类型注册特定的处理程序（比如<code>Id&lt;RequiresSpecialHandling&gt;</code>需要特殊处理）。在<code>Type</code>该参数<code>toJson()</code>和<code>fromJson()</code>包含的通用类型的信息来帮助你编写对应于同一原始类型的所有泛型类型单一的处理程序</p>
+<h3 id="Writing-an-Instance-Creator编写实例创建器"><a href="#Writing-an-Instance-Creator编写实例创建器" class="headerlink" title="Writing an Instance Creator编写实例创建器"></a>Writing an Instance Creator编写实例创建器</h3><p>While deserializing an Object, Gson needs to create a default instance of the class. Well-behaved classes that are meant for serialization and deserialization should have a no-argument constructor.</p>
+<p>在反序列化对象时，Gson 需要创建类的默认实例。用于序列化和反序列化的行为良好的类应该有一个无参数的构造函数。</p>
+<ul>
+<li>Doesn’t matter whether public or private不管是公有私</li>
+</ul>
+<p>Typically, Instance Creators are needed when you are dealing with a library class that does NOT define a no-argument constructor</p>
+<p>通常，当您处理未定义无参数构造函数的库类时，需要 Instance Creators</p>
+<p><strong>Instance Creator Example</strong>实例创建者示例****</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyInstanceCreator</span> <span class="hljs-keyword"><span class="hljs-keyword">implements</span> <span class="hljs-type">InstanceCreator</span></span>&lt;<span class="hljs-title">Money</span>&gt; </span>&#123;<br>  <span class="hljs-keyword">public</span> Money createInstance(Type type) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Money</span>(<span class="hljs-string">&quot;1000000&quot;</span>, CurrencyCode.USD);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Type could be of a corresponding generic type类型可以是相应的泛型类型</p>
+<ul>
+<li>Very useful to invoke constructors which need specific generic type information调用需要特定泛型类型信息的构造函数非常有用</li>
+<li>例如，如果<code>Id</code>类存储正在为其创建 Id 的类</li>
+<li>For example, if the <code>Id</code> class stores the class for which the Id is being created</li>
+</ul>
+<h4 id="InstanceCreator-for-a-Parameterized-Type参数化类型的-InstanceCreator"><a href="#InstanceCreator-for-a-Parameterized-Type参数化类型的-InstanceCreator" class="headerlink" title="InstanceCreator for a Parameterized Type参数化类型的 InstanceCreator"></a>InstanceCreator for a Parameterized Type参数化类型的 InstanceCreator</h4><p>Sometimes the type that you are trying to instantiate is a parameterized type. Generally, this is not a problem since the actual instance is of raw type. Here is an example:</p>
+<p>有时，您尝试实例化的类型是参数化类型。通常，这不是问题，因为实际实例是原始类型。下面是一个例子：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyList&lt;T&gt;</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ArrayList&lt;T&gt;</span> </span>&#123;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyListInstanceCreator</span> <span class="hljs-title">implements</span> <span class="hljs-title">InstanceCreator&lt;MyList&lt;?&gt;&gt;</span> </span>&#123;<br>    <span class="hljs-meta">@SuppressWarnings</span>(<span class="hljs-string">&quot;unchecked&quot;</span>)<br>  public <span class="hljs-type">MyList</span>&lt;?&gt; createInstance(<span class="hljs-type">Type</span> <span class="hljs-class"><span class="hljs-keyword">type</span>) </span>&#123;<br>    <span class="hljs-comment">// No need to use a parameterized list since the actual instance will have the raw type anyway.</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">MyList</span>();<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>However, sometimes you do need to create instance based on the actual parameterized type. In this case, you can use the type parameter being passed to the <code>createInstance</code> method. Here is an example:</p>
+<p>但是，有时您确实需要根据实际参数化类型创建实例。在这种情况下，您可以使用传递给<code>createInstance</code>方法的类型参数。下面是一个例子：</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs fortran"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> Id&lt;T&gt; &#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">Class</span>&lt;T&gt; classOfId;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> long <span class="hljs-keyword">value</span>;<br>  <span class="hljs-keyword">public</span> Id(<span class="hljs-keyword">Class</span>&lt;T&gt; classOfId, long <span class="hljs-keyword">value</span>) &#123;<br>    this.classOfId = classOfId;<br>    this.<span class="hljs-keyword">value</span> = <span class="hljs-keyword">value</span>;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> IdInstanceCreator implements InstanceCreator&lt;Id&lt;?&gt;&gt; &#123;<br>  <span class="hljs-keyword">public</span> Id&lt;?&gt; createInstance(<span class="hljs-keyword">Type</span> <span class="hljs-keyword">type</span>) &#123;<br>    <span class="hljs-keyword">Type</span>[] typeParameters = ((ParameterizedType)<span class="hljs-keyword">type</span>).getActualTypeArguments();<br>    <span class="hljs-keyword">Type</span> idType = typeParameters[<span class="hljs-number">0</span>]; // Id has <span class="hljs-keyword">only</span> one parameterized <span class="hljs-keyword">type</span> T<br>    <span class="hljs-keyword">return</span> new Id((<span class="hljs-keyword">Class</span>)idType, <span class="hljs-number">0</span>L);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>In the above example, an instance of the Id class can not be created without actually passing in the actual type for the parameterized type. We solve this problem by using the passed method parameter, <code>type</code>. The <code>type</code> object in this case is the Java parameterized type representation of <code>Id&lt;Foo&gt;</code> where the actual instance should be bound to <code>Id&lt;Foo&gt;</code>. Since <code>Id</code> class has just one parameterized type parameter, <code>T</code>, we use the zeroth element of the type array returned by <code>getActualTypeArgument()</code> which will hold <code>Foo.class</code> in this case.</p>
+<p>在上面的例子中，如果没有实际传递参数化类型的实际类型，就无法创建 Id 类的实例。我们通过使用传递的方法参数来解决这个问题，<code>type</code>。<code>type</code>在这种情况下，对象是<code>Id&lt;Foo&gt;</code>实际实例应该绑定到的位置的Java 参数化类型表示<code>Id&lt;Foo&gt;</code>。由于<code>Id</code>class 只有一个参数化类型参数 ，<code>T</code>我们使用返回的类型数组的第零个元素，在这种情况下<code>getActualTypeArgument()</code>它将保持不变<code>Foo.class</code>。</p>
+<h3 id="Compact-Vs-Pretty-Printing-for-JSON-Output-Format紧凑型对比-JSON-输出格式的漂亮打印"><a href="#Compact-Vs-Pretty-Printing-for-JSON-Output-Format紧凑型对比-JSON-输出格式的漂亮打印" class="headerlink" title="Compact Vs. Pretty Printing for JSON Output Format紧凑型对比 JSON 输出格式的漂亮打印"></a>Compact Vs. Pretty Printing for JSON Output Format紧凑型对比 JSON 输出格式的漂亮打印</h3><p>The default JSON output that is provided by Gson is a compact JSON format. This means that there will not be any whitespace in the output JSON structure. Therefore, there will be no whitespace between field names and its value, object fields, and objects within arrays in the JSON output. As well, “null” fields will be ignored in the output (NOTE: null values will still be included in collections/arrays of objects). See the <a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Null-Object-Support">Null Object Support</a> section for information on configure Gson to output all null values.</p>
+<p>Gson 提供的默认 JSON 输出是紧凑的 JSON 格式。这意味着输出 JSON 结构中不会有任何空格。因此，JSON 输出中的字段名称及其值、对象字段和数组中的对象之间不会有空格。同样，输出中的“空”字段将被忽略（注意：空值仍将包含在对象的集合/数组中）。有关配置 Gson 以输出所有空值的信息，请参阅<a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Null-Object-Support">空对象支持</a>部分。If you would like to use the Pretty Print feature, you must configure your <code>Gson</code> instance using the <code>GsonBuilder</code>. The <code>JsonFormatter</code> is not exposed through our public API, so the client is unable to configure the default print settings/margins for the JSON output. For now, we only provide a default <code>JsonPrintFormatter</code> that has default line length of 80 character, 2 character indentation, and 4 character right margin.</p>
+<p>如果您想使用漂亮打印功能，您必须<code>Gson</code>使用<code>GsonBuilder</code>. 在<code>JsonFormatter</code>没有通过我们的公共API公开，所以客户端无法配置默认打印设置/利润率为JSON输出。目前，我们仅提供<code>JsonPrintFormatter</code>默认行长度为 80 个字符、2 个字符缩进和 4 个字符右边距的默认值。</p>
+<p>The following is an example shows how to configure a <code>Gson</code> instance to use the default <code>JsonPrintFormatter</code> instead of the <code>JsonCompactFormatter</code>:</p>
+<p>以下示例显示了如何将<code>Gson</code>实例配置为使用默认值<code>JsonPrintFormatter</code>而不是<code>JsonCompactFormatter</code>：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-constructor">GsonBuilder()</span>.set<span class="hljs-constructor">PrettyPrinting()</span>.create<span class="hljs-literal">()</span>;<br>String jsonOutput = gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">someObject</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Null-Object-Support空对象支持"><a href="#Null-Object-Support空对象支持" class="headerlink" title="Null Object Support空对象支持"></a>Null Object Support空对象支持</h3><p>The default behaviour that is implemented in Gson is that <code>null</code> object fields are ignored. This allows for a more compact output format; however, the client must define a default value for these fields as the JSON format is converted back into its Java form.</p>
+<p>Gson 中实现的默认行为<code>null</code>是忽略对象字段。这允许更紧凑的输出格式；但是，客户端必须为这些字段定义默认值，因为 JSON 格式会转换回其 Java 格式。</p>
+<p>Here’s how you would configure a <code>Gson</code> instance to output null:</p>
+<p>以下是将<code>Gson</code>实例配置为输出 null 的方法：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-constructor">GsonBuilder()</span>.serialize<span class="hljs-constructor">Nulls()</span>.create<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
+
+<p>NOTE: when serializing <code>null</code>s with Gson, it will add a <code>JsonNull</code> element to the <code>JsonElement</code> structure. Therefore, this object can be used in custom serialization/deserialization.</p>
+<p>注意：当<code>null</code>使用 Gson序列化s 时，它会<code>JsonNull</code>向<code>JsonElement</code>结构中添加一个元素。因此，该对象可用于自定义序列化/反序列化。</p>
+<p>Here’s an example:下面是一个例子：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> Foo &#123;<br>  <span class="hljs-keyword">private</span> final String s;<br>  <span class="hljs-keyword">private</span> final <span class="hljs-built_in">int</span> i;<br><br>  public <span class="hljs-constructor">Foo()</span> &#123;<br>    this(null, <span class="hljs-number">5</span>);<br>  &#125;<br><br>  public <span class="hljs-constructor">Foo(String <span class="hljs-params">s</span>, <span class="hljs-params">int</span> <span class="hljs-params">i</span>)</span> &#123;<br>    this.s = s;<br>    this.i = i;<br>  &#125;<br>&#125;<br><br>Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-constructor">GsonBuilder()</span>.serialize<span class="hljs-constructor">Nulls()</span>.create<span class="hljs-literal">()</span>;<br>Foo foo = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Foo()</span>;<br>String json = gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">foo</span>)</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(json);<br><br>json = gson.<span class="hljs-keyword">to</span><span class="hljs-constructor">Json(<span class="hljs-params">null</span>)</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(json);<br></code></pre></td></tr></table></figure>
+
+<p>The output is:</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs 1c">&#123;<span class="hljs-string">&quot;s&quot;</span>:<span class="hljs-literal">null</span>,<span class="hljs-string">&quot;i&quot;</span>:<span class="hljs-number">5</span>&#125;<br><span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Versioning-Support版本支持"><a href="#Versioning-Support版本支持" class="headerlink" title="Versioning Support版本支持"></a>Versioning Support版本支持</h3><p>Multiple versions of the same object can be maintained by using <a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/annotations/Since.java">@Since</a> annotation. This annotation can be used on Classes, Fields and, in a future release, Methods. In order to leverage this feature, you must configure your <code>Gson</code> instance to ignore any field/object that is greater than some version number. If no version is set on the <code>Gson</code> instance then it will serialize and deserialize all fields and classes regardless of the version.</p>
+<p>可以使用<a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/annotations/Since.java">@Since</a>注解维护同一对象的多个版本。该注解可用于类、字段以及未来版本中的方法。为了利用此功能，您必须将<code>Gson</code>实例配置为忽略大于某个版本号的任何字段/对象。如果没有在<code>Gson</code>实例上设置版本，那么无论版本如何，它都会序列化和反序列化所有字段和类。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VersionedClass</span> </span>&#123;<br>  @Since(<span class="hljs-number">1.1</span>) <span class="hljs-keyword">private</span> final <span class="hljs-keyword">String</span> <span class="hljs-keyword">new</span><span class="hljs-type">erField</span>;<br>  @Since(<span class="hljs-number">1.0</span>) <span class="hljs-keyword">private</span> final <span class="hljs-keyword">String</span> <span class="hljs-keyword">new</span><span class="hljs-type">Field</span>;<br>  <span class="hljs-keyword">private</span> final <span class="hljs-keyword">String</span> field;<br><br>  <span class="hljs-keyword">public</span> VersionedClass() &#123;<br>    <span class="hljs-built_in">this</span>.<span class="hljs-keyword">new</span><span class="hljs-type">erField</span> = <span class="hljs-string">&quot;newer&quot;</span>;<br>    <span class="hljs-built_in">this</span>.<span class="hljs-keyword">new</span><span class="hljs-type">Field</span> = <span class="hljs-string">&quot;new&quot;</span>;<br>    <span class="hljs-built_in">this</span>.field = <span class="hljs-string">&quot;old&quot;</span>;<br>  &#125;<br>&#125;<br><br>VersionedClass versionedObject = <span class="hljs-keyword">new</span> <span class="hljs-type">VersionedClass</span>();<br>Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-type">GsonBuilder</span>().setVersion(<span class="hljs-number">1.0</span>).create();<br><span class="hljs-keyword">String</span> jsonOutput = gson.toJson(versionedObject);<br>System.out.println(jsonOutput);<br>System.out.println();<br><br>gson = <span class="hljs-keyword">new</span> <span class="hljs-type">Gson</span>();<br>jsonOutput = gson.toJson(versionedObject);<br>System.out.println(jsonOutput);<br></code></pre></td></tr></table></figure>
+
+<p>The output is:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<span class="hljs-attr">&quot;newField&quot;</span>:<span class="hljs-string">&quot;new&quot;</span>,<span class="hljs-attr">&quot;field&quot;</span>:<span class="hljs-string">&quot;old&quot;</span>&#125;<br><br>&#123;<span class="hljs-attr">&quot;newerField&quot;</span>:<span class="hljs-string">&quot;newer&quot;</span>,<span class="hljs-attr">&quot;newField&quot;</span>:<span class="hljs-string">&quot;new&quot;</span>,<span class="hljs-attr">&quot;field&quot;</span>:<span class="hljs-string">&quot;old&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Excluding-Fields-From-Serialization-and-Deserialization从序列化和反序列化中排除字段"><a href="#Excluding-Fields-From-Serialization-and-Deserialization从序列化和反序列化中排除字段" class="headerlink" title="Excluding Fields From Serialization and Deserialization从序列化和反序列化中排除字段"></a>Excluding Fields From Serialization and Deserialization从序列化和反序列化中排除字段</h3><p>Gson supports numerous mechanisms for excluding top-level classes, fields and field types. Below are pluggable mechanisms that allow field and class exclusion. If none of the below mechanisms satisfy your needs then you can always use <a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">custom serializers and deserializers</a>.</p>
+<p>Gson 支持多种机制来排除顶级类、字段和字段类型。下面是允许字段和类排除的可插入机制。如果以下机制都不能满足您的需求，那么您始终可以使用<a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">自定义序列化器和反序列化器</a>。</p>
+<h4 id="Java-Modifier-ExclusionJava-修饰符排除"><a href="#Java-Modifier-ExclusionJava-修饰符排除" class="headerlink" title="Java Modifier ExclusionJava 修饰符排除"></a>Java Modifier ExclusionJava 修饰符排除</h4><p>By default, if you mark a field as <code>transient</code>, it will be excluded. As well, if a field is marked as <code>static</code> then by default it will be excluded. If you want to include some transient fields then you can do the following:</p>
+<p>默认情况下，如果您将字段标记为<code>transient</code>，它将被排除在外。同样，如果一个字段被标记为<code>static</code>then 默认情况下它将被排除。如果要包含一些临时字段，则可以执行以下操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.lang.reflect.Modifier;<br>Gson gson = <span class="hljs-keyword">new</span> GsonBuilder()<br>    .excludeFieldsWithModifiers(Modifier.STATIC)<br>    .create();<br></code></pre></td></tr></table></figure>
+
+<p>NOTE: you can give any number of the <code>Modifier</code> constants to the <code>excludeFieldsWithModifiers</code> method. For example:</p>
+<p>注意：您可以<code>Modifier</code>为该<code>excludeFieldsWithModifiers</code>方法提供任意数量的常量。例如：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs gradle">Gson gson = <span class="hljs-keyword">new</span> GsonBuilder()<br>    .excludeFieldsWithModifiers(Modifier.<span class="hljs-keyword">STATIC</span>, Modifier.<span class="hljs-keyword">TRANSIENT</span>, Modifier.<span class="hljs-keyword">VOLATILE</span>)<br>    .create();<br></code></pre></td></tr></table></figure>
+
+<h4 id="Gson’s-Expose"><a href="#Gson’s-Expose" class="headerlink" title="Gson’s @Expose"></a>Gson’s <code>@Expose</code></h4><p>This feature provides a way where you can mark certain fields of your objects to be excluded for consideration for serialization and deserialization to JSON. To use this annotation, you must create Gson by using <code>new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()</code>. The Gson instance created will exclude all fields in a class that are not marked with <code>@Expose</code> annotation.</p>
+<p>此功能提供了一种方法，您可以将对象的某些字段标记为要排除以考虑序列化和反序列化为 JSON。要使用此注解，您必须使用<code>new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()</code>. 创建的 Gson 实例将排除类中所有没有标注的字段<code>@Expose</code>。</p>
+<h4 id="User-Defined-Exclusion-Strategies用户定义的排除策略"><a href="#User-Defined-Exclusion-Strategies用户定义的排除策略" class="headerlink" title="User Defined Exclusion Strategies用户定义的排除策略"></a>User Defined Exclusion Strategies用户定义的排除策略</h4><p>If the above mechanisms for excluding fields and class type do not work for you then you can always write your own exclusion strategy and plug it into Gson. See the <a target="_blank" rel="noopener" href="https://static.javadoc.io/com.google.code.gson/gson/2.8.5/com/google/gson/ExclusionStrategy.html"><code>ExclusionStrategy</code></a> JavaDoc for more information.</p>
+<p>如果上述排除字段和类类型的机制对您不起作用，那么您可以随时编写自己的排除策略并将其插入 Gson。有关<a target="_blank" rel="noopener" href="https://static.javadoc.io/com.google.code.gson/gson/2.8.5/com/google/gson/ExclusionStrategy.html"><code>ExclusionStrategy</code></a>更多信息，请参阅JavaDoc。</p>
+<p>The following example shows how to exclude fields marked with a specific <code>@Foo</code> annotation and excludes top-level types (or declared field type) of class <code>String</code>.</p>
+<p>以下示例显示了如何排除标有特定<code>@Foo</code>注释的字段并排除 class 的顶级类型（或声明的字段类型）<code>String</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Target(&#123;ElementType.FIELD&#125;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> Foo &#123;<br>  <span class="hljs-comment">// Field tag only annotation</span><br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SampleObjectForTest</span> </span>&#123;<br>  <span class="hljs-meta">@Foo</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> annotatedField;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String stringField;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> longField;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Class&lt;?&gt; clazzField;<br><br>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SampleObjectForTest</span><span class="hljs-params">()</span> </span>&#123;<br>    annotatedField = <span class="hljs-number">5</span>;<br>    stringField = <span class="hljs-string">&quot;someDefaultValue&quot;</span>;<br>    longField = <span class="hljs-number">1234</span>;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyExclusionStrategy</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ExclusionStrategy</span> </span>&#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Class&lt;?&gt; typeToSkip;<br><br>  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">MyExclusionStrategy</span><span class="hljs-params">(Class&lt;?&gt; typeToSkip)</span> </span>&#123;<br>    <span class="hljs-keyword">this</span>.typeToSkip = typeToSkip;<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">shouldSkipClass</span><span class="hljs-params">(Class&lt;?&gt; clazz)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> (clazz == typeToSkip);<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">shouldSkipField</span><span class="hljs-params">(FieldAttributes f)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> f.getAnnotation(Foo.class) != <span class="hljs-keyword">null</span>;<br>  &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>  Gson gson = <span class="hljs-keyword">new</span> GsonBuilder()<br>      .setExclusionStrategies(<span class="hljs-keyword">new</span> MyExclusionStrategy(String.class))<br>      .serializeNulls()<br>      .create();<br>  SampleObjectForTest src = <span class="hljs-keyword">new</span> SampleObjectForTest();<br>  String json = gson.toJson(src);<br>  System.out.println(json);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>The output is:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<span class="hljs-attr">&quot;longField&quot;</span>:<span class="hljs-number">1234</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="JSON-Field-Naming-SupportJSON-字段命名支持"><a href="#JSON-Field-Naming-SupportJSON-字段命名支持" class="headerlink" title="JSON Field Naming SupportJSON 字段命名支持"></a>JSON Field Naming SupportJSON 字段命名支持</h3><p>Gson supports some pre-defined field naming policies to convert the standard Java field names (i.e., camel cased names starting with lower case — <code>sampleFieldNameInJava</code>) to a Json field name (i.e., <code>sample_field_name_in_java</code> or <code>SampleFieldNameInJava</code>). See the <a target="_blank" rel="noopener" href="https://static.javadoc.io/com.google.code.gson/gson/2.8.5/com/google/gson/FieldNamingPolicy.html">FieldNamingPolicy</a> class for information on the pre-defined naming policies.</p>
+<p>Gson 支持一些预定义的字段命名策略来将标准的 Java 字段名称（即以小写 — 开头的驼峰命名法<code>sampleFieldNameInJava</code>）转换为 Json 字段名称（即，<code>sample_field_name_in_java</code>or <code>SampleFieldNameInJava</code>）。有关预定义命名策略的信息，请参阅<a target="_blank" rel="noopener" href="https://static.javadoc.io/com.google.code.gson/gson/2.8.5/com/google/gson/FieldNamingPolicy.html">FieldNamingPolicy</a>类。</p>
+<p>It also has an annotation based strategy to allows clients to define custom names on a per field basis. Note, that the annotation based strategy has field name validation which will raise “Runtime” exceptions if an invalid field name is provided as the annotation value.</p>
+<p>它还具有基于注释的策略，允许客户在每个字段的基础上定义自定义名称。请注意，基于注释的策略具有字段名称验证，如果提供无效的字段名称作为注释值，则会引发“运行时”异常。</p>
+<p>The following is an example of how to use both Gson naming policy features:</p>
+<p>以下是如何使用 Gson 命名策略功能的示例：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SomeObject</span> &#123;</span><br>  @<span class="hljs-built_in">SerializedName</span>(<span class="hljs-string">&quot;custom_naming&quot;</span>) <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">String</span> someField;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">String</span> someOtherField;<br><br>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SomeObject</span><span class="hljs-params">(<span class="hljs-keyword">String</span> a, <span class="hljs-keyword">String</span> b)</span> </span>&#123;<br>    <span class="hljs-keyword">this</span>.someField = a;<br>    <span class="hljs-keyword">this</span>.someOtherField = b;<br>  &#125;<br>&#125;<br><br>SomeObject someObject = <span class="hljs-keyword">new</span> <span class="hljs-built_in">SomeObject</span>(<span class="hljs-string">&quot;first&quot;</span>, <span class="hljs-string">&quot;second&quot;</span>);<br>Gson gson = <span class="hljs-keyword">new</span> <span class="hljs-built_in">GsonBuilder</span>().<span class="hljs-built_in">setFieldNamingPolicy</span>(FieldNamingPolicy.UPPER_CAMEL_CASE).<span class="hljs-built_in">create</span>();<br><span class="hljs-keyword">String</span> jsonRepresentation = gson.<span class="hljs-built_in">toJson</span>(someObject);<br>System.out.<span class="hljs-built_in">println</span>(jsonRepresentation);<br></code></pre></td></tr></table></figure>
+
+<p>The output is:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<span class="hljs-attr">&quot;custom_naming&quot;</span>:<span class="hljs-string">&quot;first&quot;</span>,<span class="hljs-attr">&quot;SomeOtherField&quot;</span>:<span class="hljs-string">&quot;second&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>If you have a need for custom naming policy (<a target="_blank" rel="noopener" href="https://groups.google.com/group/google-gson/browse_thread/thread/cb441a2d717f6892">see this discussion</a>), you can use the <a target="_blank" rel="noopener" href="https://static.javadoc.io/com.google.code.gson/gson/2.8.5/com/google/gson/annotations/SerializedName.html">@SerializedName</a> annotation.</p>
+<p>如果您需要自定义命名策略（<a target="_blank" rel="noopener" href="https://groups.google.com/group/google-gson/browse_thread/thread/cb441a2d717f6892">请参阅此讨论</a>），您可以使用<a target="_blank" rel="noopener" href="https://static.javadoc.io/com.google.code.gson/gson/2.8.5/com/google/gson/annotations/SerializedName.html">@SerializedName</a>注释。</p>
+<h3 id="Sharing-State-Across-Custom-Serializers-and-Deserializers在自定义序列化器和反序列化器之间共享状态"><a href="#Sharing-State-Across-Custom-Serializers-and-Deserializers在自定义序列化器和反序列化器之间共享状态" class="headerlink" title="Sharing State Across Custom Serializers and Deserializers在自定义序列化器和反序列化器之间共享状态"></a>Sharing State Across Custom Serializers and Deserializers在自定义序列化器和反序列化器之间共享状态</h3><p>Sometimes you need to share state across custom serializers/deserializers (<a target="_blank" rel="noopener" href="https://groups.google.com/group/google-gson/browse_thread/thread/2850010691ea09fb">see this discussion</a>). You can use the following three strategies to accomplish this:</p>
+<p>有时您需要在自定义序列化器/反序列化器之间共享状态（<a target="_blank" rel="noopener" href="https://groups.google.com/group/google-gson/browse_thread/thread/2850010691ea09fb">请参阅此讨论</a>）。您可以使用以下三种策略来完成此操作：</p>
+<ol>
+<li>Store shared state in static fields  -在静态字段中存储共享状态</li>
+<li>Declare the serializer/deserializer as inner classes of a parent type, and use the instance fields of parent type to store shared state  -将序列化器/反序列化器声明为父类型的内部类，并使用父类型的实例字段来存储共享状态</li>
+<li>Use Java <code>ThreadLocal</code>  -使用 Java <code>ThreadLocal</code></li>
+</ol>
+<p>1 and 2 are not thread-safe options, but 3 is.</p>
+<p>1 和 2 不是线程安全选项，但 3 是。</p>
+<h3 id="Streaming"><a href="#Streaming" class="headerlink" title="Streaming"></a>Streaming</h3><p>In addition Gson’s object model and data binding, you can use Gson to read from and write to a <a target="_blank" rel="noopener" href="https://sites.google.com/site/gson/streaming">stream</a>. You can also combine streaming and object model access to get the best of both approaches.</p>
+<p>除了 Gson 的对象模型和数据绑定之外，您还可以使用 Gson 读取和写入<a target="_blank" rel="noopener" href="https://sites.google.com/site/gson/streaming">流</a>。您还可以结合流和对象模型访问来充分利用这两种方法。</p>
+<h2 id="Issues-in-Designing-Gson"><a href="#Issues-in-Designing-Gson" class="headerlink" title="Issues in Designing Gson"></a>Issues in Designing Gson</h2><p>See the <a target="_blank" rel="noopener" href="https://github.com/google/gson/blob/master/GsonDesignDocument.md">Gson design document</a> for a discussion of issues we faced while designing Gson. It also include a comparison of Gson with other Java libraries that can be used for Json conversion.</p>
+<h2 id="Future-Enhancements-to-Gson"><a href="#Future-Enhancements-to-Gson" class="headerlink" title="Future Enhancements to Gson"></a>Future Enhancements to Gson</h2><p>For the latest list of proposed enhancements or if you’d like to suggest new ones, see the <a target="_blank" rel="noopener" href="https://github.com/google/gson/issues">Issues section</a> under the project website.</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/gson/">gson</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/9097d82a/">
+                        <span class="hidden-mobile">idea配置java注解处理器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

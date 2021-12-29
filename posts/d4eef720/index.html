@@ -24,7 +24,7 @@
 <meta property="og:description" content="安装fbterm:1pamac install fbterm 设置将用户加入video组,并更改fbterm权限:12345678&#x3D;&#x3D;&gt; 若想使用非根用户运行fbterm，需要把用户加入video组：#username为用户名，video为fbterm所在组sudo gpasswd -a YOUR_USERNAME video&#x3D;&#x3D;&gt; 若想非根用户可使用键盘快捷方式，需要：sudo se">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
-<meta property="article:modified_time" content="2021-12-29T01:35:48.557Z">
+<meta property="article:modified_time" content="2021-12-29T07:32:52.060Z">
 <meta property="article:author" content="NightWood">
 <meta property="article:tag" content="软件，终端">
 <meta name="twitter:card" content="summary_large_image">
@@ -241,7 +241,7 @@
               <h1 id="安装fbterm"><a href="#安装fbterm" class="headerlink" title="安装fbterm:"></a>安装fbterm:</h1><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">pamac <span class="hljs-keyword">install</span> fbterm<br></code></pre></td></tr></table></figure>
 <h1 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h1><h2 id="将用户加入video组-并更改fbterm权限"><a href="#将用户加入video组-并更改fbterm权限" class="headerlink" title="将用户加入video组,并更改fbterm权限:"></a>将用户加入video组,并更改fbterm权限:</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk">==&gt; 若想使用非根用户运行fbterm，需要把用户加入video组：<br><span class="hljs-comment">#username为用户名，video为fbterm所在组</span><br>sudo gpasswd -a YOUR_USERNAME video<br><br>==&gt; 若想非根用户可使用键盘快捷方式，需要：<br>sudo setcap <span class="hljs-string">&#x27;cap_sys_tty_config+ep&#x27;</span> <span class="hljs-regexp">/usr/</span>bin/fbterm<br>或者：<br>sudo chmod u+s <span class="hljs-regexp">/usr/</span>bin/fbterm<br></code></pre></td></tr></table></figure>
 
-<h2 id="tty自动进入fbterm"><a href="#tty自动进入fbterm" class="headerlink" title="tty自动进入fbterm"></a>tty自动进入fbterm</h2><p>修改用户配置文件“<del>/.bashrc”或“</del>/.zshrc”。在.bashrc或.zshrc最后中添加如下判断:</p>
+<h2 id="tty自动进入fbterm"><a href="#tty自动进入fbterm" class="headerlink" title="tty自动进入fbterm"></a>tty自动进入fbterm</h2><p>修改用户配置文件“home/.bashrc”或“home/.zshrc”。在.bashrc或.zshrc最后中添加如下判断:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#进入tty自动启动fbterm</span><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$TERM</span>&quot;</span> = <span class="hljs-string">&quot;linux&quot;</span> ]; <span class="hljs-keyword">then</span><br><span class="hljs-comment"># 此处使用了别名,如此当我们退出fbterm后,便能够通过简单的命令:fbterm,</span><br><span class="hljs-comment"># 重新启动fbterm了,而不用再指定LANG.</span><br><span class="hljs-built_in">alias</span> fbterm=<span class="hljs-string">&#x27;LANG=zh_CN.UTF-8 fbterm&#x27;</span><br>fbterm<br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
 
 <h1 id="创建fbterm的配置文件"><a href="#创建fbterm的配置文件" class="headerlink" title="创建fbterm的配置文件"></a>创建fbterm的配置文件</h1><p><strong>在~/.config/位置创建fbterm文件夹，在此文件夹下创建fbtermrc文件</strong></p>
@@ -351,8 +351,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/4a17b156/">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/posts/49c06d08/">
+                        <span class="hidden-mobile">aria2整理</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

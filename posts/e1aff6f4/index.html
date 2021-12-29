@@ -24,7 +24,7 @@
 <meta property="og:description" content="更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  fcitx5安装1sudo pacman -S fcitx5-im fcitx5-chinese-addons   其他一些软件包 1234567fcitx5: 输入法基础框架主程序   fcitx5-chinese-addons: 简体中文输入的支持，云拼音   fcitx5">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
-<meta property="article:modified_time" content="2021-12-29T01:33:46.700Z">
+<meta property="article:modified_time" content="2021-12-29T08:16:01.567Z">
 <meta property="article:author" content="NightWood">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="manjaro">
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      206 分钟
+      208 分钟
     </span>
   
 
@@ -278,9 +278,11 @@
 <h1 id="manjaro的pamac命令"><a href="#manjaro的pamac命令" class="headerlink" title="manjaro的pamac命令"></a>manjaro的pamac命令</h1><p>他是软件商店的命令版本，也是manjaro自己的包管理命令。类似于ubuntu的apt命令。</p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs applescript">pamac search <span class="hljs-built_in">name</span> <span class="hljs-comment">#搜索</span><br>pamac info <span class="hljs-built_in">name</span>  <span class="hljs-comment">#详细信息</span><br>pamac install <span class="hljs-built_in">name</span> <span class="hljs-comment">#安装软件</span><br>pamac remove <span class="hljs-built_in">name</span> <span class="hljs-comment">#卸载软件</span><br>pamac checkupdates <span class="hljs-comment">#检查更新</span><br>pamac upgrade <span class="hljs-comment">#安装更新</span><br></code></pre></td></tr></table></figure>
 
-<h1 id="安装字体（废弃）"><a href="#安装字体（废弃）" class="headerlink" title="安装字体（废弃）"></a>安装字体（废弃）</h1><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gauss">sudo pacman -S ttf-roboto noto-<span class="hljs-built_in">fonts</span> ttf-dejavu<br>文泉驿<br>sudo pacman -S wqy-bitmapfont wqy-microhei wqy-microhei-lite wqy-zenhei <br>思源字体<br>sudo pacman -S noto-<span class="hljs-built_in">fonts</span>-cjk adobe-source-han-sans-cn-<span class="hljs-built_in">fonts</span> adobe-source-han-serif-cn-<span class="hljs-built_in">fonts</span><br></code></pre></td></tr></table></figure>
-
-<h1 id="修改火狐滚轮速度"><a href="#修改火狐滚轮速度" class="headerlink" title="修改火狐滚轮速度"></a>修改火狐滚轮速度</h1><ul>
+<h1 id="改善火狐或chrome滚动"><a href="#改善火狐或chrome滚动" class="headerlink" title="改善火狐或chrome滚动"></a>改善火狐或chrome滚动</h1><ul>
+<li>在火狐或者chrome中搜索<code>Wheel Smooth Scroller</code>插件</li>
+</ul>
+<p>或者</p>
+<ul>
 <li><p>输入在火狐浏览器地址栏输入</p>
 <p>about:config<br>搜索mousewheel<br>其中<code> mousewheel.defalut.delta_multiplier_y</code>越大，每次滚动一下<br>滚轮，屏幕就滑动地越大。<br>除此之外，推测<code>durationMaxMs和durationMinMs</code>参数是<br>完成滚动的时间间隔，以毫秒计算，数值越小，单次滚动越快。factor<br>和鼠标滚轮滚动时，屏幕滚动的加速度有关。</p>
 </li>
@@ -350,7 +352,8 @@
 <hr>
 <h2 id="重启桌面"><a href="#重启桌面" class="headerlink" title="重启桌面"></a>重启桌面</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">kquitapp5 plasmashell    <span class="hljs-comment"># 退出kde桌面</span><br>kstart5 plasmashell<br></code></pre></td></tr></table></figure>
 
-<h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><h2 id="错误：-Cannot-find-the-fakeroot-binary-gt-错误：-Cannot-find-the-strip-binary"><a href="#错误：-Cannot-find-the-fakeroot-binary-gt-错误：-Cannot-find-the-strip-binary" class="headerlink" title="错误： Cannot find the fakeroot binary. ==&gt; 错误： Cannot find the strip binary"></a>错误： Cannot find the fakeroot binary. ==&gt; 错误： Cannot find the strip binary</h2><p>解决方法：因为没安装 fakeroot、binutils 等打包基本工具，所以<code>sudo pacman -S --needed base-devel</code> 装一下。</p>
+<h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><h2 id="ctrl-f2进入tty，中文显示为方块"><a href="#ctrl-f2进入tty，中文显示为方块" class="headerlink" title="ctrl+f2进入tty，中文显示为方块"></a>ctrl+f2进入tty，中文显示为方块</h2><p>解决方法：安装fbterm</p>
+<h2 id="错误：-Cannot-find-the-fakeroot-binary-gt-错误：-Cannot-find-the-strip-binary"><a href="#错误：-Cannot-find-the-fakeroot-binary-gt-错误：-Cannot-find-the-strip-binary" class="headerlink" title="错误： Cannot find the fakeroot binary. ==&gt; 错误： Cannot find the strip binary"></a>错误： Cannot find the fakeroot binary. ==&gt; 错误： Cannot find the strip binary</h2><p>解决方法：因为没安装 fakeroot、binutils 等打包基本工具，所以<code>sudo pacman -S --needed base-devel</code> 装一下。</p>
 <hr>
 <h2 id="使用数位板"><a href="#使用数位板" class="headerlink" title="使用数位板"></a>使用数位板</h2><p>1.查看系统信息中的内核版本，根据内核版本安装linux-header</p>
 <p>2.安装aur源中的驱动：yay -S digimend-drivers-git-dkms  </p>
@@ -519,16 +522,30 @@
 <p>在<code>MOUNTOPTIONS</code>那行添加<code>user</code>即可使普通用户也对挂载的U盘拥有写权限, 如下:<br><code>MOUNTOPTIOS=&quot;rw,user,noatime,nodiratime&quot; </code></p>
 <h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><p>下面列出常用操作的快捷键</p>
 <p>?  查看帮助</p>
-<h3 id="浏览"><a href="#浏览" class="headerlink" title="浏览:"></a>浏览:</h3><p>H   后退<br>L   前进<br>gg  跳到顶端<br>G   跳到底端<br>gh  go home<br>gn  新建标签<br>f   查找<br>/   搜素<br>g   快速进入目录</p>
-<h3 id="编辑"><a href="#编辑" class="headerlink" title="编辑:"></a>编辑:</h3><p>space   选择<br>uv      取消选择</p>
-<p>yy      复制<br>dd      剪切<br>pp      粘贴<br>delete  删除<br>cw      重命名<br>A       在当前名称基础上重命名<br>I       类似A, 但是光标会跳到起始位置<br>Ctrl-f  向下翻页<br>Ctrl-b  向上翻页</p>
-<h3 id="书签"><a href="#书签" class="headerlink" title="书签:"></a>书签:</h3><p>m       新建书签<br>`       打开书签<br>um      删除书签</p>
-<h3 id="标签"><a href="#标签" class="headerlink" title="标签:"></a>标签:</h3><p>gn / C-n        新建标签<br>TAB / S-TAB     切换标签<br>A-Right, A-Left 切换标签<br>gc / C-w        关闭标签</p>
-<h3 id="排序"><a href="#排序" class="headerlink" title="排序:"></a>排序:</h3><p>on/ob   根据文件名进行排序(natural/basename)<br>oc      根据改变时间进行排序 (Change Time 文件的权限组别和文件自身数据被修改的时间)<br>os      根据文件大小进行排序(Size)<br>ot      根据后缀名进行排序 (Type)</p>
-<p>oa      根据访问时间进行排序 (Access Time 访问文件自身数据的时间)<br>om      根据修改进行排序 (Modify time 文件自身内容被修改的时间)</p>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他:"></a>其他:</h3><p>zh      显示隐藏文件</p>
-<p>zp      打开/关闭文件预览功能<br>zP      打开目录预览功能</p>
-<h3 id="链接-Link"><a href="#链接-Link" class="headerlink" title="链接(Link):"></a>链接(Link):</h3><p>pl      粘贴绝对路径的链接<br>pL      粘贴相对路径的链接<br>phl     硬链接</p>
+<h3 id="浏览"><a href="#浏览" class="headerlink" title="浏览:"></a>浏览:</h3><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs maxima">H   后退<br>L   前进<br>gg  跳到顶端<br>G   跳到底端<br>gh  <span class="hljs-built_in">go</span> home<br><span class="hljs-built_in">gn</span>  新建标签<br>f   查找<br>/   搜素<br>g   快速进入目录<br></code></pre></td></tr></table></figure>
+
+<h3 id="编辑"><a href="#编辑" class="headerlink" title="编辑:"></a>编辑:</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs css">space   选择<br>uv      取消选择<br><br>yy      复制<br><span class="hljs-selector-tag">dd</span>      剪切<br>pp      粘贴<br>delete  删除<br>cw      重命名<br><span class="hljs-selector-tag">A</span>       在当前名称基础上重命名<br><span class="hljs-selector-tag">I</span>       类似<span class="hljs-selector-tag">A</span>, 但是光标会跳到起始位置<br>Ctrl-f  向下翻页<br>Ctrl-<span class="hljs-selector-tag">b</span>  向上翻页<br></code></pre></td></tr></table></figure>
+
+<h3 id="书签"><a href="#书签" class="headerlink" title="书签:"></a>书签:</h3><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey">m       新建书签<br>`       打开书签<br>um      删除书签<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="标签"><a href="#标签" class="headerlink" title="标签:"></a>标签:</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css">gn / C-n        新建标签<br>TAB / S-TAB     切换标签<br><span class="hljs-selector-tag">A</span>-<span class="hljs-attribute">Right</span>, <span class="hljs-selector-tag">A</span>-<span class="hljs-attribute">Left</span> 切换标签<br>gc / C-w        关闭标签<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="排序"><a href="#排序" class="headerlink" title="排序:"></a>排序:</h3><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">on</span>/ob   根据文件名进行排序(<span class="hljs-keyword">natural</span>/basename)<br>oc      根据改变时间进行排序 (Change <span class="hljs-type">Time</span> 文件的权限组别和文件自身数据被修改的时间)<br>os      根据文件大小进行排序(Size)<br>ot      根据后缀名进行排序 (<span class="hljs-keyword">Type</span>)<br><br>oa      根据访问时间进行排序 (<span class="hljs-keyword">Access</span> <span class="hljs-type">Time</span> 访问文件自身数据的时间)<br>om      根据修改进行排序 (Modify <span class="hljs-type">time</span> 文件自身内容被修改的时间)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他:"></a>其他:</h3><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-built_in">zh</span>      显示隐藏文件<br><br>zp      打开/关闭文件预览功能<br>zP      打开目录预览功能<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="链接-Link"><a href="#链接-Link" class="headerlink" title="链接(Link):"></a>链接(Link):</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">pl</span>      粘贴绝对路径的链接<br><span class="hljs-keyword">pL</span>      粘贴相对路径的链接<br>phl     硬链接<br></code></pre></td></tr></table></figure>
+
+
+
 <h3 id="批量改名"><a href="#批量改名" class="headerlink" title="批量改名:"></a>批量改名:</h3><p>批量选择文件后, 键入命令:bulkname, 会打开编辑器, 其中的文件名编辑后保存退出, 再次打开操作确认编辑, 然后就批量改名了, 如果想取消批量改名, 在确认时把文件内容删除即可.</p>
 <h3 id="任务管理"><a href="#任务管理" class="headerlink" title="任务管理:"></a>任务管理:</h3><p>在执行某些操作(比如复制一个大文件)时不能立即完成, 这在 ranger 中就是一个任务. 你可以停止, 启动某个任务, 也可以对某个任务设置优先级.</p>
 <p>w: 打开/关闭任务视图. 在w打开的任务视图中:<br>    dd: 终止一个任务<br>    J: 降低当前任务的优先级<br>    K: 提升当前任务的优先级</p>
@@ -537,12 +554,17 @@
 <p>使用ranger命令(3? 查看可用命令) :set colorscheme snow 设置颜色模式</p>
 </li>
 </ul>
-<h2 id="快速预览"><a href="#快速预览" class="headerlink" title="快速预览"></a>快速预览</h2><p>安装一下程序可以实现快速预览:</p>
-<p>elinks, html<br>highlight,text/code<br>img2txt,image<br>atool,压缩包<br>pdf2text,pdf<br>medinfo,audio/video</p>
+<h2 id="快速预览"><a href="#快速预览" class="headerlink" title="快速预览"></a>快速预览</h2><p>安装以下程序可以实现快速预览:</p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey"><span class="hljs-built_in">elinks,</span> html<br><span class="hljs-built_in">highlight,</span>text/code<br><span class="hljs-built_in">img2txt,</span>image<br><span class="hljs-built_in">atool,</span>压缩包<br><span class="hljs-built_in">pdf2text,</span>pdf<br><span class="hljs-built_in">medinfo,</span>audio/video<br></code></pre></td></tr></table></figure>
+
+
+
 <hr>
 <h1 id="字体调整"><a href="#字体调整" class="headerlink" title="字体调整"></a>字体调整</h1><p><strong>提示：</strong> 中文用户在安装思源cjk全集或者noto-cjk全集后，部分文字显示为日文异形字体，可参看<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Arch_Linux_Localization_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E4%BF%AE%E6%AD%A3%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%E6%98%BE%E7%A4%BA%E4%B8%BA%E5%BC%82%E4%BD%93%EF%BC%88%E6%97%A5%E6%96%87%EF%BC%89%E5%AD%97%E5%BD%A2">Arch Linux Localization (简体中文)#修正简体中文显示为异体（日文）字形</a> 进行解决。</p>
 <h2 id="字体安装和配置"><a href="#字体安装和配置" class="headerlink" title="字体安装和配置"></a>字体安装和配置</h2><p><code>noto-fonts-cjk</code>-Google Noto CJK 字体， 提供简体中文、繁体中文、日文、韩文一致的设计和外观。它是基于是<code>adobe-source-han-sans-otc-fonts</code>重贴的商标。所以选择一个安装。</p>
-<h2 id="安装的字体"><a href="#安装的字体" class="headerlink" title="安装的字体"></a>安装的字体</h2><ul>
+<h2 id="安装的字体"><a href="#安装的字体" class="headerlink" title="安装的字体"></a>安装的字体</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs vim">例如<br>sudo pacman -S ttf-roboto noto-fonts ttf-dejavu<br>文泉驿<br>sudo pacman -S wqy-bitmapfont wqy-microhei wqy-microhei-lite wqy-zenhei <br>思源字体<br>sudo pacman -S adobe-<span class="hljs-keyword">source</span>-han-sans-<span class="hljs-keyword">cn</span>-fonts adobe-<span class="hljs-keyword">source</span>-han-serif-<span class="hljs-keyword">cn</span>-fonts<br></code></pre></td></tr></table></figure>
+
+<ul>
 <li><p>思源字体（不安装cjk版本，仅安装cn版本，避免火狐异体字问题）：</p>
 <ul>
 <li><code>adobe-source-han-serif-cn-fonts</code></li>
@@ -601,7 +623,11 @@
 <p>执行以下命令检查，如果出现 <code>NotoSansCJK-Regular.ttc: &quot;Noto Sans CJK SC&quot; &quot;Regular&quot;</code> 则表示设置成功：</p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim"># fc-<span class="hljs-keyword">match</span> -s | <span class="hljs-keyword">grep</span> <span class="hljs-string">&#x27;Noto Sans CJK&#x27;</span><br></code></pre></td></tr></table></figure>
 
-<h1 id="kde-美化"><a href="#kde-美化" class="headerlink" title="kde 美化"></a>kde 美化</h1><h2 id="安装主题管理"><a href="#安装主题管理" class="headerlink" title="安装主题管理"></a>安装主题管理</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> pacman -S kvantum-qt<span class="hljs-number">5</span><br></code></pre></td></tr></table></figure>
+<h1 id="kde-美化"><a href="#kde-美化" class="headerlink" title="kde 美化"></a>kde 美化</h1><h2 id="安装kde的一些小工具"><a href="#安装kde的一些小工具" class="headerlink" title="安装kde的一些小工具"></a>安装kde的一些小工具</h2><ul>
+<li>kdialog 某些shell脚本会用他显示一些提示信息</li>
+<li>kmousetool 自动点击，解放你的鼠标</li>
+</ul>
+<h2 id="安装主题管理"><a href="#安装主题管理" class="headerlink" title="安装主题管理"></a>安装主题管理</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> pacman -S kvantum-qt<span class="hljs-number">5</span><br></code></pre></td></tr></table></figure>
 
 <h2 id="主题位置"><a href="#主题位置" class="headerlink" title="主题位置"></a>主题位置</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs awk">AURORAE_DIR=<span class="hljs-string">&quot;$HOME/.local/share/aurorae/themes&quot;</span><span class="hljs-regexp">//</span>窗口装饰元素<br>PLASMA_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/desktoptheme&quot;</span><span class="hljs-regexp">//</span>plasma样式<br>LAYOUT_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/layout-templates&quot;</span><span class="hljs-regexp">//</span>无<br>LOOKFEEL_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/look-and-feel&quot;</span>总体的预览/全局主题<br>SCHEMES_DIR=<span class="hljs-string">&quot;$HOME/.local/share/color-schemes&quot;</span><span class="hljs-regexp">//</span>颜色<br>KVANTUM_DIR=<span class="hljs-string">&quot;$HOME/.config/Kvantum&quot;</span><br>WALLPAPER_DIR=<span class="hljs-string">&quot;$HOME/.local/share/wallpapers&quot;</span><br>   				<span class="hljs-variable">$HOME</span><span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/icons/</span> <span class="hljs-regexp">//</span>存放鼠标或图标<br><span class="hljs-variable">$HOME</span><span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/plasma/</span>plasmoids/ 存放插件<br>以上目录如果没有就自行创建。<br><br>壁纸位置在<span class="hljs-regexp">/home/</span>kiylx<span class="hljs-regexp">/.local/</span>share/wallpapers 更改为此文件夹下的文件就可以改壁纸<br><span class="hljs-number">1</span>.更换登录壁纸 :菜单-系统设置-工作区-工作空间行为-锁屏-外观-接下来选取你喜欢的图片即可<br><span class="hljs-number">2</span>.更换锁屏壁纸 :菜单-系统设置-工作区-工作空间行为-锁屏-外观-接下来选取你喜欢的图片即可<br><span class="hljs-number">3</span>.更换登录屏幕的壁纸：菜单-系统设置-工作区-开机和关机-登录屏幕-接下来选取你喜欢的动画即可<br><span class="hljs-number">4</span>.更换开机动画：菜单-系统设置-工作区-开机和关机-欢迎屏幕<br><span class="hljs-number">5</span>.设置双击打开文件夹，单击选择：菜单-系统设置-工作区-工作空间行为-常规行为-点击行为<br></code></pre></td></tr></table></figure>
 
