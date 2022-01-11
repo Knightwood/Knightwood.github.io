@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="bash shell 获取当前正在执行脚本的绝对路径一般我们写Shell脚本的时候，都倾向使用绝对路径，这样无论脚本在什么目录执行，都应该起到相同的效果，但是有些时候，我们设计一个软件包中的工具脚本或者远程调用某个脚本时，可能使用相对路径更加灵活一点，因为你不知道用户会在哪个目录执行你的程序，于是问题就来了，如何获取当前正在执行脚本的绝对路径？ 常见的一种误区，是使用 pwd 命令，该命令的作用是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell学习">
+<meta property="og:url" content="https://knightwood.github.io/posts/f8d5cfbe/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="bash shell 获取当前正在执行脚本的绝对路径一般我们写Shell脚本的时候，都倾向使用绝对路径，这样无论脚本在什么目录执行，都应该起到相同的效果，但是有些时候，我们设计一个软件包中的工具脚本或者远程调用某个脚本时，可能使用相对路径更加灵活一点，因为你不知道用户会在哪个目录执行你的程序，于是问题就来了，如何获取当前正在执行脚本的绝对路径？ 常见的一种误区，是使用 pwd 命令，该命令的作用是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-04T05:05:06.000Z">
+<meta property="article:modified_time" content="2022-01-11T01:42:12.131Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="shell">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>shell学习 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="shell学习">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-01-04 13:05" pubdate>
+        2022年1月4日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      25 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">shell学习</h1>
+            
+            <div class="markdown-body">
+              <h1 id="bash-shell-获取当前正在执行脚本的绝对路径"><a href="#bash-shell-获取当前正在执行脚本的绝对路径" class="headerlink" title="bash shell 获取当前正在执行脚本的绝对路径"></a>bash shell 获取当前正在执行脚本的绝对路径</h1><p>一般我们写Shell脚本的时候，都倾向使用绝对路径，这样无论脚本在什么目录执行，都应该起到相同的效果，但是有些时候，我们设计一个软件包中的工具脚本或者远程调用某个脚本时，可能使用相对路径更加灵活一点，因为你不知道用户会在哪个目录执行你的程序，于是问题就来了，如何获取当前正在执行脚本的绝对路径？</p>
+<p>常见的一种误区，是使用 pwd 命令，该命令的作用是<code>“print name of current/working directory”，</code>这才是此命令的真实含义，当前的工作目录，这里没有任何意思说明，这个目录就是脚本存放的目录。所以，这是不对的。你可以试试<code>bash shell/a.sh</code>，a.sh 内容是 pwd，你会发现，显示的是执行命令的路径 <code>/home/ljl</code>，并不是 a.sh 所在路径：<code>/home/ljl/shell/a.sh</code></p>
+<p>另一个误人子弟的答案，是 <code>$0</code>，这个也是不对的，这个<code>$0</code>是Bash环境下的特殊变量，其真实含义是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript">Expands to the name <span class="hljs-keyword">of</span> the shell or shell script. This is set at shell initialization. If bash is invoked <span class="hljs-keyword">with</span> a file <span class="hljs-keyword">of</span> commands, <br>$<span class="hljs-number">0</span><br> is set to the name <span class="hljs-keyword">of</span> that file. If bash is started <span class="hljs-keyword">with</span> the -c option, then <br>$<span class="hljs-number">0</span><br>is set to the first argument after the string to be executed, <span class="hljs-keyword">if</span> one is present. Otherwise, it is set to the file name used to invoke bash, <span class="hljs-keyword">as</span> given by argument zero.<br></code></pre></td></tr></table></figure>
+
+<p> 这个$0有可能是好几种值，跟调用的方式有关系：</p>
+<ul>
+<li>使用一个文件调用bash，那$0的值，是那个文件的名字(没说是绝对路径噢)</li>
+<li>使用-c选项启动bash的话，真正执行的命令会从一个字符串中读取，字符串后面如果还有别的参数的话，使用从$0开始的特殊变量引用(跟路径无关了)</li>
+<li>除此以外，$0会被设置成调用bash的那个文件的名字(没说是绝对路径)</li>
+</ul>
+<p>下面对比下正确答案：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs shell">Jun@VAIO 192.168.1.216 23:52:54 ~ &gt;<br>cat shell/a.sh<br><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>echo &#x27;$0: &#x27;$0<br>echo &quot;pwd: &quot;`pwd`<br>echo &quot;=============================&quot;<br>echo &quot;scriptPath1: &quot;$(cd `dirname $0`; pwd)<br>echo &quot;scriptPath2: &quot;$(pwd)<br>echo &quot;scriptPath3: &quot;$(dirname $(readlink -f $0))<br>echo &quot;scriptPath4: &quot;$(cd $(dirname $&#123;BASH_SOURCE:-$0&#125;);pwd)<br>echo -n &quot;scriptPath5: &quot; &amp;&amp; dirname $(readlink -f $&#123;BASH_SOURCE[0]&#125;)<br>Jun@VAIO 192.168.1.216 23:53:17 ~ &gt;<br>bash shell/a.sh<br><span class="hljs-meta">$</span><span class="bash">0: shell/a.sh</span><br>pwd: /home/Jun<br>=============================<br>scriptPath1: /home/Jun/shell<br>scriptPath2: /home/Jun<br>scriptPath3: /home/Jun/shell<br>scriptPath4: /home/Jun/shell<br>scriptPath5: /home/Jun/shell<br>Jun@VAIO 192.168.1.216 23:54:54 ~ &gt;<br></code></pre></td></tr></table></figure>
+
+<p>在此解释下 <code>scriptPath1</code> ：</p>
+<ul>
+<li><ul>
+<li><code>dirname $0</code>，取得当前执行的脚本文件的父目录</li>
+<li><code>cd dirname $0</code>，进入这个目录(切换当前工作目录)</li>
+<li><code>pwd</code>，显示当前工作目录(cd执行后的)</li>
+</ul>
+</li>
+</ul>
+<p>由此，我们获得了当前正在执行的脚本的存放路径。</p>
+<hr>
+<p>有时候，我们需要知道当前执行的输出shell脚本的所在绝对路径，可以用dirname实现。<br>我们知道 dirname 可以获取一个文件所在的路径，dirname的用处是：</p>
+<blockquote>
+<p>输出已经去除了尾部的”/”字符部分的名称；如果名称中不包含”/”，<br>则显示”.”(表示当前目录)。</p>
+</blockquote>
+<p>直接从dirname返回的未必是绝对路径，取决于提供给dirname的参数是否是绝对路径。<br>所以下面这样的代码中SHELL_FOLDER中不一定是绝对路径</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">SHELL_FOLDER=$(dirname &quot;$0&quot;)<br></code></pre></td></tr></table></figure>
+
+<p>需要用cd和pwd命令配合获取脚本所在绝对路径，正确的写法是这样的，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">! /bin/bash</span><br><span class="hljs-meta">#</span><span class="bash">输出当前目录-版本1</span><br>this_dir=`pwd`<br>echo &quot;$this_dir ,this is pwd&quot;<br>echo &quot;$0 ,this is \$0&quot;<br>dirname $0|grep &quot;^/&quot; &gt;/dev/null<br>if [ $? -eq 0 ];then<br>    this_dir=`dirname $0`<br>else<br>    dirname $0|grep &quot;^\.&quot; &gt;/dev/null<br>     retval=$?<br>if [ $retval -eq 0 ];then<br>    this_dir=`dirname $0|sed &quot;s#^.#$this_dir#&quot;`<br>else<br>    this_dir=`dirname $0|sed &quot;s#^#$this_dir/#&quot;`<br>fi<br> fi<br> echo $this_dir<br></code></pre></td></tr></table></figure>
+
+<p>简单版一句</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">SHELL_FOLDER=$(cd &quot;$(dirname &quot;$0&quot;)&quot;;pwd)<br></code></pre></td></tr></table></figure>
+
+<p> 如果你觉得上面的写法比较麻烦，还有一个方式获取脚本的绝对路径,就是借助readlink命令，下面是readlink的命令行说明：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">readlink [选项]<span class="hljs-string">...</span> [文件列表]<span class="hljs-string">...</span><br>描述<br>       请注意，realpath<span class="hljs-params">(1)</span> 是更建议使用的用于标准化（或正规化，canonicalization）功能的命令。<br>       输出符号链接值或权威文件名<br>       -f, <span class="hljs-params">--canonicalize</span><br>              递归跟随给出文件名的所有符号链接以标准化；所有组件都必须存在<br>       -e, <span class="hljs-params">--canonicalize-existing</span><br>              递归跟随给出文件名的所有符号链接以标准化，除最后一个外所有组件必须存在<br>       -m, <span class="hljs-params">--canonicalize-missing</span><br>              递归跟随给出文件名的所有符号链接以标准化；各个组件没有必须存在的要求<br>       -n, <span class="hljs-params">--no-newline</span><br>              不要输出末尾定界符<br></code></pre></td></tr></table></figure>
+
+<p>所以用readlink命令我们可以直接获取$0参数的全路径文件名，然后再用dirname获取其所在的绝对路径：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">SHELL_FOLDER=<span class="hljs-variable">$</span>(dirname <span class="hljs-variable">$</span>(readlink <span class="hljs-operator">-f</span> <span class="hljs-string">&quot;<span class="hljs-variable">$0</span>&quot;</span>))<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/linux/">linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/shell/">shell</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/899e41d0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Rsync</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/f0a26b8/">
+                        <span class="hidden-mobile">Gson的github文档翻译</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

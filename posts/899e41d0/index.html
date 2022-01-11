@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="网页 使用   匹配是从父目录到子目录，如果排除了某个目录，那被排除目录的子目录的任何规则不再生效。 例如: exclude&#x3D;’&#x2F;var’ include&#x3D;’var&#x2F;opt’  **表示匹配这个地址的每一层   ​        例如 &#x2F;var&#x2F;opt&#x2F;**可以被理解为 include&#x3D;“&#x2F;” include&#x3D;“&#x2F;var” include&#x3D;“&#x2F;var&#x2F;opt” 例如 123456789101112">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rsync">
+<meta property="og:url" content="https://knightwood.github.io/posts/899e41d0/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="网页 使用   匹配是从父目录到子目录，如果排除了某个目录，那被排除目录的子目录的任何规则不再生效。 例如: exclude&#x3D;’&#x2F;var’ include&#x3D;’var&#x2F;opt’  **表示匹配这个地址的每一层   ​        例如 &#x2F;var&#x2F;opt&#x2F;**可以被理解为 include&#x3D;“&#x2F;” include&#x3D;“&#x2F;var” include&#x3D;“&#x2F;var&#x2F;opt” 例如 123456789101112">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-08T06:36:09.000Z">
+<meta property="article:modified_time" content="2022-01-08T09:12:56.280Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="rsync">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Rsync - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Rsync">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-01-08 14:36" pubdate>
+        2022年1月8日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      14k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      117 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Rsync</h1>
+            
+            <div class="markdown-body">
+              <p><a target="_blank" rel="noopener" href="https://bleepcoder.com/cn/timeshift/362931478/folder-exclusion-doesn-t-work">网页</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.voycn.com/article/timeshiftxitongbeifenyuhaiyuan">使用</a></p>
+<hr>
+<ul>
+<li><p>匹配是从父目录到子目录，如果排除了某个目录，那被排除目录的子目录的任何规则不再生效。</p>
+<p>例如: exclude=’/var’ include=’var/opt’</p>
+</li>
+<li><p><code>**</code>表示匹配这个地址的每一层</p>
+</li>
+</ul>
+<p>​        例如 <code>/var/opt/**</code>可以被理解为 include=“/” include=“/var” include=“/var/opt”</p>
+<p>例如</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">$ rsync -anv <span class="hljs-params">--include=</span><span class="hljs-string">&quot;/home/kiylx/文档/Linux学习/**&quot;</span> <span class="hljs-params">--exclude=</span><span class="hljs-string">&quot;.*&quot;</span> <span class="hljs-params">--exclude=</span><span class="hljs-string">&quot;/Linux学习/linux/***&quot;</span> <span class="hljs-string">/home/kiylx/</span>文档<span class="hljs-string">/Linux</span>学习  <span class="hljs-string">/home/kiylx/Android</span><br><br>输出：<br>Linux学习/<br>Linux学习<span class="hljs-string">/Font</span> configuration_Examples - ArchWiki <span class="hljs-params">(2021_9_14 下午5_33_06)</span><span class="hljs-string">.html</span><br>Linux学习<span class="hljs-string">/VimVi</span>使用<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/VimVi</span>使用<span class="hljs-string">.pdf</span><br>Linux学习<span class="hljs-string">/freebsd.md</span><br>Linux学习<span class="hljs-string">/iptables</span>和firewalld.pdf<br>Linux学习<span class="hljs-string">/manjaro</span>配置<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/ranger.svg</span><br>Linux学习<span class="hljs-string">/ranger</span>使用<span class="hljs-string">.md</span><br>Linux学习/背景介绍<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/TyporaRaw/</span><br>Linux学习<span class="hljs-string">/TyporaRaw/ranger</span>使用<span class="hljs-string">.assets/</span><br>Linux学习<span class="hljs-string">/TyporaRaw/ranger</span>使用<span class="hljs-string">.assets/cheatsheet.svg</span><br><br>排除了所有的前缀是`.`的文件，排除了linux文件夹<br></code></pre></td></tr></table></figure>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gradle">$ rsync -anv --<span class="hljs-keyword">exclude</span>=<span class="hljs-string">&#x27;*&#x27;</span>  --<span class="hljs-keyword">include</span>=<span class="hljs-string">&quot;/Linux学习/linux/***&quot;</span> <span class="hljs-regexp">/home/</span>kiylx<span class="hljs-regexp">/文档/</span>Linux学习  <span class="hljs-regexp">/home/</span>kiylx/Android<br><br>输出：<br>空白<br>开头的--<span class="hljs-keyword">exclude</span>=<span class="hljs-string">&#x27;*&#x27;</span> 排除了所有文件，后面的规则不再生效<br></code></pre></td></tr></table></figure>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gradle">$ rsync -anv --<span class="hljs-keyword">include</span>=<span class="hljs-string">&quot;/home/kiylx/文档/Linux学习/**&quot;</span> --<span class="hljs-keyword">exclude</span>=<span class="hljs-string">&#x27;Linux学习/*&#x27;</span> --<span class="hljs-keyword">include</span>=<span class="hljs-string">&quot;/Linux学习/linux/***&quot;</span> <span class="hljs-regexp">/home/</span>kiylx<span class="hljs-regexp">/文档/</span>Linux学习  <span class="hljs-regexp">/home/</span>kiylx/Android<br><br>输出：<br>Linux学习/<br>包含Linux学习<span class="hljs-regexp">/下的东西，又排除了Linux学习/</span>下的东西，所以，包含Linux学习<span class="hljs-regexp">/linux/</span>文件夹的规则不再生效<br></code></pre></td></tr></table></figure>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs gradle">$ rsync -anv --<span class="hljs-keyword">include</span>=<span class="hljs-string">&quot;/home/kiylx/文档/Linux学习/**&quot;</span> --<span class="hljs-keyword">include</span>=<span class="hljs-string">&quot;/Linux学习/linux/***&quot;</span>  --<span class="hljs-keyword">exclude</span>=<span class="hljs-string">&#x27;Linux学习/*&#x27;</span> <span class="hljs-regexp">/home/</span>kiylx<span class="hljs-regexp">/文档/</span>Linux学习  <span class="hljs-regexp">/home/</span>kiylx/Android<br><br>输出：<br>Linux学习/<br>Linux学习<span class="hljs-regexp">/linux/</span><br>Linux学习<span class="hljs-regexp">/linux/</span>.MD文档.md<br>Linux学习<span class="hljs-regexp">/linux/</span>Linux就该这么学（完整目录版）.pdf<br>Linux学习<span class="hljs-regexp">/linux/</span>linux学习.md<br>Linux学习<span class="hljs-regexp">/linux/</span>文件与目录管理.md<br>Linux学习<span class="hljs-regexp">/linux/</span>文件基本属性.md<br>Linux学习<span class="hljs-regexp">/linux/</span>用户与用户组管理.md<br>Linux学习<span class="hljs-regexp">/linux/</span>目录结构.md<br>Linux学习<span class="hljs-regexp">/linux/</span>磁盘管理.md<br>先包含linux学习文件夹和其下的linux文件夹，然后再排除linux学习文件夹下的一切<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">$ rsync -anv <span class="hljs-params">--include=</span><span class="hljs-string">&quot;/home/kiylx/文档/Linux学习/**&quot;</span> <span class="hljs-params">--exclude=</span>&#x27;Linux学习<span class="hljs-string">/linux</span>*&#x27; <span class="hljs-string">/home/kiylx/</span>文档<span class="hljs-string">/Linux</span>学习  <span class="hljs-string">/home/kiylx/Android</span><br><br>输出：<br>Linux学习/<br>Linux学习<span class="hljs-string">/Font</span> configuration_Examples - ArchWiki <span class="hljs-params">(2021_9_14 下午5_33_06)</span><span class="hljs-string">.html</span><br>Linux学习<span class="hljs-string">/Linux</span> chmod 命令 _ 菜鸟教程 <span class="hljs-params">(2021_3_18 上午10_08_38)</span><span class="hljs-string">.html</span><br>Linux学习<span class="hljs-string">/Manjaro</span> XFCE 安装和调教 _ Azure <span class="hljs-params">(2021_2_26 下午9_47_19)</span><span class="hljs-string">.html</span><br>Linux学习<span class="hljs-string">/VimVi</span>使用<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/VimVi</span>使用<span class="hljs-string">.pdf</span><br>Linux学习<span class="hljs-string">/freebsd.md</span><br>Linux学习<span class="hljs-string">/iptables</span>和firewalld.pdf<br>Linux学习<span class="hljs-string">/manjaro</span>配置<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/ranger.svg</span><br>Linux学习<span class="hljs-string">/ranger</span>使用<span class="hljs-string">.md</span><br>Linux学习/背景介绍<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/.obsidian/</span><br>Linux学习<span class="hljs-string">/.obsidian/app.json</span><br>Linux学习<span class="hljs-string">/.obsidian/appearance.json</span><br>Linux学习<span class="hljs-string">/.obsidian/core-plugins.json</span><br>Linux学习<span class="hljs-string">/.obsidian/graph.json</span><br>Linux学习<span class="hljs-string">/.obsidian/hotkeys.json</span><br>Linux学习<span class="hljs-string">/.obsidian/workspace</span><br>Linux学习<span class="hljs-string">/TyporaRaw/</span><br>Linux学习<span class="hljs-string">/TyporaRaw/ranger</span>使用<span class="hljs-string">.assets/</span><br>Linux学习<span class="hljs-string">/TyporaRaw/ranger</span>使用<span class="hljs-string">.assets/cheatsheet.svg</span><br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">rsync -anv <span class="hljs-params">--exclude=</span><span class="hljs-string">&quot;/home/kiylx/文档/Linux学习/linux&quot;</span> <span class="hljs-params">--include=</span><span class="hljs-string">&quot;/home/kiylx/文档/Linux学习/**&quot;</span> <span class="hljs-string">/home/kiylx/</span>文档<span class="hljs-string">/Linux</span>学习  <span class="hljs-string">/home/kiylx/Android</span><br>sending incremental file list<br>Linux学习/<br>Linux学习<span class="hljs-string">/Font</span> configuration_Examples - ArchWiki <span class="hljs-params">(2021_9_14 下午5_33_06)</span><span class="hljs-string">.html</span><br>Linux学习<span class="hljs-string">/Linux</span> chmod 命令 _ 菜鸟教程 <span class="hljs-params">(2021_3_18 上午10_08_38)</span><span class="hljs-string">.html</span><br>Linux学习<span class="hljs-string">/Manjaro</span> XFCE 安装和调教 _ Azure <span class="hljs-params">(2021_2_26 下午9_47_19)</span><span class="hljs-string">.html</span><br>Linux学习<span class="hljs-string">/VimVi</span>使用<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/VimVi</span>使用<span class="hljs-string">.pdf</span><br>Linux学习<span class="hljs-string">/freebsd.md</span><br>Linux学习<span class="hljs-string">/iptables</span>和firewalld.pdf<br>Linux学习<span class="hljs-string">/manjaro</span>配置<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/ranger.svg</span><br>Linux学习<span class="hljs-string">/ranger</span>使用<span class="hljs-string">.md</span><br>Linux学习/背景介绍<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/.obsidian/</span><br>Linux学习<span class="hljs-string">/.obsidian/app.json</span><br>Linux学习<span class="hljs-string">/.obsidian/appearance.json</span><br>Linux学习<span class="hljs-string">/.obsidian/core-plugins.json</span><br>Linux学习<span class="hljs-string">/.obsidian/graph.json</span><br>Linux学习<span class="hljs-string">/.obsidian/hotkeys.json</span><br>Linux学习<span class="hljs-string">/.obsidian/workspace</span><br>Linux学习<span class="hljs-string">/TyporaRaw/</span><br>Linux学习<span class="hljs-string">/TyporaRaw/ranger</span>使用<span class="hljs-string">.assets/</span><br>Linux学习<span class="hljs-string">/TyporaRaw/ranger</span>使用<span class="hljs-string">.assets/cheatsheet.svg</span><br>Linux学习<span class="hljs-string">/linux/</span><br>Linux学习<span class="hljs-string">/linux/.MD</span>文档<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/linux/Linux</span>就该这么学（完整目录版）<span class="hljs-string">.pdf</span><br>Linux学习<span class="hljs-string">/linux/linux</span>学习<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/linux/</span>文件与目录管理<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/linux/</span>文件基本属性<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/linux/</span>用户与用户组管理<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/linux/</span>目录结构<span class="hljs-string">.md</span><br>Linux学习<span class="hljs-string">/linux/</span>磁盘管理<span class="hljs-string">.md</span><br><br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="man-page"><a href="#man-page" class="headerlink" title="man page"></a><a target="_blank" rel="noopener" href="https://download.samba.org/pub/rsync/rsync.1">man page</a></h1><h2 id="包含-排除模式规则"><a href="#包含-排除模式规则" class="headerlink" title="包含/排除模式规则"></a>包含/排除模式规则</h2><p>您可以通过使用“+”、“-⁠”等过滤规则指定模式来包含和排除文件（如上面的过滤规则部分所述）。每个包含/排除规则都指定了一个模式，该模式与将要传输的文件的名称相匹配。这些模式可以采用多种形式：</p>
+<ul>
+<li>如果模式以 a 开头，<code>/</code>则它被锚定到文件层次结构中的特定位置，否则它与路径名的末尾匹配。这类似于<code>^</code>正则表达式中的前导。因此 <code>/foo</code>将匹配“传输根”（对于全局规则）或合并文件的目录（对于每个目录规则）中的“foo”名称。一个不合格<code>foo</code>将匹配树中任何位置的“foo”名称，因为该算法是从上到下递归应用的；它的行为就像每个路径组件在文件名结尾处轮流。即使未锚定的“sub/foo”也会在层次结构中的任何点匹配，其中在名为“sub”的目录中找到“foo”。有关如何指定在传输的根处匹配的模式的完整讨论，请参阅关于 ANCHORING INCLUDE/EXCLUDE PATTERNS 的部分。</li>
+<li>如果模式以 a 结尾，<code>/</code>那么它只会匹配一个目录，而不是常规文件、符号链接或设备。</li>
+<li>rsync 通过检查模式是否包含以下三个通配符之一来选择进行简单的字符串匹配和通配符匹配：’ <code>*</code>‘、’ <code>?</code>‘ 和 ‘ <code>[</code>‘ 。</li>
+<li>‘ <code>*</code>‘ 匹配任何路径组件，但它在斜线处停止。</li>
+<li>使用 ‘ <code>**</code>‘ 来匹配任何东西，包括斜线。</li>
+<li>‘ <code>?</code>‘ 匹配除斜杠 ( <code>/</code>)之外的任何字符。</li>
+<li>‘ <code>[</code>‘ 引入了一个字符类，例如<code>[a-z]</code>or <code>[[:alpha:]]</code>。</li>
+<li>在通配符模式中，反斜杠可用于转义通配符，但在不存在通配符时按字面匹配。这意味着与没有通配符的模式相比，当模式包含通配符时，反斜杠删除的级别更高。例如，如果您将通配符添加到“ <code>foo\bar</code>”（与反斜杠匹配），您将需要使用“ <code>foo\\bar*</code>”来避免“ <code>\b</code>”变成“b”。</li>
+<li>如果模式包含<code>/</code>（不包括尾随 /）或“ <code>**</code>”，则它与完整路径名匹配，包括任何前导目录。如果模式不包含 a<code>/</code>或 “ <code>**</code>“，则它仅与文件名的最后一部分匹配。（请记住，该算法是递归应用的，因此“完整文件名”实际上可以是从起始目录向下的路径的任何部分。）</li>
+<li>尾随的“ <code>dir_name/***</code>”将匹配目录（就像指定了“dir_name/”）和目录中的所有内容（就像<code>dir_name/**</code>已经指定了“ ”）。此行为是在 2.6.7 版中添加的。</li>
+</ul>
+<p>请注意，当使用<code>--recursive</code>( <code>-r</code>) 选项（由 暗示 <code>-a</code>）时，从左到右访问每个路径的每个子目录组件，每个目录都有机会在其内容之前排除。通过这种方式，包含/排除模式以递归方式应用于文件系统树中每个节点的路径名（传输内部的节点）。当 rsync 找到要发送的文件时，排除模式会使目录遍历阶段短路。</p>
+<p>例如，要包含“ <code>/foo/bar/baz</code>”，不得排除目录“ <code>/foo</code>”和“ <code>/foo/bar</code>”。排除这些父目录之一会阻止检查其内容，切断 rsync 到这些路径的递归并使“ <code>/foo/bar/baz</code>”的包含无效（因为 rsync 无法匹配它在目录层次结构的截止部分中从未见过的内容） .</p>
+<p>使用尾随“ <code>*</code>”规则时，概念路径排除尤其重要。例如，这行不通：</p>
+<blockquote>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs gradle">+ <span class="hljs-regexp">/some/</span>path/<span class="hljs-keyword">this</span>-<span class="hljs-keyword">file</span>-will-not-be-found<br>+ /<span class="hljs-keyword">file</span>-is-included<br>- *<br></code></pre></td></tr></table></figure>
+</blockquote>
+<p>这将失败，因为父目录“some”被 ‘ <code>*</code>‘ 规则排除，所以 rsync 从不访问“some”或“some/path”目录中的任何文件。一种解决方案是通过使用单个规则：“ <code>+ */</code>”（将其放在“ <code>- *</code>”规则之前的某个位置）要求包含层次结构中的所有目录，并且可能使用该<code>--prune-empty-dirs</code>选项。另一种解决方案是为所有需要访问的父目录添加特定的包含规则。例如，这组规则工作正常：</p>
+<blockquote>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gradle">+ <span class="hljs-regexp">/some/</span><br>+ <span class="hljs-regexp">/some/</span>path/<br>+ <span class="hljs-regexp">/some/</span>path/<span class="hljs-keyword">this</span>-<span class="hljs-keyword">file</span>-is-found<br>+ /<span class="hljs-keyword">file</span>-also-included<br>- *<br></code></pre></td></tr></table></figure>
+</blockquote>
+<p>以下是排除/包含匹配的一些示例：</p>
+<ul>
+<li>“ <code>- *.o</code>“ 将排除所有匹配的名称<code>*.o</code></li>
+<li>“ <code>- /foo</code>“ 将排除 transfer-root 目录中名为 foo 的文件（或目录）</li>
+<li>“ <code>- foo/</code>“ 将排除任何名为 foo 的目录</li>
+<li>“ <code>- /foo/*/bar</code>“ 将排除位于 transfer-root 目录中名为 foo 的目录下两级的名为 bar 的任何文件</li>
+<li>“ <code>- /foo/**/bar</code>“ 将排除在 transfer-root 目录中名为 foo 的目录下两级或更多级名为 bar 的任何文件</li>
+<li>“ <code>+ */</code>“、” <code>+ *.c</code>“ 和 “ <code>- *</code>“ 的组合将包含所有目录和 C 源文件，但不包含其他内容（另请参见 <code>--prune-empty-dirs</code>选项）</li>
+<li>“ <code>+ foo/</code>“、” <code>+ foo/bar.c</code>“ 和 “ <code>- *</code>“ 的组合将仅包含 foo 目录和 foo/bar.c（必须明确包含 foo 目录，否则它将被 “ <code>*</code>“排除）</li>
+</ul>
+<p>在 “ <code>+</code>“ 或 “ <code>-</code>“之后接受以下修饰符：</p>
+<ul>
+<li><p>A<code>/</code>指定包含/排除规则应与当前项的绝对路径名匹配。例如，“ <code>-/ /etc/passwd</code>”会在传输从“/etc”目录发送文件时排除 passwd 文件，而“-⁠/subdir/foo”在名为“subdir”的目录中时将始终排除“foo” , 即使“foo”是当前传输的根。</p>
+</li>
+<li><p>A<code>!</code>指定如果模式匹配失败，包含/排除应该生效。例如，“ <code>-! */</code>”将排除所有非目录。</p>
+</li>
+<li><p>A<code>C</code>用于指示所有全局 CVS 排除规则都应作为排除插入来代替“-⁠C”。不应遵循任何 arg。</p>
+</li>
+<li><p>An<code>s</code>用于指示规则适用于发送方。当规则影响发送方时，它会阻止文件传输。除非<code>--delete-excluded</code>指定，否则默认规则会影响双方，在这种情况下，默认规则仅成为发送方。另请参阅隐藏 (H) 和显示 (S) 规则，它们是指定发送方包含/排除的另一种方法。</p>
+</li>
+<li><p>An<code>r</code>用于指示规则适用于接收方。当规则影响接收方时，它可以防止文件被删除。有关<code>s</code>更多信息，请参阅修饰符。另请参阅保护 (P) 和风险 (R) 规则，这是指定接收方包含/排除的另一种方法。</p>
+</li>
+<li><p>A<code>p</code>表示规则易腐烂，这意味着它在被删除的目录中被忽略。例如，<code>-C</code>排除诸如“CVS”和“ <code>*.o</code>”之类的选项的默认规则被标记为易腐烂，并且不会阻止在源上删除的目录在目标上被删除。</p>
+</li>
+<li><p>An<code>x</code>表示规则影响 xattr 复制/删除操作中的 xattr 名称（因此在匹配文件/目录名称时被忽略）。如果未指定 xattr 匹配规则，则使用默认的 xattr 过滤规则（请参阅<code>--xattrs</code>选项）。</p>
+<hr>
+</li>
+</ul>
+<h1 id="博客1-地址"><a href="#博客1-地址" class="headerlink" title="博客1 地址"></a><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/428319">博客1 地址</a></h1><p>   关于rsync的过滤规则：<br>  译者注：这部分其实是man page中关于client的过滤规则的条目！不过，我把daemon中的过滤规则也集合到了里，两部分对比着进行理解。<br>  关于pattern和rule，个人理解是：pattern是用来匹配文件或目录的正则，而rule则是前缀+pattern，也即整条规则。如：</p>
+  <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">+</span> foo/<br><span class="hljs-bullet">+</span> foo/bar.c<br><span class="hljs-bullet">-</span> <span class="hljs-emphasis">*</span><br></code></pre></td></tr></table></figure>
+
+
+<p>  这是三条规则（rule），规则开头的”+”或”-“是前缀，foo/等前缀后面的东西即pattern（模式）。</p>
+<p>  下面是正文：<br>  首先，来看rsyncd.conf官方文档在filter部分的描述（daemon上的过滤规则）：<br>  daemon拥有自己的过滤链，来决定哪些文件允许被client访问。这个过滤链不会被发送到client，并且独立于client中已经指定的过滤规则。<br>  当client拉文件时，那些被daemon过滤链排除的文件会被视为不存在；而当client往server推送文件时，会跳过那些被daemon过滤链排除的文件，并且server会返回client一个错误消息；（当同步文件时）被daemon过滤链排除的文件永远不会从模块中删除。<br>  daemon过滤链由”filter”、”include from”、”include”、”exclude from”、”exclude”参数组成，并以此为先后（生效）顺序。<br>  （译者注：关于规则的生效顺序，应该是最先匹配。rsyncd.conf文档明确指出include规则可以覆盖掉exclude规则，照此理解，如果发生冲突，后面的规则应该不会覆盖掉前面的规则。下面filter rules部分也提到，最先匹配的模式会生效，但是在include/exclude pattern rules部分也提到一个特殊例子，在排除父目录，特别是使用<em>号匹配来排除父目录时，有些地方需要特别留意。<br>  条目中还有一句话：Anchored patterns are anchored at the root of the module.大意似乎是：锚点模式标记的是模块根目录。下面还会有提到Anchored pattern。）<br>  要阻止对整个目录的访问，必须排除该目录下的所有文件，最简单的方法是使用三个星号，如，想要阻止访问/secret，过滤规则就应该这样写：/secret/</em>**</p>
+<p>  再来看rsync的man page对过滤规则的描述（client中的过滤规则），这部分内容很多，由FILTER RULES条目开始，包括了条目：INCLUDE/EXCLUDE PATTERN RULES、MERGE-FILE FILTER RULES、MERGE-FILE FILTER RULES、ANCHORING INCLUDE/EXCLUDE PATTERNS等。</p>
+<p>  <strong>filter rules：</strong><br>  filter规则允许选择传输哪些文件（include），跳过哪些文件（exclude）。filter规则既可以直接指定include/exclude模式，也可以指定一个获取include/exclude模式的途径（如从一个文件中读取）。<br>  当建立了要传输的文件/目录列表后，rsync会依次核查它们是否符合include/exclude模式，匹配到的第一个模式会生效：如果符合exclude模式，则跳过该文件，如果符合include模式，不跳过该，如果不符合任何模式，文件也不会被跳过。<br>  rsync按照命令行中filter规则顺序建立一个有序列表。filter规则的语法如下：<br>  rule [pattern_or_filename]<br>  rule,modfiers [pattern_or_filename]<br>  可以使用完整规则名称，也可以使用简写名称，可用的规则前缀如下：<br>  exclude, - ：排除模式<br>  include, + ：包含模式<br>  merge, . ：指定一个merge-file，供多个规则读取<br>  dir-merge, : ：指定一个per-directory merge-file<br>  hide, H ：指定一个模式，符合该模式的文件将被隐藏，以防止传输<br>  show, S ：不隐藏符合该模式的文件<br>  protect, p ：指定一个模式来防止文件被删除<br>  risk, R ：符合该模式的文件不会被保护<br>  clear, ! ：清除当前的include/exclude模式列表（该选项无参数）<br>  注：关于merge-file和per-directory，见下文。<br>  如果使用简写形式，前面语法中rule和modefiers之间的逗号是可选的，紧跟着的pattern或filename（如果存在）之后必须有一个空格或下划线。<br>  如果规则是从文件中读取的，那么文件中的空白行将被忽略，以#开头的行被视为注释。<br>  注意：–include/–exclude命令行中的选项，不能完全依照上面filter规则的解释。–include/–exclude命令只允许使用指明的include/exclude模式加”!”标识（即：模式+标识）来清除（译者注：排除或许更准确）（文件或目录）列表。如果模式不以”- “（两个字符：减号和空格）或”+ “（两个字符：加号和空格）开头，那么，对于包含选项而言，规则将被解释为字符串前添加了”+”前缀；对于排除选项而言，规则将被解释为字符串前添加了”-“前缀。与之相反，–filter选项必须在规则开头包含一个简写或完整的规则名称。<br>  另外要注意的是，每个–filter选项，–include选项，和–exclude选项只接受一个rule/pattern，如果想添加多个rule/pattern，可以在命令行中的重复这些选项，或在–filter选项中使用merge-file语法，或使用–include-from/–exclude-from选项。</p>
+<p>  <strong>include/exclude pattern ruls：</strong><br>  注：rsync的man page说，–include和–exclude是–filter选项的简化版。<br>  你可以使用”+”、”-“等filter过滤规则来指定模式，用以包含和排除文件。每个include/exclude规则指定一个模式来匹配传输文件。模式可以有以下几种形式：<br>  1）如果”/”出现在模式的开头，那么它标记了层级中的一个特殊位置（译者注：指的应该是文件系统的位置或完整路径的层次结构中的某一层次），否则，它只是匹配路径的结束。（译者注：这里又出现了anchor，计算机术语称之为锚点，它设置一个标记，然后可以在本文档或页面的其它地方创建一个指向本标记的链接：锚点，标记了一个特定位置。）因此，”/foo”将匹配”root of the transfer”中的foo（对全局规则而言），或者merge-file目录中的foo（对per-directory规则而言）。而未经限定的foo将匹配文件系统中任何位置的foo，因为算法是自上而下递归地生效，就像是路径的每个部分轮流变成文件或目录的结尾（译者注：例如foo/a/b/c，算法对该路径的解释将会是foo/a，foo/a/b，foo/a/b/c，算法依次把a、b、c作为文件或目录结尾）。实际上，非锚定的”sub/foo”将会匹配层次结构中包含子目录sub的，任何位置的foo。<br>  2）如果”/”出现在模式的结尾，那么它只匹配目录，而不匹配常规文件、链接，或设备。<br>  3）rsync会检查模式中是否包含下列通配符，以确定做简单的字符匹配还是通配符匹配：”*”、”?”、”[“<br>  * ：匹配路径的任何部分，遇到斜杠终止<br>  ** ：匹配任何东西，包括斜杠<br>  ? ：匹配任何单个字符，斜杠(“/”)除外<br>  [ ：匹配一个字符集，如[a-z]，或[[:alpha:]]<br>  4）在通配符模式中，反斜杠(“\”)对通配符进行转义，如果通配符不存在，它会被解释一个普通字符<br>  5）如果模式包含”/”（尾部的”/”不计算在内）或”<strong>”，它将匹配完整路径，包括前导目录（即foo/a，既匹配a，也匹配前导的foo）；如果模式不包含”/”或”</strong>”，它只匹配路径最后的部分。（注意：算法是递归地应用，所以实际上“完整路径”可能是从起始目录向下，路径的任何一个部分。）<br>  6）以dir_name/***结尾的模式，既匹配目录（就像指定了dir_name/），又匹配目录中的所有文件（就像指定了dir_name/*<em>）。<br>  请注意：如果使用了-r选项（-a选项隐含了此选项），那么，自顶向下，路径的每一个部分都将被访问，所以，include/exclude模式会递归地对路径的每个组成部分生效（如，要包含/foo/bar/baz，就不能排除/foo和/foo/bar）。当rsync寻找要发送的文件时，exclude模式实际上是rsync在历遍目录时的一个短路。如果一个模式排除了特定的父目录，它就能使一个更深的include模式无法生效，因为rsync无法穿过层级中的排除部分而向下（匹配文件）。（译者注：意思应该是，如果模式排除一个指定的父目录，那么它将无法继续匹配该父目录下的子目录或文件。）这一点非常重要，尤其是使用一个以”</em>”结尾的规则时。如下：<br>  + /some/path/this-file-will-not-be-found<br>  + /file-is-included<br>  - *<br>  上述规则链将无法得到你想要的结果，因为父目录some被”*”规则排除了，所以rsync不会去访问some或some/path目录下的任何文件。要解决这个问题，可以使用一个”+ */”规则来包含层级的所有目录（把它放到”- <em>”前面的任意位置），或许还需要–prune-empty-dirs选项。另外一个解决途径是，添加一个include规则来包含所有需要被访问的父目录。下例的规则集就可以很好的工作：<br>  + /some/<br>  + /some/path/<br>  + /some/path/this-file-is-found<br>  + /file-also-included<br>  - *<br>  （译者注：<br>  1）不知道大家是否理解了上面的官方示例。第一个例子本想包含两个文件，但结果只包含到了一个。文件this-file-will-not-be-found没有被包含的原因在于：基于最先匹配原则，文件本身被include规则所匹配，但其父目录以及爷爷目录并没有被include规则所匹配，所以它们被后面的exclude规则所匹配，而由于rsync不能穿过被exclude规则排除的父目录而匹配其中的文件，所以该文件最终将无法出现在匹配结果中。<br>  这一过程有三个关键：一是rsync无法穿过被排除的父目录而向下匹配文件；二是</em>匹配路径任一部分，遇/终止匹配；三是最先匹配。<br>  2）关于–prune-empty-dirs（简写模式为-m）：这个命令行中的选项告诉rsync的接收方从文件列表中删除空目录，包括那些没有非空子目录的嵌套目录。这个选项很有用，当rsync的发送方使用include/exclude/filter规则扫描具有多层次结构的文件时，它可以避免（接收方）创建一系列无用的目录。）</p>
+<p>  下面是一些exclude/include匹配的示例：<br>  - <em>.o：排除所有以o结尾的文件<br>  - /foo：排除transfer-root目录中，名为foo的文件或目录<br>  （译者注：前面也提到了transfer-root，这个概念会在ANCHORING INCLUDE/EXCLUDE PATTERNS条目中讲到，举例来说明，有一个路径/home/me/foo/bar：<br>  rsync -a - /me/foo/bar /home/me /dest<br>  rsync -a - /foo/bar /home/me/ /dest<br>  上述规则要复制/home/me目录及其下所有文件到/dest，但要排除/me/foo/bar文件（或目录）。两条规则的效果是一样的，但是transfer-root不同。第一条规则中，/home目录就是transfer-root；而对于第二条规则，/home/me/才是transfer-root。也就是说，transfer-root是从路径的最末位向前追溯，遇到的第一个以”/“结尾的目录。）<br>  - foo/：排除任何名为foo的目录<br>  - /foo/</em>/bar：从transfer-root中的foo目录向下两级的位置，排除名为bar的文件。<br>  - /foo/**/bar：从transfer-root中的foo目录向下至少两级的位置，排除名为bar的文件。<br>  + */c，+ *.c，和- *的组合，会包含所有目录，以及以c结尾的文件，除此之外，所有文件都排除。<br>  + /foo/，+ foo/bar.c，和- <em>的组合，将只包含foo目录，以及foo/bar.c文件。（必须明确包含foo目录，否则它将被exclude规则中的</em>所匹配，这会导致前面所讲到的排除特定父目录的问题，将无法如你所愿匹配到foo/bar.c文件。）</p>
+<p>  “+”或”-“接受下列修饰符：<br>  /，指定include/exclude规则要匹配当前项目的绝对路径。例如，-/ /etc/passwd，每当从/etc目录中传输文件时，都要排除密码文件；再比如，-/ subdir/foo，当从名为subdir的目录中传输文件时，总是排除文件foo，即使该文件位于当前传输的根目录。<br>  译者注：不要混淆匹配模式中的/和修饰符/ ！<br>  !，告诉rsync，当模式匹配失败时，include/exclude规则才生效。如，-! */，它将匹配所有非目录文件。<br>  C，该修饰符指示，所有全局的CVS-exclude规则将插入到-C的地方。该修饰符后面无参数。（译者注：文档在介绍-C –cvs-exclude选项时说，如果在自己的–filter规则中同时使用-C，那么所有的CVS exclude规则将附加到你自己的规则的末尾，不管-C位于命令行的什么地方。）<br>  s，指示规则作用于发送端。当规则对发送端生效时，它将阻止文件被传输。该修饰符通常用于那些在两端都生效的规则，除非指定了–delete-excluded；它将使规则默认只在发送端生效。另一种指定发送端includes/excludes的途经是使用hide(H)和show(S)。<br>  r，通常用来指示规则应用于接收端。当规则对接收方生效时，它将防止文件被删除。另一种指定接收端includes/excludes的方法是，使用protect(P)和risk(R)规则。</p>
+<p>  本文转自 li_qinshan 51CTO博客，原文链接:<a target="_blank" rel="noopener" href="http://blog.51cto.com/share/567578">http://blog.51cto.com/share/567578</a></p>
+<p>  <strong>版权声明：</strong>本文内容由阿里云实名注册用户自发贡献，版权归原作者所有，阿里云开发者社区不拥有其著作权，亦不承担相应法律责任。具体规则请查看《<a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/768092">阿里云开发者社区用户服务协议</a>》和《<a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/768093">阿里云开发者社区知识产权保护指引</a>》。如果您发现本社区中有涉嫌抄袭的内容，填写<a target="_blank" rel="noopener" href="https://yida.alibaba-inc.com/o/right">侵权投诉表单</a>进行举报，一经查实，本社区将立刻删除涉嫌侵权内容。</p>
+<hr>
+<h1 id="博客2-地址"><a href="#博客2-地址" class="headerlink" title="博客2 地址"></a><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_30657541/article/details/95381658">博客2 地址</a></h1><p>  rsync –include-from –exclude-from的理解：</p>
+<p>  1、同时添加–include-from –exclude-from时。后者是对前者的结果进行排除</p>
+<p>  如：“–include-from include.txt –include-from exclude.txt” #也就是说绝对不会超过–include-from声明的范围</p>
+<p>  2、–include-from 文件前面的符号是有效的有意义的</p>
+<p>  3、–exclude-from 文件前面不管是什么符号、有没有符号都是排除的意思</p>
+<p>  4、每一个目录、子目录、文件都会与这个过滤规则列表进行匹配，直到找到一个命中的（命中的规则说要过滤就过滤，要包含那就包含），</p>
+<p>  5、最重要的一个原则： 只找第一个匹配的规则</p>
+<p>   以下是原文，我把关键词标出来方便阅读：</p>
+<h2 id="FILTER-RULES"><a href="#FILTER-RULES" class="headerlink" title="FILTER RULES"></a>FILTER RULES</h2><p>  The filter rules allow for flexible selection of which files to transfer (include) and which files to skip (exclude). The rules either directly specify include/exclude patterns or they specify a way to acquire more include/exclude patterns (e.g. to read them from a file).</p>
+<p>  As the list of files/directories to transfer is built, rsync checks each name to be transferred against the list of include/exclude patterns in turn, and the first matching pattern is acted on: if it is an exclude pattern, then that file is skipped; if it is an include pattern then that filename is not skipped; if no matching pattern is found, then the filename is not skipped.</p>
+<p>  Rsync builds an ordered list of filter rules as specified on the command-line.</p>
+<p>  以下是一个实例后面添加对相关过滤规则的说明和理解</p>
+<p>  #############################################################################</p>
+<p>  ### include.txt:</p>
+<p>  # CompanyAttachment Files</p>
+<p>  # 限制所有目录只包含2019开头的</p>
+<p>  - ETest/20191/ #如果非要排除 ETest/20191下的文件 这个排除规则应该放前面。每个路径 只找第一个匹配的规则 （ 只找第一个、只找第一个、只找第一个 这很重要，理解了这个原则，才能理解所有的规则）</p>
+<p>  + 2019*/ #这个只是 包含了目录，目录下的文件不会同步</p>
+<p>  + 2019*/** #这个只包含了目录下的文件，如果没有上面的这个也无效</p>
+<p>  + ETest/ #这个只是 包含了目录 但是子目录如果符合上面的其它条件也会被同步（如ETest目录下有2019开头的文件夹，也会同步）</p>
+<p>  - * #排除其它文件</p>
+<p>  - *.tmp #排除所有的.tmp文件。 这是个 错误 的示例，这个不一定会排除所有目录的.tmp文件。因为有些路径会命中前面的规则就直接返回了。这个排除规则要么写到最前面，要么写到exclude.txt里去</p>
+<p>  #############################################################################</p>
+<p>  #############################################################################</p>
+<p>  # exclude.txt</p>
+<p>  *.tmp #exclude-from文件里不管前面加不加+、-号都是排除（测试+号、-号、不要符号结果是一样的,很奇怪，但测试结果是这样，不知道我是不是理解错误）</p>
+<p>  #* #exclude-from 是对include-from的结果进行排除，所以不能加这个。这个相当于禁用同步了。</p>
+<p>  #############################################################################</p>
+<p>  总结一下：</p>
+<p>  1、顺序很重要，重要的、命中范围小的写前面</p>
+<p>  2、最重要的还是理解它的过滤逻辑：每一个目录、子目录、文件都会与这个过滤规则列表进行匹配，直到找到一个命中的（命中的规则说要过滤就过滤，要包含那就包含），</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/linux/">linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/rsync/">rsync</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/f8d5cfbe/">
+                        <span class="hidden-mobile">shell学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

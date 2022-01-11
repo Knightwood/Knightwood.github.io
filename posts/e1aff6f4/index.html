@@ -24,7 +24,7 @@
 <meta property="og:description" content="更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  fcitx5安装1sudo pacman -S fcitx5-im fcitx5-chinese-addons   其他一些软件包 1234567fcitx5: 输入法基础框架主程序   fcitx5-chinese-addons: 简体中文输入的支持，云拼音   fcitx5">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
-<meta property="article:modified_time" content="2021-12-29T08:16:01.567Z">
+<meta property="article:modified_time" content="2022-01-11T00:46:18.840Z">
 <meta property="article:author" content="NightWood">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="manjaro">
@@ -198,7 +198,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      25k 字
+      27k 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      208 分钟
+      222 分钟
     </span>
   
 
@@ -279,7 +279,8 @@
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs applescript">pamac search <span class="hljs-built_in">name</span> <span class="hljs-comment">#搜索</span><br>pamac info <span class="hljs-built_in">name</span>  <span class="hljs-comment">#详细信息</span><br>pamac install <span class="hljs-built_in">name</span> <span class="hljs-comment">#安装软件</span><br>pamac remove <span class="hljs-built_in">name</span> <span class="hljs-comment">#卸载软件</span><br>pamac checkupdates <span class="hljs-comment">#检查更新</span><br>pamac upgrade <span class="hljs-comment">#安装更新</span><br></code></pre></td></tr></table></figure>
 
 <h1 id="改善火狐或chrome滚动"><a href="#改善火狐或chrome滚动" class="headerlink" title="改善火狐或chrome滚动"></a>改善火狐或chrome滚动</h1><ul>
-<li>在火狐或者chrome中搜索<code>Wheel Smooth Scroller</code>插件</li>
+<li>在火狐中搜索<code> Yet Another Smooth Scrolling WE</code>扩展</li>
+<li>chrome中搜索<code>Chromium Wheel Smooth Scroller</code>扩展</li>
 </ul>
 <p>或者</p>
 <ul>
@@ -458,6 +459,11 @@
 <p>然后，再执行 journalctl 限制日志的命令：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"># journalctl --vacuum-time=1w<br>Vacuuming done, freed 0B <span class="hljs-keyword">of</span> archived journals on disk.<br># journalctl --vacuum-size=500M<br>Vacuuming done, freed 0B <span class="hljs-keyword">of</span> archived journals on disk.<br></code></pre></td></tr></table></figure>
 
+<h1 id="pgp密钥管理"><a href="#pgp密钥管理" class="headerlink" title="pgp密钥管理"></a>pgp密钥管理</h1><h2 id="删除密钥"><a href="#删除密钥" class="headerlink" title="删除密钥"></a>删除密钥</h2><p>删除密钥有三个选项：–delete-keys、–delete-secret-keys和–delete-secret-and-public-key。<br>–delete-keys表示从公钥钥匙圈上删除密钥，也就是一同删除公钥和对应的私钥。在分批模式（batch mode）下，密钥必须使用指纹表示，或者使用–yes选项。<br>–delete-secret-keys表示从私钥钥匙圈上删除密钥。<br>–delete-secret-and-public-key和–delete-keys一样，但是如果私钥存在的话，会先移除私钥。在分批模式下，密钥必须使用指纹表示。</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs livescript">❯ gpg --<span class="hljs-keyword">list</span>-keys <span class="hljs-comment">#列出自己添加的密钥</span><br><span class="hljs-regexp">/home/kiylx/</span>.gnupg/pubring.kbx<br>------------------------------<br>pub   rsa4096 <span class="hljs-number">2009</span>-<span class="hljs-number">07</span>-<span class="hljs-number">05</span> [SC]<br>      <span class="hljs-number">8</span>C470B2A0B31568E110D432516281F2E007C98D1<br>uid             [ 未知 ] Francois Marier &lt;fmarier@gmail.com&gt;<br>uid             [ 未知 ] Francois Marier &lt;francois@fmarier.org&gt;<br>uid             [ 未知 ] Francois Marier &lt;fmarier@alumni.uwaterloo.ca&gt;<br>uid             [ 未知 ] Francois Marier &lt;francois@debian.org&gt;<br>sub   rsa4096 <span class="hljs-number">2009</span>-<span class="hljs-number">07</span>-<span class="hljs-number">05</span> [E]<br><br>❯ gpg --<span class="hljs-keyword">delete</span>-keys <span class="hljs-number">8</span>C470B2A0B31568E110D432516281F2E007C98D1  <span class="hljs-comment">#删除密钥的公钥和私钥</span><br>gpg (GnuPG) <span class="hljs-number">2.2</span>.<span class="hljs-number">32</span>; Copyright (C) <span class="hljs-number">2021</span> Free Software Foundation, Inc.<br>This <span class="hljs-keyword">is</span> free software: you are free <span class="hljs-keyword">to</span> change <span class="hljs-keyword">and</span> redistribute <span class="hljs-literal">it</span>.<br>There <span class="hljs-keyword">is</span> NO WARRANTY, <span class="hljs-keyword">to</span> the extent permitted <span class="hljs-keyword">by</span> law.<br><br><br>pub  rsa4096/<span class="hljs-number">16281</span>F2E007C98D1 <span class="hljs-number">2009</span>-<span class="hljs-number">07</span>-<span class="hljs-number">05</span> Francois Marier &lt;fmarier@gmail.com&gt;<br><br>要从钥匙环里删除这个密钥吗？(y/N) y<br><br></code></pre></td></tr></table></figure>
+
+
+
 <h1 id="plasmashell"><a href="#plasmashell" class="headerlink" title="plasmashell"></a>plasmashell</h1><p><strong>可以直接在<code>krunner</code>中运行按 <code>alt+F2 </code>打开<code> krunner</code>。</strong></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># kde4</span><br>killall plasmashell &amp;&amp; kstart plasmashell<br>kquitapp5 plasmashell &amp;&amp; kstart plasmashell<br><span class="hljs-comment"># kde5</span><br>killall plasmashell &amp;&amp; kstart5 plasmashell<br>kquitapp5 plasmashell &amp;&amp; kstart5 plasmashell<br></code></pre></td></tr></table></figure>
 
@@ -626,10 +632,11 @@
 <h1 id="kde-美化"><a href="#kde-美化" class="headerlink" title="kde 美化"></a>kde 美化</h1><h2 id="安装kde的一些小工具"><a href="#安装kde的一些小工具" class="headerlink" title="安装kde的一些小工具"></a>安装kde的一些小工具</h2><ul>
 <li>kdialog 某些shell脚本会用他显示一些提示信息</li>
 <li>kmousetool 自动点击，解放你的鼠标</li>
+<li>kipi-plugins  是gwenview的插件集合</li>
 </ul>
 <h2 id="安装主题管理"><a href="#安装主题管理" class="headerlink" title="安装主题管理"></a>安装主题管理</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> pacman -S kvantum-qt<span class="hljs-number">5</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="主题位置"><a href="#主题位置" class="headerlink" title="主题位置"></a>主题位置</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs awk">AURORAE_DIR=<span class="hljs-string">&quot;$HOME/.local/share/aurorae/themes&quot;</span><span class="hljs-regexp">//</span>窗口装饰元素<br>PLASMA_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/desktoptheme&quot;</span><span class="hljs-regexp">//</span>plasma样式<br>LAYOUT_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/layout-templates&quot;</span><span class="hljs-regexp">//</span>无<br>LOOKFEEL_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/look-and-feel&quot;</span>总体的预览/全局主题<br>SCHEMES_DIR=<span class="hljs-string">&quot;$HOME/.local/share/color-schemes&quot;</span><span class="hljs-regexp">//</span>颜色<br>KVANTUM_DIR=<span class="hljs-string">&quot;$HOME/.config/Kvantum&quot;</span><br>WALLPAPER_DIR=<span class="hljs-string">&quot;$HOME/.local/share/wallpapers&quot;</span><br>   				<span class="hljs-variable">$HOME</span><span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/icons/</span> <span class="hljs-regexp">//</span>存放鼠标或图标<br><span class="hljs-variable">$HOME</span><span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/plasma/</span>plasmoids/ 存放插件<br>以上目录如果没有就自行创建。<br><br>壁纸位置在<span class="hljs-regexp">/home/</span>kiylx<span class="hljs-regexp">/.local/</span>share/wallpapers 更改为此文件夹下的文件就可以改壁纸<br><span class="hljs-number">1</span>.更换登录壁纸 :菜单-系统设置-工作区-工作空间行为-锁屏-外观-接下来选取你喜欢的图片即可<br><span class="hljs-number">2</span>.更换锁屏壁纸 :菜单-系统设置-工作区-工作空间行为-锁屏-外观-接下来选取你喜欢的图片即可<br><span class="hljs-number">3</span>.更换登录屏幕的壁纸：菜单-系统设置-工作区-开机和关机-登录屏幕-接下来选取你喜欢的动画即可<br><span class="hljs-number">4</span>.更换开机动画：菜单-系统设置-工作区-开机和关机-欢迎屏幕<br><span class="hljs-number">5</span>.设置双击打开文件夹，单击选择：菜单-系统设置-工作区-工作空间行为-常规行为-点击行为<br></code></pre></td></tr></table></figure>
+<h2 id="主题位置"><a href="#主题位置" class="headerlink" title="主题位置"></a>主题位置</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs awk">AURORAE_DIR=<span class="hljs-string">&quot;$HOME/.local/share/aurorae/themes&quot;</span><span class="hljs-regexp">//</span>窗口装饰元素<br>PLASMA_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/desktoptheme&quot;</span><span class="hljs-regexp">//</span>plasma样式<br>LAYOUT_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/layout-templates&quot;</span><span class="hljs-regexp">//</span>无<br>LOOKFEEL_DIR=<span class="hljs-string">&quot;$HOME/.local/share/plasma/look-and-feel&quot;</span>总体的预览/全局主题<br>SCHEMES_DIR=<span class="hljs-string">&quot;$HOME/.local/share/color-schemes&quot;</span><span class="hljs-regexp">//</span>颜色<br>KVANTUM_DIR=<span class="hljs-string">&quot;$HOME/.config/Kvantum&quot;</span><br>WALLPAPER_DIR=<span class="hljs-string">&quot;$HOME/.local/share/wallpapers&quot;</span><br>   				<span class="hljs-variable">$HOME</span><span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/icons/</span> <span class="hljs-regexp">//</span>存放鼠标或图标<br><span class="hljs-variable">$HOME</span><span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/plasma/</span>plasmoids/ 存放插件<br><span class="hljs-variable">$HOME</span><span class="hljs-regexp">/.local/</span>share<span class="hljs-regexp">/kwin/</span>scripts/  kwin插件<br>以上目录如果没有就自行创建。<br><br>壁纸位置在<span class="hljs-regexp">/home/</span>kiylx<span class="hljs-regexp">/.local/</span>share/wallpapers 更改为此文件夹下的文件就可以改壁纸<br><span class="hljs-number">1</span>.更换登录壁纸 :菜单-系统设置-工作区-工作空间行为-锁屏-外观-接下来选取你喜欢的图片即可<br><span class="hljs-number">2</span>.更换锁屏壁纸 :菜单-系统设置-工作区-工作空间行为-锁屏-外观-接下来选取你喜欢的图片即可<br><span class="hljs-number">3</span>.更换登录屏幕的壁纸：菜单-系统设置-工作区-开机和关机-登录屏幕-接下来选取你喜欢的动画即可<br><span class="hljs-number">4</span>.更换开机动画：菜单-系统设置-工作区-开机和关机-欢迎屏幕<br><span class="hljs-number">5</span>.设置双击打开文件夹，单击选择：菜单-系统设置-工作区-工作空间行为-常规行为-点击行为<br></code></pre></td></tr></table></figure>
 
 <h2 id="重启plasmashell"><a href="#重启plasmashell" class="headerlink" title="重启plasmashell"></a>重启plasmashell</h2><h3 id="直接杀死并重启"><a href="#直接杀死并重启" class="headerlink" title="直接杀死并重启"></a>直接杀死并重启</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sh">killall plasmashell    <span class="hljs-comment"># 杀死 kde plasma 的进程</span><br><span class="hljs-comment"># kde4</span><br>kstart plasmashell    <span class="hljs-comment"># 重新启动 plasma 桌面会话</span><br><span class="hljs-comment"># kde5</span><br>kstart5 plasmashell    <span class="hljs-comment"># 重新启动 plasma 桌面会话</span><br></code></pre></td></tr></table></figure>
 
@@ -662,9 +669,24 @@
 <p>提供窗口管理按钮</p>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">github：https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/psifidotos/</span>applet-window-buttons<br>上面的菜单使用应用商店安装好后，编译环境还没被卸载，可以直接clone这个applet-window-buttons库下来，调用sh install.sh安装这个button插件<br><br></code></pre></td></tr></table></figure></li>
 <li><p><a target="_blank" rel="noopener" href="https://github.com/psifidotos/applet-window-title">顶栏显示应用的标题和图标</a></p>
+<p>应用商店自行安装</p>
+<p>或手动安装：</p>
+<p>克隆仓库</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/psifidotos/</span>applet-window-title.git<br></code></pre></td></tr></table></figure>
+
+<p>由于此插件使用<code>QML</code>编写，所以可以直接使用命令装入插件</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dos"><span class="hljs-built_in">cd</span> applet-window-<span class="hljs-built_in">title</span><br>plasmapkg2 -i .<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><h3 id="kwin脚本"><a href="#kwin脚本" class="headerlink" title="kwin脚本"></a>kwin脚本</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/JoseBahamonde/hide-titles">窗口最大化隐藏窗口顶部</a></p>
+</li>
+<li><p>另一种“神灯”<a target="_blank" rel="noopener" href="https://github.com/zzag/kwin-effects-yet-another-magic-lamp/tree/Plasma/5.23">效果</a></p>
 </li>
 </ul>
-<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><h3 id="kwin脚本"><a href="#kwin脚本" class="headerlink" title="kwin脚本"></a>kwin脚本</h3><p><a target="_blank" rel="noopener" href="https://github.com/JoseBahamonde/hide-titles">窗口最大化隐藏窗口顶部</a></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs vim">git clone http<span class="hljs-variable">s:</span>//github.<span class="hljs-keyword">com</span>/zzag/kwin-effects-yet-another-magic-lamp.git<br><span class="hljs-keyword">cd</span> kwin-effects-yet-another-magic-lamp<br>git branch -<span class="hljs-keyword">a</span> 				//查看远程分支<br>git checkout Plasma/<span class="hljs-number">5.23</span>    //切换到与kde桌面版本符合的分支<br><span class="hljs-built_in">mkdir</span> build &amp;&amp; <span class="hljs-keyword">cd</span> build<br>cmake .. \<br>    -DCMAKE_BUILD_TYPE=Release \<br>    -DCMAKE_INSTALL_PREFIX=/usr<br><span class="hljs-keyword">make</span><br>sudo <span class="hljs-keyword">make</span> install<br><br><span class="hljs-keyword">ps</span>：卸载<br>查看克隆文件夹里的<br>kwin-effects-yet-another-magic-lamp/build/install_manifest.txt文件，删除文件中记载的位置的文件<br></code></pre></td></tr></table></figure>
+
+
+
 <h3 id="applet"><a href="#applet" class="headerlink" title="applet"></a>applet</h3><ul>
 <li><p>日历插件<code>plasma5-applets-eventcalendar</code>，可直接在应用商店搜索</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Zren/plasma-applet-eventcalendar">github地址</a></p>
@@ -716,8 +738,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/a7d9bd28/">
-                        <span class="hidden-mobile">hexo整理</span>
+                      <a href="/posts/8d2ce9e6/">
+                        <span class="hidden-mobile">Sqlite基本内容</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

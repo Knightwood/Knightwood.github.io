@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="在manjaro上使用nix包管理文档 手册  普通安装  分一个ext4分区  在根目录下创建nix文件夹  使用chown username &#x2F;nix 改变nix目录的所属者  使用磁盘工具，将分好的分区挂载到&#x2F;nix目录  安装nix 1$ sh &lt;(curl -L https:&#x2F;&#x2F;nixos.org&#x2F;nix&#x2F;install) --no-daemon  #单用户 卸载nix：删除&#x2F;ni">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nix包管理">
+<meta property="og:url" content="https://knightwood.github.io/posts/321c9b4b/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="在manjaro上使用nix包管理文档 手册  普通安装  分一个ext4分区  在根目录下创建nix文件夹  使用chown username &#x2F;nix 改变nix目录的所属者  使用磁盘工具，将分好的分区挂载到&#x2F;nix目录  安装nix 1$ sh &lt;(curl -L https:&#x2F;&#x2F;nixos.org&#x2F;nix&#x2F;install) --no-daemon  #单用户 卸载nix：删除&#x2F;ni">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
+<meta property="article:modified_time" content="2022-01-08T09:13:04.427Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="nix os">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>nix包管理 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="nix包管理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-23 14:36" pubdate>
+        2021年12月23日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.4k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      13 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">nix包管理</h1>
+            
+            <div class="markdown-body">
+              <h1 id="在manjaro上使用nix包管理"><a href="#在manjaro上使用nix包管理" class="headerlink" title="在manjaro上使用nix包管理"></a>在manjaro上使用nix包管理</h1><h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://nixos.org/manual/nix/stable/installation/installing-binary.html">手册</a></li>
+</ol>
+<h1 id="普通安装"><a href="#普通安装" class="headerlink" title="普通安装"></a>普通安装</h1><ol>
+<li><p> 分一个ext4分区</p>
+</li>
+<li><p>在根目录下创建nix文件夹</p>
+</li>
+<li><p>使用<code>chown username /nix</code> 改变nix目录的所属者</p>
+</li>
+<li><p>使用磁盘工具，将分好的分区挂载到<code>/nix</code>目录</p>
+</li>
+<li><p>安装nix</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ sh &lt;(curl -L https:<span class="hljs-regexp">//</span>nixos.org<span class="hljs-regexp">/nix/i</span>nstall) --no-daemon  <span class="hljs-comment">#单用户</span><br></code></pre></td></tr></table></figure></li>
+<li><p>卸载nix：删除<code>/nix</code>目录即可</p>
+</li>
+</ol>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>查询可供安装的软件包。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile">nix-<span class="hljs-keyword">env</span> -qa<br></code></pre></td></tr></table></figure>
+
+<p>查找软件包</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vim">nix-env -<span class="hljs-keyword">qa</span> firefox<br>和<br>nix-env -<span class="hljs-keyword">qa</span> | <span class="hljs-keyword">grep</span> <span class="hljs-string">&quot;firefox&quot;</span> <br></code></pre></td></tr></table></figure>
+
+<p> 要安装软件包，通过指定软件包版本使用以下命令，例如安装火狐</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">nix-env -<span class="hljs-selector-tag">i</span> firefox<br></code></pre></td></tr></table></figure>
+
+<p>在本地系统上，Nix将包存储在<strong>Nix存储中</strong> ，默认情况下为**/ nix / store**目录，其中每个包都有自己唯一的子目录。 例如， <strong>apache-tomcat</strong>包存储在：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/nix/</span>store/<span class="hljs-number">95</span>gmgnxlrcpkhlm00fa5ax8kvd6189py-apache-tomcat-<span class="hljs-number">9.0</span>.<span class="hljs-number">2</span><br></code></pre></td></tr></table></figure>
+
+<p>在此路径中，随机字符<strong>95gmgnxlrcpkhlm00fa5ax8kvd6189py</strong>是包的唯一标识符，它考虑了所有依赖项。</p>
+<p>您可以使用以下命令列出已安装的软件包。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile">$ nix-<span class="hljs-keyword">env</span> -q<br></code></pre></td></tr></table></figure>
+
+<p>要升级<strong>apache-tomcat</strong>软件包，可以使用<code>-u</code> upgrade开关</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile">$ nix-<span class="hljs-keyword">env</span> -u apache-tomcat<br></code></pre></td></tr></table></figure>
+
+<p>如果要删除/擦除<strong>apache-tomcat</strong> ，请使用<code>-e</code>标志。 这里，包不会立即从系统中删除，只会使其未使用。 这很有用，因为您想要进行回滚，或者它可能位于其他用户的配置文件中。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile">$ nix-<span class="hljs-keyword">env</span> -e apache-tomcat<br></code></pre></td></tr></table></figure>
+
+<p>删除包后，您可以使用<strong>nix-collect-garbage</strong>实用程序进行一些垃圾<strong>回收</strong> 。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>nix-collect-garbage<br></code></pre></td></tr></table></figure>
+
+<h3 id="多用户安装-如何在Linux中删除Nix包管理器"><a href="#多用户安装-如何在Linux中删除Nix包管理器" class="headerlink" title="多用户安装 如何在Linux中删除Nix包管理器"></a>多用户安装 如何在Linux中删除Nix包管理器</h3><p>要卸载Nix，请一次删除所有与nix相关的文件。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo rm -rf <span class="hljs-regexp">/etc/</span>profile<span class="hljs-regexp">/nix.sh /</span>etc<span class="hljs-regexp">/nix /</span>nix ~root<span class="hljs-regexp">/.nix-profile ~root/</span>.nix-defexpr ~root<span class="hljs-regexp">/.nix-channels ~/</span>.nix-profile ~<span class="hljs-regexp">/.nix-defexpr ~/</span>.nix-channels<br></code></pre></td></tr></table></figure>
+
+<p>在具有systemd的系统上，运行以下命令以停止所有与nix相关的服务并禁用它们。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> sudo systemctl stop nix-daemon.socket</span><br><span class="hljs-meta">$</span><span class="bash"> sudo systemctl stop nix-daemon.service</span><br><span class="hljs-meta">$</span><span class="bash"> sudo systemctl <span class="hljs-built_in">disable</span> nix-daemon.socket</span><br><span class="hljs-meta">$</span><span class="bash"> sudo systemctl <span class="hljs-built_in">disable</span> nix-daemon.service</span><br><span class="hljs-meta">$</span><span class="bash"> sudo systemctl daemon-reload</span><br></code></pre></td></tr></table></figure>
+
+<p>如果使用的macos,你需要运行</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">sudo launchctl unload /Library/LaunchDaemons/org<span class="hljs-selector-class">.nixos</span><span class="hljs-selector-class">.nix-daemon</span><span class="hljs-selector-class">.plist</span><br>sudo rm /Library/LaunchDaemons/org<span class="hljs-selector-class">.nixos</span><span class="hljs-selector-class">.nix-daemon</span>.plist<br></code></pre></td></tr></table></figure>
+
+<p>此外，您需要删除这些文件中对Nix的任何引用： <strong>/ etc / profile</strong> ， <strong>/ etc / bashrc</strong>和**/ etc / zshrc** 。</p>
+<p>有关更多信息，请参阅我们已查看的上述实用程序的手册页。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> <span class="hljs-built_in">man</span> nix<span class="hljs-literal">-channel</span><br><span class="hljs-variable">$</span> <span class="hljs-built_in">man</span> nix<span class="hljs-literal">-env</span><br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/linux/">linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/nix-os/">nix os</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/3f6454bb/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">java注解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/d4eef720/">
+                        <span class="hidden-mobile">安装fbterm</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

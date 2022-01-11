@@ -1,0 +1,578 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本篇文章可以学到以下内容：  SQLite操作以及SQL基本语法 Android中的数据库操作（增删改查） Android中ContentProvide内容提供者和ContentResolver内容解析者的使用  项目地址：  https:&#x2F;&#x2F;github.com&#x2F;liaozhoubei&#x2F;DatabaseContentProvider  学习android的小伙伴们在使用Android的SQLit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sqlite基本内容">
+<meta property="og:url" content="https://knightwood.github.io/posts/8d2ce9e6/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="本篇文章可以学到以下内容：  SQLite操作以及SQL基本语法 Android中的数据库操作（增删改查） Android中ContentProvide内容提供者和ContentResolver内容解析者的使用  项目地址：  https:&#x2F;&#x2F;github.com&#x2F;liaozhoubei&#x2F;DatabaseContentProvider  学习android的小伙伴们在使用Android的SQLit">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
+<meta property="article:modified_time" content="2022-01-08T09:13:39.031Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Sqlite基本内容 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Sqlite基本内容">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-23 14:36" pubdate>
+        2021年12月23日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      20k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      171 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Sqlite基本内容</h1>
+            
+            <div class="markdown-body">
+              <p>本篇文章可以学到以下内容：</p>
+<ul>
+<li>SQLite操作以及SQL基本语法</li>
+<li>Android中的数据库操作（增删改查）</li>
+<li>Android中ContentProvide内容提供者和ContentResolver内容解析者的使用</li>
+</ul>
+<p>项目地址：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=https://github.com/liaozhoubei/DatabaseContentProvider">https://github.com/liaozhoubei/DatabaseContentProvider</a></p>
+</blockquote>
+<p>学习android的小伙伴们在使用Android的SQLiteDatabase类进行数据库操作的时候总会有一些力不从心，特别是对于初涉数据库的小伙伴来说更是如此。<br>这是因为Android的SQLiteDatabase原本就不是依赖于Android而存在的，而是单独的作为一个个体而存在的，有着自己特有的体系和语言，而这就是SQL语法了。</p>
+<p>关于SQLite数据库的理论知识网上一搜一大片，这里就不多说。SQLite是一个轻量型的数据库，它对于大型数据库来说功能少，因此只需要学习一些通用的SQL语法就能够轻松掌握，而这些SQL语法对于其他的数据库来说也是基本不变化的。</p>
+<p>但SQLite有个缺点，那就是作为轻量级选手的它，如果要保存大量数据会力有不及，因此它在android中适合保存个人设置等没有大量数据的信息。</p>
+<p>好了，下面就是正式学习SQLite了，只有掌握了SQLite，掌握SQL语法，才能对Android中的数据库操作运用自如。</p>
+<h2 id="SQLite的数据类型"><a href="#SQLite的数据类型" class="headerlink" title="SQLite的数据类型"></a>SQLite的数据类型</h2><p>与Java语言一样，SQLite也有其特有的数据类型，当然相比MySQL来说只有5种数据类型算是很少了</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs csharp">NULL：空值相当于Java中的<span class="hljs-literal">null</span><br>INTEGER：带符号的整型，相当于Java中的<span class="hljs-built_in">int</span>型<br>REAL：浮点数字，相当于Java中<span class="hljs-built_in">float</span>/<span class="hljs-built_in">double</span>型<br>TEXT/VARCHAR：字符串文本，相当于Java中String类<br>BLOB：二进制对象，相当于Java中的<span class="hljs-built_in">byte</span>数组，用于存放图片、声音等文件<br></code></pre></td></tr></table></figure>
+
+<h2 id="Sqlite3中的约束"><a href="#Sqlite3中的约束" class="headerlink" title="Sqlite3中的约束"></a>Sqlite3中的约束</h2><p>SQLite的约束是什么呢？约束就是限定数据库字段的条件，如果有个student数据表，它里面有一个age年龄的属性字段，我们要求数据库保存age这个字段的时候必须有值，不能为空，那么就可以设置为：”age INTEGER NOT NULL”。这句话的意思就是age字段是不能为空的整型</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php">NOT <span class="hljs-literal">NULL</span> ：非空<br>UNIQUE ： 唯一<br>PRIMARY KEY ：主键<br>FOREIGN KEY : 外键<br>CHECK ：条件检查<br><span class="hljs-keyword">DEFAULT</span> : 默认<br></code></pre></td></tr></table></figure>
+
+<p>创建表，此时可对表里的结构和字段进行约束限定，将约束条件放在需要约束的字段之后</p>
+<h2 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h2><p>数据库是数据库，数据表是存放在数据库中存放信息的容器，这点大家要区分。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css">语法：<br>  create <span class="hljs-selector-tag">table</span> tabname(col1 type1 <span class="hljs-selector-attr">[not null]</span><span class="hljs-selector-attr">[primary key]</span>, col2 type2<span class="hljs-selector-attr">[not null]</span>, ··· )<br>注：<br>    tabname为表名<br>    col1、col2为字段名字<br>    type1、type2为字段类型<br>    在<span class="hljs-selector-attr">[]</span>中的约束条件是可以选的<br></code></pre></td></tr></table></figure>
+
+<p>例：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs objectivec">  字段名       类型            长度           约束            说明<br>  <span class="hljs-keyword">id</span>        INTEGER                       主键，自增长       编号<br>  name      VARCHAR           <span class="hljs-number">20</span>            非空            姓名<br>  cid       INTEGER                                        所在班级<br>  age       INTEGER                      大于<span class="hljs-number">18</span>且小于<span class="hljs-number">60</span>     年龄<br>  gender    BIT                          默认为<span class="hljs-number">1</span>，表示男     性别<br>  score     REAL                                           成绩<br><br>create table student(<br>    <span class="hljs-keyword">id</span> INTEGER PRIMARY KEY AUTOINCREMENT,<br>    name VARCHAR(<span class="hljs-number">20</span>) NOT <span class="hljs-literal">NULL</span>,<br>    cid INTEGER,<br>    age INTEGER CHECK(age&gt;<span class="hljs-number">18</span> and age&lt;<span class="hljs-number">60</span>),<br>    gender BIT DEFAULT(<span class="hljs-number">1</span>),<br>    score REAL);<br><br>注：SQL中不区分大小写<br></code></pre></td></tr></table></figure>
+
+<h2 id="insert插入语句"><a href="#insert插入语句" class="headerlink" title="insert插入语句"></a>insert插入语句</h2><p>数据库的操作无非四大类，增删改查这几种，因此必须要掌握这几种语句，insert增加也就是在数据表中添加信息</p>
+<p>语法</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function">insert <span class="hljs-keyword">into</span> <span class="hljs-title">table1</span>(<span class="hljs-params">field1, field2</span>) <span class="hljs-title">values</span>(<span class="hljs-params">value1, value2</span>)</span>;<br>语法详解，在表名为table1的表的field1和field2字段分别插入value1和value2的值<br></code></pre></td></tr></table></figure>
+
+<p>例：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs csharp">给student表中的各个字段插入值<br><span class="hljs-function">insert <span class="hljs-keyword">into</span> <span class="hljs-title">student</span> (<span class="hljs-params">name, cid, age, gender, score</span>) <span class="hljs-title">values</span> (<span class="hljs-params"><span class="hljs-string">&#x27;tom&#x27;</span>, <span class="hljs-number">1</span>, <span class="hljs-number">20</span>, <span class="hljs-number">1</span>, <span class="hljs-number">80.0</span></span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>注：其实可以在student后面不带有字段名，即name，cid···等，但如果不携带字段信息但看insert语句就无法直接明了的知道插入的value是给哪个字段赋值</p>
+<h2 id="update更新语句"><a href="#update更新语句" class="headerlink" title="update更新语句"></a>update更新语句</h2><p>语法：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs csharp">update table1 <span class="hljs-keyword">set</span> field1=value1 <span class="hljs-keyword">where</span> 范围<br>语法详解：<span class="hljs-keyword">set</span>后面是某个字段要更改的值，<span class="hljs-keyword">where</span>表示限定field1字段<span class="hljs-keyword">value</span>值在某个范围内才需要修改<br><span class="hljs-keyword">set</span>表示要修改哪个字段的值<br><span class="hljs-keyword">where</span>表示修改字段值的范围<br></code></pre></td></tr></table></figure>
+
+<p>例：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs csharp">update student <span class="hljs-keyword">set</span> name=<span class="hljs-string">&#x27;jack&#x27;</span> <span class="hljs-keyword">where</span> name=<span class="hljs-string">&#x27;tom&#x27;</span>;<br>将student表中name字段中<span class="hljs-keyword">value</span>为tom的值修改为jack<br></code></pre></td></tr></table></figure>
+
+<h2 id="select查询语句"><a href="#select查询语句" class="headerlink" title="select查询语句"></a>select查询语句</h2><p>select查询方法可以说是在数据库操作中使用最频繁的操作了，无论是想获取数据还是得知数据库中的信息都必须使用select语句，同时select语句也算得上在SQL语法中最复杂的语句了。</p>
+<p>语法：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs csharp">基础查询：<br>    <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> table1 <span class="hljs-keyword">where</span> 范围<br>    语法详解：* 代表通配符，即所有的字段<br>    <span class="hljs-keyword">select</span> col1, col2, col3 <span class="hljs-keyword">from</span> table1 <span class="hljs-keyword">where</span> 范围;<br>    查看col1, col2, col3字段的信息<br><br>    例：<br><br>        <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> name=<span class="hljs-string">&quot;jack&quot;</span><br>        查询student表中名字叫jack的所有字段的信息<br><br>        <span class="hljs-keyword">select</span> id, name, score <span class="hljs-keyword">from</span> student;<br>        查询student表中所有学生的编号、名字、分数<br></code></pre></td></tr></table></figure>
+
+<p>限制查询：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs csharp">LIMIT关键字<br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> table1 LIMIT <span class="hljs-number">5</span>;<br>查询table1中前<span class="hljs-number">5</span>行中的数据，LIMIT关键字后面加数字可限定返回多少条数据<br>OFFSET关键字<br> <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> table1 limit <span class="hljs-number">5</span> offset <span class="hljs-number">5</span>;<br> 查询table1中从第<span class="hljs-number">5</span>行起的<span class="hljs-number">5</span>行数据，OFFSET前面必须有LIMIT限定<br><br>例子：<br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student limit <span class="hljs-number">5</span>;<br>查询table1中前<span class="hljs-number">5</span>行中的数据<br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> limit <span class="hljs-number">5</span> offset <span class="hljs-number">5</span>;<br>查询table1中从第<span class="hljs-number">5</span>行起的<span class="hljs-number">5</span>行数据<br></code></pre></td></tr></table></figure>
+
+<p>排序查询：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs csharp">ORDER BY关键字<br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> table1 order <span class="hljs-keyword">by</span> col1;<br>查询table1中所有数据，然后按照col1字段的升序排列（A-Z, <span class="hljs-number">0</span><span class="hljs-number">-9</span>)<br> <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> table1 order <span class="hljs-keyword">by</span> col1, col2;<br> 查询table1中所有数据，然后先按照col1字段的排列，然后按照col2字段排序<br><br> 例子：<br>     <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student order <span class="hljs-keyword">by</span> score;<br>     查询student中所有数据，然后按照score字段的升序排列<br>     <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student order <span class="hljs-keyword">by</span> name, score;<br>     查询student中所有数据，然后先按照name字段的排列，然后按照score字段排序<br><br> DESC关键字<br> <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student order <span class="hljs-keyword">by</span> name, score DESC;<br> 查询student中所有数据，然后先按照name字段的排列，然后按照name字段降序排序<br> 注：DESC为降序排序，即（Z-A,<span class="hljs-number">9</span><span class="hljs-number">-0</span>)，DESC是DESCENDING缩写。<br>     DESC必须跟着ORDER BY关键字后面；<br>     DESC关键字只应用在直接位于其前面的列名；<br>     与DESC相反的是ASC(即ASCENDING)，在升序排序时可指定ASC，但这一关键字并没什么用处，因为升序是默认的<br></code></pre></td></tr></table></figure>
+
+<h2 id="where过滤语句"><a href="#where过滤语句" class="headerlink" title="where过滤语句"></a>where过滤语句</h2><p>where是过滤语句，数据会根据where自居的搜索条件进行过滤，一般情况下where跟在insert、delete、update、select后面。这是一个需要值得注意的语句，使用它能够极大的提高查询数据库的效率，而使用delete语句如果不带上过滤语句，则会把数据表中的所有信息删除！</p>
+<p>注：当ORDER BY关键字和where一起使用的时候，ORDER BY应该位于where后面，否则会报错。</p>
+<p>where子句后面跟着的是过滤条件，过滤条件可使用逻辑符号，即&gt;、&lt;、=、!=等等逻辑符号，与计算机通用的逻辑符合并没有什么不同</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs csharp">例子：<br>    <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> score&gt;<span class="hljs-number">70.0</span> ORDER BY name;<br>    查询student表中成绩大于<span class="hljs-number">70</span>分的数据，同时按照名字升序排列<br><br>高级过滤：<br>    AND关键字：必须满足前后两个条件的数据<br>    <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> score&gt;<span class="hljs-number">60</span> <span class="hljs-keyword">and</span> score&lt; <span class="hljs-number">100</span>;<br>    查询student表中成绩大于<span class="hljs-number">60</span>分并且小于<span class="hljs-number">100</span>分的数据<br>    OR关键字：只要满足前后任意一个条件即可<br>    <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> score&gt;<span class="hljs-number">90</span> <span class="hljs-keyword">or</span> score&lt;<span class="hljs-number">70</span>;<br>    查询student表中成绩大于<span class="hljs-number">90</span>分并且或者小于<span class="hljs-number">70</span>分的数据<br><br>    AND和OR连用（<span class="hljs-keyword">and</span>的优先级比<span class="hljs-keyword">or</span>要高，两者连用的时候最后在各自的条件中添加圆括号（）进行分组）<br>    <span class="hljs-keyword">select</span> * <span class="hljs-function"><span class="hljs-keyword">from</span> student <span class="hljs-title">where</span> (<span class="hljs-params">score&gt;<span class="hljs-number">90</span> <span class="hljs-keyword">or</span> score&lt;<span class="hljs-number">70</span></span>) <span class="hljs-title">and</span> (<span class="hljs-params">age&gt;<span class="hljs-number">19</span></span>)</span>;<br><br>    BETWEEN关键字：<br>     <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> score between <span class="hljs-number">70</span> <span class="hljs-keyword">and</span> <span class="hljs-number">80</span>;<br>     查询student表中分数在<span class="hljs-number">70</span>至<span class="hljs-number">80</span>分之间的数据<br><br>    IN关键字：用于指定范围，范围中的每个条件都进行匹配，IN由一组逗号分隔、括在圆括号中的合法值<br>    <span class="hljs-keyword">select</span> * <span class="hljs-function"><span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> name <span class="hljs-title">in</span>(<span class="hljs-params"><span class="hljs-string">&#x27;tom&#x27;</span>, <span class="hljs-string">&#x27;Denesy&#x27;</span></span>)</span>;<br>    查询student表中名字为tom和Denesy的数据<br><br>    注：在指定要匹配值得清单的关键字中，IN和OR功能相当<br>    IN可与<span class="hljs-keyword">and</span>和<span class="hljs-keyword">or</span>等其他操作符使用<br>    IN操作符比一组OR操作符执行快<br>    可以包含其他的SELECT语句<br><br>    NOT关键字：否定其后条件的关键字<br>    <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> <span class="hljs-keyword">not</span> name=<span class="hljs-string">&#x27;tom&#x27;</span>;<br>    获取不包含名字为tom的信息<br>    <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> <span class="hljs-keyword">not</span> score&gt;<span class="hljs-number">80</span>;<br>    获取分数不是大于<span class="hljs-number">80</span>分的信息<br><br>    空值检查：<br>    <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> score <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">null</span>;<br>    查询student表中score字段不为空的信息<br></code></pre></td></tr></table></figure>
+
+<h2 id="delete删除语句"><a href="#delete删除语句" class="headerlink" title="delete删除语句"></a>delete删除语句</h2><p>语法：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs csharp">delete <span class="hljs-keyword">from</span> table1 <span class="hljs-keyword">where</span> 范围<br>语法详解：从table中删除某一范围内的数据（只能一条一条的删除，不能删除某个字段中的值）<br>注：不要漏掉<span class="hljs-keyword">where</span>，否则会清空整个表中的信息<br></code></pre></td></tr></table></figure>
+
+<p>例：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs csharp">delete <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> name=<span class="hljs-string">&#x27;tom&#x27;</span>;<br>从student表中删除名字为tom的信息<br><br>delete <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> score&lt; <span class="hljs-number">90</span>;<br>从student表中删除分数小于<span class="hljs-number">90</span>分的信息<br></code></pre></td></tr></table></figure>
+
+<h2 id="Android中的数据库操作"><a href="#Android中的数据库操作" class="headerlink" title="Android中的数据库操作"></a>Android中的数据库操作</h2><p>Android中的数据库操作其实只要掌握了上面的SQLite的基本知识，那么就很简单了。<br>首先我们要创建一个类继承自SQLiteOpenHelper，这个类的作用在于创建数据库和数据表。在Android中已经帮我们封装好了创建数据库的方法，因此只要写好创建数据表的语句就好了，而创建数据表的方法是使用原生的SQL语法，仅仅如此就让你不得不学习SQL语法了。</p>
+<p>MyDatabaseHelper代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyDatabaseHelper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SQLiteOpenHelper</span> </span>&#123;<br>    <span class="hljs-comment">// 创建Book数据表语法</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String CREATE_BOOK = <span class="hljs-string">&quot;create table Book (&quot;</span><br>            + <span class="hljs-string">&quot;id integer primary key autoincrement, &quot;</span> <br>            + <span class="hljs-string">&quot;author text, &quot;</span><br>            + <span class="hljs-string">&quot;price real, &quot;</span> <br>            + <span class="hljs-string">&quot;pages integer, &quot;</span> <br>            + <span class="hljs-string">&quot;bookname text)&quot;</span>;<br>    <br>    <span class="hljs-comment">// 通过构造方法创建数据库，其中name为数据库名称</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">MyDatabaseHelper</span><span class="hljs-params">(Context context, String name)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>(context, name, <span class="hljs-keyword">null</span>, <span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(SQLiteDatabase db)</span> </span>&#123;<br>        <span class="hljs-comment">// 执行创建数据表的语法</span><br>        db.execSQL(CREATE_BOOK);<br>    &#125;<br>···<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="数据库操作类"><a href="#数据库操作类" class="headerlink" title="数据库操作类"></a>数据库操作类</h3><p>为了方便大家阅读，这里将数据库操作都封装到一个类中，同时，将原本需要从外部传入的数据也直接在类中写入。<br>代码如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">BookDao</span> &#123;<br>    <span class="hljs-keyword">private</span> MyDatabaseHelper helper;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BookDao</span>(<span class="hljs-params">Context context</span>)</span> &#123;<br>        helper = <span class="hljs-keyword">new</span> MyDatabaseHelper(context, <span class="hljs-string">&quot;BookStore.db&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 添加数据到Book表中        </span><br><span class="hljs-comment">     * @return    返回新插入的行号，如果插入失败返回-1</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">long</span> <span class="hljs-title">addData</span>(<span class="hljs-params"></span>)</span> &#123;<br>        SQLiteDatabase database = helper.getReadableDatabase();<br>        <span class="hljs-comment">// 使用anddroid封装的SQL语法</span><br>        ContentValues values = <span class="hljs-keyword">new</span> ContentValues();<br>        values.put(<span class="hljs-string">&quot;bookname&quot;</span>, <span class="hljs-string">&quot;The Da Vinci Code&quot;</span>);<br>        values.put(<span class="hljs-string">&quot;author&quot;</span>, <span class="hljs-string">&quot;Dan Brown&quot;</span>);<br>        values.put(<span class="hljs-string">&quot;pages&quot;</span>, <span class="hljs-number">454</span>);<br>        values.put(<span class="hljs-string">&quot;price&quot;</span>, <span class="hljs-number">16.96</span>);<br>        <span class="hljs-built_in">long</span> insert = database.insert(<span class="hljs-string">&quot;Book&quot;</span>, <span class="hljs-literal">null</span>, values);<br>        values.clear();<br>        values.put(<span class="hljs-string">&quot;bookname&quot;</span>, <span class="hljs-string">&quot;The Lost Symbol&quot;</span>);<br>        values.put(<span class="hljs-string">&quot;author&quot;</span>, <span class="hljs-string">&quot;Dan Brown&quot;</span>);<br>        values.put(<span class="hljs-string">&quot;pages&quot;</span>, <span class="hljs-number">510</span>);<br>        values.put(<span class="hljs-string">&quot;price&quot;</span>, <span class="hljs-number">19.95</span>);<br>        <span class="hljs-built_in">long</span> insert1 = database.insert(<span class="hljs-string">&quot;Book&quot;</span>, <span class="hljs-literal">null</span>, values);<br><br>        <span class="hljs-keyword">return</span> insert;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 更新Book表中的数据</span><br><span class="hljs-comment">     * @return    返回受影响的行</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> <span class="hljs-title">updateData</span>(<span class="hljs-params"></span>)</span> &#123;<br>        SQLiteDatabase database = helper.getReadableDatabase();<br>        <span class="hljs-comment">// 使用anddroid封装的SQL语法</span><br>        ContentValues values = <span class="hljs-keyword">new</span> ContentValues();<br>        values.put(<span class="hljs-string">&quot;price&quot;</span>, <span class="hljs-number">10.99</span>);<br>        <span class="hljs-built_in">int</span> update = database.update(<span class="hljs-string">&quot;Book&quot;</span>, values,  <span class="hljs-string">&quot;bookname = ?&quot;</span>, <span class="hljs-keyword">new</span> String[] &#123; <span class="hljs-string">&quot;The Da Vinci Code&quot;</span> &#125;);<br><br>        <span class="hljs-keyword">return</span> update;<br>    &#125;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 删除Book中的数据     </span><br><span class="hljs-comment">     * @return    返回受影响的行</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> <span class="hljs-title">delete</span>(<span class="hljs-params"></span>)</span> &#123;<br>        SQLiteDatabase database = helper.getReadableDatabase();<br>        <span class="hljs-comment">// 使用anddroid封装的SQL语法</span><br>        <span class="hljs-built_in">int</span> delete = database.delete(<span class="hljs-string">&quot;Book&quot;</span>, <span class="hljs-string">&quot;pages &gt; ?&quot;</span>, <span class="hljs-keyword">new</span> String[] &#123; <span class="hljs-string">&quot;500&quot;</span> &#125;);<br><br>        <span class="hljs-keyword">return</span> delete;    <br>    &#125;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 查询Book表中的数据</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">query</span>(<span class="hljs-params"></span>)</span> &#123;<br>        SQLiteDatabase database = helper.getReadableDatabase();<br>        <span class="hljs-comment">// 使用原生SQL语法</span><br>        Cursor cursor = database.query(<span class="hljs-string">&quot;Book&quot;</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">&quot;price=?&quot;</span>, <span class="hljs-keyword">new</span> String[]&#123;<span class="hljs-string">&quot;10.99&quot;</span>&#125;, <span class="hljs-string">&quot;bookname&quot;</span>, <span class="hljs-string">&quot;author=&#x27;Baby lin&#x27;&quot;</span>, <span class="hljs-string">&quot;author&quot;</span>);<br><br>        <span class="hljs-keyword">if</span> (cursor.moveToFirst()) &#123;<br>            <span class="hljs-keyword">do</span> &#123;<br>                String bookname = cursor.getString(cursor.getColumnIndex(<span class="hljs-string">&quot;bookname&quot;</span>));<br>                String author = cursor.getString(cursor.getColumnIndex(<span class="hljs-string">&quot;author&quot;</span>));<br>                <span class="hljs-built_in">int</span> pages = cursor.getInt(cursor.getColumnIndex(<span class="hljs-string">&quot;pages&quot;</span>));<br>                <span class="hljs-built_in">double</span> price = cursor.getDouble(cursor.getColumnIndex(<span class="hljs-string">&quot;price&quot;</span>));<br>                System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;书名：&quot;</span> + bookname + <span class="hljs-string">&quot;  作者：&quot;</span> + author + <span class="hljs-string">&quot;  页数&quot;</span> + pages + <span class="hljs-string">&quot;   价格&quot;</span> + price);<br>            &#125; <span class="hljs-keyword">while</span> (cursor.moveToNext());<br>        &#125;<br>        cursor.close();    <br>    &#125;    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面的代码虽然有些长，但其功能却很简单，也就是实现了数据库的增删查改这是个方法。</p>
+<p>首先我们看到每个方法都有这么一行代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs undefined">SQLiteDatabase database = helper.getReadableDatabase();<br></code></pre></td></tr></table></figure>
+
+<p>这一行代码是通过MyDatabaseHelper使用父类SQLiteOpenHelper 中有两个非常重要的实例方法，getReadableDatabase() 和getWritableDatabase()。这两个方法都可以创建或打开一个现有的数据库（如果数据库已存在则直接打开，否则创建一个新的数据库），并返回一个可对数据库进行读写操作的对象。不同的是，当数据库不可写入的时候（如磁盘空间已满）getReadableDatabase()方法返回的对象将以只读的方式去打开数据库，而getWritableDatabase()方法则将出现异常。</p>
+<h4 id="详解addData-方法"><a href="#详解addData-方法" class="headerlink" title="详解addData()方法"></a>详解addData()方法</h4><p>其次，在addData()插入数据中有ContentValue这个类，这个类是用来存储要插入数据表中的数据的。<br>举个比较熟悉的例子，如ArrayList数据列表，我们可以在它里面存储String或者HashMap&lt;key, value&gt;，而ContentValue就是类似ArrayList这样的容器。<br>实际上ContentValue里面存储的也是HashMap&lt;key, value&gt;。<br>通过ContentValue存储数据，然后再使用Android封装的insert方法，能够解析其中的数据，然后保存到数据表中。<br>其实深入Android中的insert方法，可以看到Android只是将insert方法中的参数取出还原为SQL原生语句，然后保存到数据表中。那么怎么在Android使用原生的SQL方法呢？android在SQLiteDatabase对象中封装了execSQL()方法，可直接使用，当然，execSQL()方法又有完全使用SQL语句，一半使用SQL语句一半使用Android参数的方法。下面是使用原生的SQL语句的代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">addData</span><span class="hljs-params">()</span> </span>&#123;<br>    SQLiteDatabase database = helper.<span class="hljs-built_in">getReadableDatabase</span>();<br>    <br>    <span class="hljs-comment">// 使用原生SQL语法</span><br>    database.<span class="hljs-built_in">execSQL</span>(<span class="hljs-string">&quot;insert into Book(bookname, author, pages, price) values(&#x27;The Da Vinci Code&#x27;, &#x27;Dan Brown&#x27;, 454, 16.96)&quot;</span>);<br>    <br>    <span class="hljs-comment">// 使用原生与android封装方法，在values(?,?,?,?)有4个问号，</span><br>    <span class="hljs-comment">// 代表的是占位符，分别对应后面的String数组中的四个值。</span><br>    database.<span class="hljs-built_in">execSQL</span>(<span class="hljs-string">&quot;insert into Book(bookname, author, pages, price) values(?, ?, ?, ?)&quot;</span>, <br>            <span class="hljs-keyword">new</span> String[]&#123;<span class="hljs-string">&quot;The Lost Symbol&quot;</span>, <span class="hljs-string">&quot;Dan Brown&quot;</span>, <span class="hljs-string">&quot;510&quot;</span>, <span class="hljs-string">&quot;19.95&quot;</span>&#125;);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们看到如果使用原生的SQL语句来保存数据库，代码量减少了很多。但是android为什么推荐我们使用它封装的方法呢？这是因为使用原生SQL语法不能获取返回值，因此一但出现问题，会造成App崩溃；同时使用SQL语句的时候不能拼错单词或出现其他问题，否则也会崩溃。</p>
+<p>同时我们看到使用SQL语句中保持的数字都是String，与数据表中的限定的值不同，这是因为在保存过程中只要数据类型正确，会自动将”510”还原为整数型。</p>
+<h4 id="详解query-方法"><a href="#详解query-方法" class="headerlink" title="详解query()方法"></a>详解query()方法</h4><p>除此之外，需要特别注意的便是查询数据库的query()方法</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs dart">query(<span class="hljs-built_in">String</span> table, <span class="hljs-built_in">String</span>[] columns, <span class="hljs-built_in">String</span> selection,<br>        <span class="hljs-built_in">String</span>[] selectionArgs, <span class="hljs-built_in">String</span> groupBy, <span class="hljs-built_in">String</span> having,<br>        <span class="hljs-built_in">String</span> orderBy) ；<br></code></pre></td></tr></table></figure>
+
+<p>这几个参数的意思是：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs csharp">table：指定查询的表名，对应：<span class="hljs-keyword">from</span> table_name<br>columns：指定查询的列名，对应<span class="hljs-keyword">select</span> column1, column2<br>selection：指定<span class="hljs-keyword">where</span> 的约束条件，对应：<span class="hljs-keyword">where</span> column = <span class="hljs-keyword">value</span><br>selectionArgs：为<span class="hljs-keyword">where</span> 中的占位符提供具体的值<br>groupBy：指定需要<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> 的列，对应：<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> column<br>having：<span class="hljs-keyword">value</span> 对<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> 后的结果进一步约束，对应：having column = <span class="hljs-keyword">value</span><br>orderBy：指定查询结果的排序方式，对应：order <span class="hljs-keyword">by</span> column1, column2<br></code></pre></td></tr></table></figure>
+
+<p>这些参数中在SQL语法中都是有的，其后面对应的是相应的SQL语句。<br>group By这个关键字是归组的意思，用于与 SELECT 语句一起使用，来对相同的数据进行分组。在 SELECT 语句中，GROUP BY 子句放在 WHERE 子句之后，放在 ORDER BY 子句之前。<br>也就是说如果使用GROUP BY子句，那么会见所有相同的字段的值合并为一条信息返回。<br>HAVING 子句允许指定条件来过滤将出现在最终结果中的分组结果。WHERE 子句在所选列上设置条件，而 HAVING 子句则在由 GROUP BY 子句创建的分组上设置条件。</p>
+<p>为了获取查询结构，首先插入这些数据：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">database.execSQL(<br>        <span class="hljs-string">&quot;insert into Book(bookname, author, pages, price) values(&#x27;The Da Vinci Code&#x27;, &#x27;Dan Brown&#x27;, 454, 16.96)&quot;</span>);<br>database.execSQL(<br>        <span class="hljs-string">&quot;insert into Book(bookname, author, pages, price) values(&#x27;The Lost Symbol&#x27;, &#x27;Dan Brown&#x27;, 510, 19.95)&quot;</span>);<br>database.execSQL(<br>        <span class="hljs-string">&quot;insert into Book(bookname, author, pages, price) values(&#x27;piao liu chuan shuo&#x27;, &#x27;Baby lin&#x27;, 189, 12.99)&quot;</span>);<br>database.execSQL(<br>        <span class="hljs-string">&quot;insert into Book(bookname, author, pages, price) values(&#x27;lv bing xun chuan qi&#x27;, &#x27;Baby lin&#x27;, 470, 10.99)&quot;</span>);<br>database.execSQL(<br>        <span class="hljs-string">&quot;insert into Book(bookname, author, pages, price) values(&#x27;bing yu huo zhi ge&#x27;, &#x27;Dan Brown&#x27;, 624, 10.99)&quot;</span>);<br>database.execSQL(<br>        <span class="hljs-string">&quot;insert into Book(bookname, author, pages, price) values(&#x27;bing yu huo zhi ge&#x27;, &#x27;Dan Brown&#x27;, 624, 10.99)&quot;</span>);<br>database.execSQL(<br>        <span class="hljs-string">&quot;insert into Book(bookname, author, pages, price) values(&#x27;wo yao du shu&#x27;, &#x27;Dan Brown&#x27;, 510, 10.99)&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>他们只有些许的区别，现在我们想查询价格是10.99元，然后按照bookname进行归组，找出组里作者是Baby lin的那条信息，最后按照author排序（实质只有一条信息，没必要排序）。<br>这条信息由两种写法，一种是上面代码演示的，一种用原生SQL，如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs csharp">Cursor cursor = database.rawQuery(<br>            <span class="hljs-string">&quot;select * from Book where price=10.99 group by bookname having author=&#x27;Baby lin&#x27; order by author&quot;</span>, <span class="hljs-literal">null</span>);<br></code></pre></td></tr></table></figure>
+
+<p>这两种写法都可以的到Cursor这个对象，然后通过Cursor获得数据库中的数据。<br>Cursor的用法相对固定，通过while遍历，每次使用cursor.moveToNext()将游标移到下一行数据，如果能移动下一行数据则返回True，否则为false。<br>cursor.getString(int index)或者cursor.getInt(int index)传入相应字段在数据表中的排序便能获得在当前行的字段的值。</p>
+<h4 id="修改和删除"><a href="#修改和删除" class="headerlink" title="修改和删除"></a>修改和删除</h4><p>修改和删除就比前面两种方法简单多了。<br>修改update数据表的三种方法：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-comment">// 使用anddroid封装的SQL语法</span><br>ContentValues values = <span class="hljs-keyword">new</span> ContentValues();<br>values.put(<span class="hljs-string">&quot;price&quot;</span>, <span class="hljs-number">10.99</span>);<br><span class="hljs-built_in">int</span> update = database.update(<span class="hljs-string">&quot;Book&quot;</span>, values, <span class="hljs-string">&quot;bookname = ?&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>[] &#123; <span class="hljs-string">&quot;The Da Vinci Code&quot;</span> &#125;);<br><span class="hljs-comment">// 使用原生SQL语法</span><br><span class="hljs-comment">// database.execSQL(&quot;update Book SET price=10.99 where bookname=&#x27;The Da</span><br><span class="hljs-comment">// Vinci Code&#x27; &quot;);</span><br><span class="hljs-comment">// 使用原生与android封装方法</span><br><span class="hljs-comment">// database.execSQL(&quot;update Book SET price=? where bookname=? &quot;, new String[] &#123; &quot;10.99&quot;, &quot;The Da Vinci Code&quot; &#125;);</span><br></code></pre></td></tr></table></figure>
+
+<p>删除delete数据表的三种方法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">int</span> <span class="hljs-keyword">delete</span> = database.<span class="hljs-built_in"><span class="hljs-keyword">delete</span></span>(<span class="hljs-string">&quot;Book&quot;</span>, <span class="hljs-string">&quot;pages &gt; ?&quot;</span>, <span class="hljs-keyword">new</span> String[] &#123; <span class="hljs-string">&quot;500&quot;</span> &#125;);<br><span class="hljs-comment">// 使用原生SQL语法</span><br><span class="hljs-comment">// database.execSQL(&quot;delete from Book where pages &gt; 500&quot;);</span><br><span class="hljs-comment">// 使用原生与android封装方法</span><br><span class="hljs-comment">// database.execSQL(&quot;delete from Book where pages &gt; ?&quot;, new String[] &#123; &quot;500&quot; &#125;);</span><br></code></pre></td></tr></table></figure>
+
+<p>以上就是android中对于数据库操作的全部内容了！</p>
+<h2 id="内容提供者"><a href="#内容提供者" class="headerlink" title="内容提供者"></a>内容提供者</h2><p>研究完数据库，那么与数据库密切相关的内容提供者就不得不说说的，因为内容提供者也是依赖于数据库的实现的。<br>内容提供者也就是将当前应用的数据提供出去给其他的app使用，这是一个很好的功能，可惜一般情况下没有人会使用你的应用的信息，因为不知道是不是有陷阱。当然啦，支付宝、微博这些肯定会有人用的。<br>言归正传，我们来说说如何构建一个内容提供者,在这里以上一个项目的数据库作为内容提供者。</p>
+<h3 id="创建一个类继承自ContentProvider"><a href="#创建一个类继承自ContentProvider" class="headerlink" title="创建一个类继承自ContentProvider"></a>创建一个类继承自ContentProvider</h3><p>ContentProvider有六个方法必须实现，他们是onCreate()和getType()以及数据库的增删查改四个方法，其中他们每个方法都会使用的Uri参数，这个参数是调用ContentResolver内容解析者的增删改查方法时传递过来的。</p>
+<p>我们首先创建MyContentProvider继承ContentProvider。<br>然后在AndroidManifest.xml的application中添加内容提供者的注册清单：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">provider</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.example.databasecontentprovider.MyContentProvider&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:authorities</span>=<span class="hljs-string">&quot;com.example.databasecontentprovider.provider&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:exported</span>=<span class="hljs-string">&quot;true&quot;</span> &gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">provider</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>其中android:name是ContentProvider的全类名，android:authorities 属性中指定了该内容提供器的权限，android:exported表示该应用是否可供外部访问。</p>
+<p>然后回到MyContentProvider中，我们写下以下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyContentProvider</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ContentProvider</span></span>&#123;<br>    <span class="hljs-comment">//定一个一个uri路径匹配器</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> UriMatcher sUrimatcher = <span class="hljs-keyword">new</span> UriMatcher(UriMatcher.NO_MATCH);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> QUERYSUCESS = <span class="hljs-number">0</span>;  <span class="hljs-comment">//ctrl+shift+X  变大写   小写加y</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> INSERTSUCESS = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> UPDATESUCESS = <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> DELETESUCESS = <span class="hljs-number">3</span>;<br>    <span class="hljs-keyword">private</span> MyDatabaseHelper databaseHelper;<br>    <br>    <span class="hljs-keyword">static</span> &#123;<br>        sUrimatcher.addURI(<span class="hljs-string">&quot;com.example.databasecontentprovider.provider&quot;</span>, <span class="hljs-string">&quot;query&quot;</span>, QUERYSUCESS);<br>        sUrimatcher.addURI(<span class="hljs-string">&quot;com.example.databasecontentprovider.provider&quot;</span>, <span class="hljs-string">&quot;insert&quot;</span>, INSERTSUCESS);<br>        sUrimatcher.addURI(<span class="hljs-string">&quot;com.example.databasecontentprovider.provider&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>, UPDATESUCESS);<br>        sUrimatcher.addURI(<span class="hljs-string">&quot;com.example.databasecontentprovider.provider&quot;</span>, <span class="hljs-string">&quot;delete&quot;</span>, DELETESUCESS);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onCreate</span><span class="hljs-params">()</span> </span>&#123;<br>        databaseHelper = <span class="hljs-keyword">new</span> MyDatabaseHelper(getContext(), <span class="hljs-string">&quot;BookStore.db&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Cursor <span class="hljs-title">query</span><span class="hljs-params">(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> code = sUrimatcher.match(uri);<br>        <span class="hljs-keyword">if</span> (code == QUERYSUCESS) &#123;<br>            SQLiteDatabase readableDatabase = databaseHelper.getReadableDatabase();<br>            Cursor cursor = readableDatabase.query(<span class="hljs-string">&quot;Book&quot;</span>, projection, selection, selectionArgs, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, sortOrder);<br>            <span class="hljs-keyword">return</span> cursor;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getType</span><span class="hljs-params">(Uri uri)</span> </span>&#123;<br>        <span class="hljs-comment">// TODO Auto-generated method stub</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Uri <span class="hljs-title">insert</span><span class="hljs-params">(Uri uri, ContentValues values)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> code = sUrimatcher.match(uri);<br>        <span class="hljs-keyword">if</span> (code == INSERTSUCESS)&#123;<br>            SQLiteDatabase readableDatabase = databaseHelper.getReadableDatabase();<br>            <span class="hljs-keyword">long</span> insert = readableDatabase.insert(<span class="hljs-string">&quot;Book&quot;</span>, <span class="hljs-keyword">null</span>, values);<br>            Uri myUri = Uri.parse(<span class="hljs-string">&quot;com.youCanDoIt/&quot;</span> + insert);<br>            <span class="hljs-keyword">return</span> myUri;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">delete</span><span class="hljs-params">(Uri uri, String selection, String[] selectionArgs)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> code = sUrimatcher.match(uri);<br>        <span class="hljs-keyword">if</span> (code == DELETESUCESS) &#123;<br>            SQLiteDatabase readableDatabase = databaseHelper.getReadableDatabase();<br>            <span class="hljs-keyword">int</span> delete = readableDatabase.delete(<span class="hljs-string">&quot;Book&quot;</span>, selection, selectionArgs);<br>            <span class="hljs-keyword">return</span> delete;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br>        <br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">update</span><span class="hljs-params">(Uri uri, ContentValues values, String selection, String[] selectionArgs)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> code = sUrimatcher.match(uri);<br>        <span class="hljs-keyword">if</span> (code == UPDATESUCESS)&#123;<br>            SQLiteDatabase readableDatabase = databaseHelper.getReadableDatabase();<br>            <span class="hljs-keyword">int</span> update = readableDatabase.update(<span class="hljs-string">&quot;Book&quot;</span>, values, selection, selectionArgs);<br>            <span class="hljs-keyword">return</span> update;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中UriMatcher这个实用类，我们可以当作是路径匹配器，它添加访问需要的路径名。<br>在UriMatcher构造方法中有UriMatcher.NO_MATCH这个参数，表示的是Uri不匹配时返回的code<br>其中</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">sUrimatcher<span class="hljs-selector-class">.addURI</span>(&quot;com<span class="hljs-selector-class">.example</span><span class="hljs-selector-class">.databasecontentprovider</span><span class="hljs-selector-class">.provider</span>&quot;, &quot;query&quot;, QUERYSUCESS);<br></code></pre></td></tr></table></figure>
+
+<p>这个方法，第一个参数这是在AndroidManifest.xml中内容提供者注册清单中的authorities，第二个参数需要匹配的路径名，第三个参数这是路径匹配时所返回的值。<br>那么query这个路径该怎么访问呢？<br>这时使用</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-built_in">Uri</span> url = <span class="hljs-built_in">Uri</span>.parse(<span class="hljs-string">&quot;content://com.example.databasecontentprovider.provider/query&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>就能够解析这个路径，其中content://是协议，跟http://差不多。</p>
+<p>设置好匹配器，也设置了访问路径，接下来就是提供给外部的权限方法了，现在我们先让其他的app有对数据库增删查改的方法，那么就要重新MyContentProvider中增删查改是个方法。<br>首先判断sUrimatcher.match(uri)是否能够匹配传过来的uri，如果返回的值刚好就与定义好的值相等，那么就返回这里增删查改方法中要返回的数据类型。<br>如public Cursor query(···）中要返回一个Cursor游标，那么就返回一个Cursor对象。<br>而public Uri insert( ···)最特殊，它要返回一个Uri，事实上这个Uri可以自定义，只需要符合相应规则就行，即com.xxxx即可，它最大的功能是让外部应用得到是否成功执行插入数据的操作。</p>
+<p>这样一来，一个内容提供者就完成了。<br>总结一下，有以下几个步骤：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs undefined">1、定义内容提供者 定义一个类继承contentProvider  <br>2、在清单文件里面配置一下 内容提供者<br>3、定义一个Urimatcher <br>4、写一个静态代码块 ，添加匹配规则 <br>5、按照我们添加的匹配规则，暴露想暴露的方法 <br></code></pre></td></tr></table></figure>
+
+<h2 id="内容访问者"><a href="#内容访问者" class="headerlink" title="内容访问者"></a>内容访问者</h2><p>内容提供者设置好之后，便要有访问者，内容访问者很简单，只要得到Uri路径，然后使用ContentResolver内容访问者就好了。<br>我们新建一个MyContentResolver应用，添加增删查改四个按钮，然后在MainActivity中添加以下代码：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs dart">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MainActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Activity</span> </span>&#123;<br><br>    <span class="hljs-meta">@Override</span><br>    protected <span class="hljs-keyword">void</span> onCreate(Bundle savedInstanceState) &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);<br>        setContentView(R.layout.activity_main);<br>        Button addData = (Button) findViewById(R.id.add_data);<br>        Button queryData = (Button) findViewById(R.id.query_data);<br>        Button updateData = (Button) findViewById(R.id.update_data);<br>        Button deleteData = (Button) findViewById(R.id.delete_data);<br>        <br>        addData.setOnClickListener(<span class="hljs-keyword">new</span> OnClickListener() &#123;<br>            <br>            <span class="hljs-meta">@Override</span><br>            public <span class="hljs-keyword">void</span> onClick(View v) &#123;<br>                <span class="hljs-built_in">Uri</span> url = <span class="hljs-built_in">Uri</span>.parse(<span class="hljs-string">&quot;content://com.example.databasecontentprovider.provider/insert&quot;</span>);<br>                ContentValues values = <span class="hljs-keyword">new</span> ContentValues();<br>                values.put(<span class="hljs-string">&quot;bookname&quot;</span>, <span class="hljs-string">&quot;A Clash of Kings&quot;</span>);<br>                values.put(<span class="hljs-string">&quot;author&quot;</span>, <span class="hljs-string">&quot;George Martin&quot;</span>);<br>                values.put(<span class="hljs-string">&quot;pages&quot;</span>, <span class="hljs-number">1040</span>);<br>                values.put(<span class="hljs-string">&quot;price&quot;</span>, <span class="hljs-number">55.55</span>);<br>                ContentResolver contentResolver = getContentResolver();<br>                <span class="hljs-built_in">Uri</span> insert = contentResolver.insert(url, values);<br>                System.out.println(insert);<br>            &#125;<br>        &#125;);<br>        <br>        queryData.setOnClickListener(<span class="hljs-keyword">new</span> OnClickListener() &#123;<br>            <br>            <span class="hljs-meta">@Override</span><br>            public <span class="hljs-keyword">void</span> onClick(View v) &#123;<br>                <span class="hljs-built_in">Uri</span> url = <span class="hljs-built_in">Uri</span>.parse(<span class="hljs-string">&quot;content://com.example.databasecontentprovider.provider/query&quot;</span>);    <br>                ContentResolver contentResolver = getContentResolver();<br>                Cursor query = contentResolver.query(url, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>);<br>                <span class="hljs-keyword">if</span> (query != <span class="hljs-keyword">null</span>) &#123;<br>                    <span class="hljs-keyword">while</span> (query.moveToNext())&#123;<br>                        <span class="hljs-built_in">String</span> autor = query.getString(<span class="hljs-number">1</span>);<br>                        <span class="hljs-built_in">String</span> prices = query.getString(<span class="hljs-number">2</span>);<br>                        <span class="hljs-built_in">String</span> pages = query.getString(<span class="hljs-number">3</span>);<br>                        <span class="hljs-built_in">String</span> bookname = query.getString(<span class="hljs-number">4</span>);<br>                        System.out.println(autor + <span class="hljs-string">&quot;   &quot;</span> + prices + <span class="hljs-string">&quot;   &quot;</span> + pages +<span class="hljs-string">&quot;   &quot;</span> + bookname);<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;);<br>        <br>        updateData.setOnClickListener(<span class="hljs-keyword">new</span> OnClickListener() &#123;<br>            <br>            <span class="hljs-meta">@Override</span><br>            public <span class="hljs-keyword">void</span> onClick(View v) &#123;<br>                <span class="hljs-built_in">Uri</span> url = <span class="hljs-built_in">Uri</span>.parse(<span class="hljs-string">&quot;content://com.example.databasecontentprovider.provider/update&quot;</span>);<br>                ContentValues values = <span class="hljs-keyword">new</span> ContentValues();<br>                values.put(<span class="hljs-string">&quot;bookname&quot;</span>, <span class="hljs-string">&quot;A Storm of Swords&quot;</span>);<br>                values.put(<span class="hljs-string">&quot;pages&quot;</span>, <span class="hljs-number">1216</span>);<br>                values.put(<span class="hljs-string">&quot;price&quot;</span>, <span class="hljs-number">24.05</span>);    <br>                ContentResolver contentResolver = getContentResolver();<br>                <span class="hljs-built_in">int</span> update = contentResolver.update(url, values, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>);<br>                System.out.println(<span class="hljs-string">&quot;更新了&quot;</span> + update + <span class="hljs-string">&quot;条数据&quot;</span>);<br>            &#125;<br>        &#125;);<br>        <br>        deleteData.setOnClickListener(<span class="hljs-keyword">new</span> OnClickListener() &#123;<br>            <br>            <span class="hljs-meta">@Override</span><br>            public <span class="hljs-keyword">void</span> onClick(View v) &#123;<br>                <span class="hljs-built_in">Uri</span> url = <span class="hljs-built_in">Uri</span>.parse(<span class="hljs-string">&quot;content://com.example.databasecontentprovider.provider/delete&quot;</span>);<br>                ContentResolver contentResolver = getContentResolver();<br>                <span class="hljs-built_in">int</span> delete = contentResolver.delete(url, <span class="hljs-string">&quot;bookname = ?&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>[]&#123;<span class="hljs-string">&quot;A Storm of Swords&quot;</span>&#125;);<br>                System.out.println(<span class="hljs-string">&quot;删除了&quot;</span> + delete + <span class="hljs-string">&quot;条数据&quot;</span>);<br>            &#125;<br>        &#125;);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在这里，我们通过Activity中的getContentResolver()得到ContentResolver()，然后通过ContentResolver对象传出想要修改或查询的数据。当然在这里就不能够写SQL原生的语句了，只能够按照Android的封装的方法来走。<br>内容解析者的操作简略为以下几步：<br>1、通过Uri地址获取Uri对象<br>2、通过getContentResolver()得到ContentResolver对象<br>3、通过ContentResolver对象进行增删改查等动作，方法与数据库操作基本相同。</p>
+<p>好了，这篇文章就到此结束，写的还停长的，但实质上就只有这三方面的内容：<br>SQLite操作以及SQL基本语法；<br>Android中的数据库操作；<br>Android中的内容提供者和内容解析者；</p>
+<h2 id="补充小知识"><a href="#补充小知识" class="headerlink" title="补充小知识"></a>补充小知识</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs css">使用adb进入模拟器：当有多个模拟器开启式使用以下方式<br>    adb -s emulator-<span class="hljs-number">5554</span> shell<br>其中emulator-<span class="hljs-number">5554</span>是你的设备代号，在dos窗口下使用adb devices列出当前所有的设备<br><br>-：普通文件<br>d：目录<br>r：可读<br>w：可写<br>x：可读可写可执行<br><br>直接更改数据库权限为可读可写可执行（在dos窗口中更改数据库全新）：chmod <span class="hljs-number">777</span> xxx<span class="hljs-selector-class">.db</span><br><br>创建或打开D盘中的数据库，在dos窗口：sqlite3<span class="hljs-selector-class">.exe</span> d:\test.db<br><br>然后创建表<br><br>此时如果在D盘中原本没有test.db这个数据库，那么在你创建表的时候会直接创建数据库和表<br><br>.table  展示数据库中已经拥有的表名<br><br>.schema 展示表的创建语句<br></code></pre></td></tr></table></figure>
+
+<p>项目地址：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=https://github.com/liaozhoubei/DatabaseContentProvider">https://github.com/liaozhoubei/DatabaseContentProvider</a></p>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/android/">android</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/android/">android</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/e1aff6f4/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Manjaro文档</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/a7d9bd28/">
+                        <span class="hidden-mobile">hexo整理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
