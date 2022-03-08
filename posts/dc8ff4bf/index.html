@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1.添加依赖在gradle.build文件中，应用插件：maven或者maven-publish 123apply plugin: &#96;maven&#96;或者apply plugin: &#96;maven-publish&#96;  如果是新版gradle,应用插件可以使用plugins&amp;#123;&amp;#125;取代apply plugin写法。例如： 1234plugins&amp;#123;	id &amp;#x27;java&amp;#x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jitpack打包">
+<meta property="og:url" content="https://knightwood.github.io/posts/dc8ff4bf/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="1.添加依赖在gradle.build文件中，应用插件：maven或者maven-publish 123apply plugin: &#96;maven&#96;或者apply plugin: &#96;maven-publish&#96;  如果是新版gradle,应用插件可以使用plugins&amp;#123;&amp;#125;取代apply plugin写法。例如： 1234plugins&amp;#123;	id &amp;#x27;java&amp;#x">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-28T06:15:09.000Z">
+<meta property="article:modified_time" content="2022-03-08T15:10:00.854Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="gradle">
+<meta property="article:tag" content="打包">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>jitpack打包 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="jitpack打包">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-28 14:15" pubdate>
+        2021年12月28日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      51 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">jitpack打包</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-添加依赖"><a href="#1-添加依赖" class="headerlink" title="1.添加依赖"></a>1.添加依赖</h1><p>在gradle.build文件中，应用插件：<code>maven</code>或者<code>maven-publish</code></p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey"><span class="hljs-title">apply plugin:</span> `maven`<br>或者<br><span class="hljs-title">apply plugin:</span> `maven-publish`<br></code></pre></td></tr></table></figure>
+
+<p>如果是新版<code>gradle</code>,应用插件可以使用<code>plugins&#123;&#125;</code>取代<code>apply plugin</code>写法。例如：</p>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gml">plugins&#123;<br>	<span class="hljs-symbol">id</span> <span class="hljs-string">&#x27;java&#x27;</span><br>    <span class="hljs-symbol">id</span> <span class="hljs-string">&#x27;maven-publish&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>如果应用的<code>maven</code>插件，可以使用下面命令在本地测试打包情况</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">./gradlew <span class="hljs-keyword">install</span><br></code></pre></td></tr></table></figure>
+
+<p>如果使用的<code>maven-publish</code>插件，可以使用下面命令在本地测试打包情况</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-string">./gradlew</span> build publishToMavenLocal <span class="hljs-params">--stacktrace</span> <span class="hljs-string">//</span>本地打包发布，<span class="hljs-params">--stacktrace</span>参数查看更详细内容<br></code></pre></td></tr></table></figure>
+
+<h1 id="2-更改build-gradle"><a href="#2-更改build-gradle" class="headerlink" title="2.更改build.gradle"></a>2.更改build.gradle</h1><h2 id="示例代码-来自jitpack官方"><a href="#示例代码-来自jitpack官方" class="headerlink" title="示例代码:来自jitpack官方"></a>示例代码:来自jitpack官方</h2><h3 id="Simple-https-github-com-jitpack-gradle-simple"><a href="#Simple-https-github-com-jitpack-gradle-simple" class="headerlink" title="Simple - https://github.com/jitpack/gradle-simple"></a>Simple - <a target="_blank" rel="noopener" href="https://github.com/jitpack/gradle-simple">https://github.com/jitpack/gradle-simple</a></h3><p>Example Gradle project producing a single jar. Uses the <code>maven</code> plugin to publish the jar to the local repository.</p>
+<p><a target="_blank" rel="noopener" href="https://jitpack.io/#jitpack/gradle-simple">https://jitpack.io/#jitpack/gradle-simple</a></p>
+<p>To install the library add:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">repositories</span> &#123; <br>     jcenter()<br>     maven &#123; url <span class="hljs-string">&quot;https://jitpack.io&quot;</span> &#125;<br>&#125;<br><span class="hljs-keyword">dependencies</span> &#123;<br>      implementation <span class="hljs-string">&#x27;com.github.jitpack:gradle-simple:1.1&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>build.gradle文件示例内容</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">apply plugin: <span class="hljs-string">&#x27;java&#x27;</span><br>apply plugin: <span class="hljs-string">&#x27;maven-publish&#x27;</span><br><br><span class="hljs-keyword">group</span> = <span class="hljs-string">&#x27;com.github.jitpack&#x27;</span><br>version = <span class="hljs-string">&#x27;2.0&#x27;</span><br><br>sourceCompatibility = <span class="hljs-number">1.8</span> // java <span class="hljs-number">8</span><br>targetCompatibility = <span class="hljs-number">1.8</span><br><br>repositories &#123;<br>  mavenCentral()<br>&#125;<br><br>dependencies &#123;<br>  implementation <span class="hljs-string">&#x27;com.google.guava:guava:29.0-jre&#x27;</span><br>&#125;<br><br>java &#123;<br>	withSourcesJar()<br>	withJavadocJar()<br>&#125;<br><br>publishing &#123;<br>    publications &#123;<br>        maven(MavenPublication) &#123;<br>		<span class="hljs-keyword">from</span> components.java<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">wrapper</span> &#123;<br>    gradleVersion = &quot;7.3.3&quot;<br>    distributionType = <span class="hljs-keyword">Wrapper</span>.DistributionType.<span class="hljs-keyword">ALL</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Multiple-modules-https-github-com-jitpack-gradle-modular"><a href="#Multiple-modules-https-github-com-jitpack-gradle-modular" class="headerlink" title="Multiple modules - https://github.com/jitpack/gradle-modular"></a>Multiple modules - <a target="_blank" rel="noopener" href="https://github.com/jitpack/gradle-modular">https://github.com/jitpack/gradle-modular</a></h3><p>Example gradle project with two modules:</p>
+<ul>
+<li>client</li>
+<li>server</li>
+</ul>
+<p>To install each module individually use <code>com.github.User.Repo</code> for groupId and module name as artifact id:</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">compile</span> &#x27;com.github.jitpack.gradle-modular:client:<span class="hljs-number">1</span>.<span class="hljs-number">1</span>&#x27;<br><span class="hljs-attribute">compile</span> &#x27;com.github.jitpack.gradle-modular:server:<span class="hljs-number">1</span>.<span class="hljs-number">1</span>&#x27;<br></code></pre></td></tr></table></figure>
+
+<p><strong>build.gradle文件示例内容</strong></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">allprojects</span> &#123;<br>	version = <span class="hljs-string">&quot;1.4&quot;</span><br>	<span class="hljs-keyword">group</span> = <span class="hljs-string">&#x27;io.jitpack.gradle-modular&#x27;</span><br>&#125;<br><br><span class="hljs-keyword">subprojects</span> &#123;<br>	apply plugin: <span class="hljs-string">&#x27;java&#x27;</span><br>	apply plugin: <span class="hljs-string">&#x27;maven-publish&#x27;</span><br>	<br>	<span class="hljs-keyword">sourceCompatibility</span> = <span class="hljs-number">1.8</span> <span class="hljs-comment">// java 8</span><br>	<span class="hljs-keyword">targetCompatibility</span> = <span class="hljs-number">1.8</span><br><br>	java &#123;<br>		withSourcesJar()<br>		withJavadocJar()<br>	&#125;<br><br>	publishing &#123;<br>		publications &#123;<br>			maven(MavenPublication) &#123;<br>				groupId <span class="hljs-keyword">project</span>.<span class="hljs-keyword">group</span><br>				artifactId <span class="hljs-keyword">project</span>.name<br>				version <span class="hljs-keyword">project</span>.version<br>				<span class="hljs-keyword">from</span> components.java<br>			&#125;<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Project-with-multiple-artifacts-https-github-com-jitpack-gradle-multiple-jars"><a href="#Project-with-multiple-artifacts-https-github-com-jitpack-gradle-multiple-jars" class="headerlink" title="Project with multiple artifacts - https://github.com/jitpack/gradle-multiple-jars"></a>Project with multiple artifacts - <a target="_blank" rel="noopener" href="https://github.com/jitpack/gradle-multiple-jars">https://github.com/jitpack/gradle-multiple-jars</a></h3><p>Example Gradle project producing two jars from single source directory:</p>
+<ul>
+<li><em>API</em> from src/api</li>
+<li><em>Impl</em> from src/impl</li>
+</ul>
+<p>Both jars are installed to local maven reactor with:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">gradle <span class="hljs-keyword">install</span><br></code></pre></td></tr></table></figure>
+
+<p>To add them to build.gradle use the following syntax:</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">compile</span> &#x27;com.github.jitpack.gradle-multiple-jars:api:<span class="hljs-number">1</span>.<span class="hljs-number">0</span>.<span class="hljs-number">1</span>&#x27;<br><span class="hljs-attribute">compile</span> &#x27;com.github.jitpack.gradle-multiple-jars:impl:<span class="hljs-number">1</span>.<span class="hljs-number">0</span>.<span class="hljs-number">1</span>&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>Or to add them both together:</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">compile</span> &#x27;com.github.jitpack:gradle-multiple-jars:<span class="hljs-number">1</span>.<span class="hljs-number">0</span>.<span class="hljs-number">1</span>&#x27;<br></code></pre></td></tr></table></figure>
+
+<p><strong>build.gradle文件示例内容</strong></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs gradle">apply plugin: <span class="hljs-string">&quot;java&quot;</span><br>apply plugin: <span class="hljs-string">&quot;maven&quot;</span><br><br><span class="hljs-keyword">group</span> = <span class="hljs-string">&quot;com.github.jitpack&quot;</span><br>version = <span class="hljs-number">1.0</span><br><span class="hljs-keyword">sourceCompatibility</span> = <span class="hljs-number">1.8</span> <span class="hljs-comment">// java 8</span><br><span class="hljs-keyword">targetCompatibility</span> = <span class="hljs-number">1.8</span><br>	<br><span class="hljs-keyword">repositories</span> &#123;<br>    mavenCentral()<br>&#125;<br><br><span class="hljs-keyword">sourceSets</span> &#123;<br>    api<br>    impl<br>&#125;<br><br><span class="hljs-keyword">sourceSets</span>.all &#123; set -&gt;<br>    <span class="hljs-keyword">def</span> jarTask = <span class="hljs-keyword">task</span>(<span class="hljs-string">&quot;$&#123;set.name&#125;Jar&quot;</span>, type: Jar) &#123;<br>        baseName = <span class="hljs-string">&quot;$set.name&quot;</span><br>        <span class="hljs-keyword">from</span> set.output<br>    &#125;<br><br>    <span class="hljs-keyword">artifacts</span> &#123;<br>        archives jarTask<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">dependencies</span> &#123;<br>    apiCompile <span class="hljs-string">&#x27;commons-codec:commons-codec:1.5&#x27;</span><br><br>    implCompile <span class="hljs-keyword">sourceSets</span>.api.output<br>    implCompile <span class="hljs-string">&#x27;commons-lang:commons-lang:2.6&#x27;</span><br><br>    testCompile <span class="hljs-string">&#x27;junit:junit:4.9&#x27;</span><br>    testCompile <span class="hljs-keyword">sourceSets</span>.api.output<br>    testCompile <span class="hljs-keyword">sourceSets</span>.impl.output<br>    <br>    <span class="hljs-keyword">runtime</span> <span class="hljs-keyword">configurations</span>.apiRuntime<br>    <span class="hljs-keyword">runtime</span> <span class="hljs-keyword">configurations</span>.implRuntime<br>&#125;<br><br>jar &#123;<br>    <span class="hljs-keyword">from</span> <span class="hljs-keyword">sourceSets</span>.api.output<br>    <span class="hljs-keyword">from</span> <span class="hljs-keyword">sourceSets</span>.impl.output<br>&#125;<br><br><span class="hljs-comment">// this step is necessary when installing both jars in the local maven repository</span><br>install &#123;<br>    <span class="hljs-keyword">repositories</span>.mavenInstaller &#123;<br>		addFilter(<span class="hljs-string">&#x27;api&#x27;</span>) &#123; artifact, <span class="hljs-keyword">file</span> -&gt; artifact.name.endsWith(<span class="hljs-string">&#x27;api&#x27;</span>) &#125;<br>		addFilter(<span class="hljs-string">&#x27;impl&#x27;</span>) &#123; artifact, <span class="hljs-keyword">file</span> -&gt; artifact.name.endsWith(<span class="hljs-string">&#x27;impl&#x27;</span>) &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="3-打包和发布"><a href="#3-打包和发布" class="headerlink" title="3.打包和发布"></a>3.打包和发布</h1><h2 id="3-1公开库"><a href="#3-1公开库" class="headerlink" title="3.1公开库"></a>3.1公开库</h2><h2 id="3-2私有库"><a href="#3-2私有库" class="headerlink" title="3.2私有库"></a>3.2私有库</h2><h3 id="3-2-1-总览-以私有库为例"><a href="#3-2-1-总览-以私有库为例" class="headerlink" title="3.2.1 总览-以私有库为例"></a>3.2.1 总览-以私有库为例</h3><ol>
+<li><p>使用github账号登录Jitpack，点击settings</p>
+</li>
+<li><p>输入自己的私有库地址，点击<code>Generate</code>生成SSH keys</p>
+</li>
+<li><p>把jitpack.io生成的ssh-key粘贴到自己的私有工程中，配置访问权限。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">私有库的设置页面，在<span class="hljs-string">&quot;deploy keys&quot;</span>下面点击 “<span class="hljs-built_in">add</span> deploy <span class="hljs-built_in">keys</span>”<br>点击 “<span class="hljs-built_in">add</span> deploy <span class="hljs-built_in">keys</span>”之后，添加key，配置访问权限。<br>不用勾选页面下方的“Allow <span class="hljs-built_in">write</span> access”<br></code></pre></td></tr></table></figure></li>
+<li><p>在github上生成relase,之后在jitpack.io中，查找自己的库，点击Look up出现我们的release版本</p>
+</li>
+</ol>
+<h3 id="3-2-2-setup"><a href="#3-2-2-setup" class="headerlink" title="3.2.2 setup"></a>3.2.2 setup</h3><p>要开始使用私有存储库，您首先需要授予 JitPack 访问权限。打开<a target="_blank" rel="noopener" href="https://jitpack.io/private#auth">https://jitpack.io/private</a>并按照以下步骤操作：</p>
+<ol>
+<li><p>单击授权以获取您的个人身份验证令牌。您团队的每个成员都应该获得自己的令牌。</p>
+</li>
+<li><p>将令牌添加到 $HOME/.gradle/gradle.properties：</p>
+<p><code>authToken=AUTHENTICATION_TOKEN</code></p>
+</li>
+<li><p>然后在 build.gradle 中使用 authToken 作为用户名：</p>
+</li>
+</ol>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">repositories</span> &#123;<br>       maven &#123;<br>           url <span class="hljs-string">&quot;https://jitpack.io&quot;</span><br>           credentials &#123; username authToken &#125;<br>       &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>做完这一步，自己就可以不用公开存储库，而是可以直接使用了。</p>
+<p>如果要让其他人可以使用，参考下面的两种分享方法</p>
+<h4 id="问题：按照官网的写法但是使用的时候jitpack-从服务器收到状态代码521-401-403"><a href="#问题：按照官网的写法但是使用的时候jitpack-从服务器收到状态代码521-401-403" class="headerlink" title="问题：按照官网的写法但是使用的时候jitpack -从服务器收到状态代码521/401/403"></a><del><strong>问题</strong>：按照官网的写法但是使用的时候<strong>jitpack -从服务器收到状态代码521/401/403</strong></del></h4><p>因为您在 gradle.properties 中定义了 jitpack 令牌，但您没有将其指向那里，只需复制并粘贴下面在 gradle 属性中使用 jitpack 令牌的代码和应该能正常工作</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript">allprojects &#123;<br>repositories &#123;<br>    google()<br>    jcenter()<br>    mavenCentral()<br>    maven &#123; <br>      url <span class="hljs-string">&quot;https://jitpack.io&quot;</span> <br>        credentials &#123; username = project.properties[<span class="hljs-string">&#x27;jitpackToken&#x27;</span>] &#125;<br>    &#125;<br>    maven &#123; url <span class="hljs-string">&#x27;https://maven.microblink.com&#x27;</span> &#125;<br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-3-公开分享"><a href="#3-2-3-公开分享" class="headerlink" title="3.2.3 公开分享"></a>3.2.3 公开分享</h3><p>在某些情况下，您希望公开发布您的项目，同时保持源代码的私密性。在这种情况下：</p>
+<ol>
+<li>使用具有推送权限的用户登录</li>
+<li>查找您的私人存储库</li>
+<li>点击设置图标</li>
+<li>单击 Lock 图标以公开此库</li>
+</ol>
+<h3 id="3-2-4-私有分享"><a href="#3-2-4-私有分享" class="headerlink" title="3.2.4 私有分享"></a>3.2.4 私有分享</h3><p>任何对您的 Git 存储库具有读取权限的人都可以下载构建工件。您还可以在 JitPack.io 上添加对构建工件具有读取权限的其他协作者。他们将无权访问源代码。</p>
+<p>添加协作者：</p>
+<ol>
+<li>使用具有推送权限的用户登录</li>
+<li>查找您的私人存储库</li>
+<li>点击设置</li>
+<li>添加合作者 GitHub 用户名</li>
+</ol>
+<p>合作者需要登录 JitPack.io 以获得他们自己的身份验证令牌。</p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><h2 id="说没有gradle-wrapper"><a href="#说没有gradle-wrapper" class="headerlink" title="说没有gradle-wrapper"></a>说没有gradle-wrapper</h2><p>这个文件是gradle的包装，在不同的环境下不同的gradle版本中确保编译顺利，所以，版本库里不能把他忽略。</p>
+<p>如果git的忽略文件中的规则把他忽略了（比如忽略文件中的规则 ：  *.jar），可以使用<code>git add -f gradle-wrapper.jar </code>强制添加</p>
+<h2 id="Entry-META-INF-DownloadEngine-kotlin-module-is-a-duplicate-but-no-duplicate-handling-strategy-has-been-set"><a href="#Entry-META-INF-DownloadEngine-kotlin-module-is-a-duplicate-but-no-duplicate-handling-strategy-has-been-set" class="headerlink" title="Entry META-INF/DownloadEngine.kotlin_module is a duplicate but no duplicate handling strategy has been set."></a>Entry META-INF/DownloadEngine.kotlin_module is a duplicate but no duplicate handling strategy has been set.</h2><ul>
+<li>Try adding this to your build.gradle . in packagingOptions:</li>
+</ul>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs puppet"><span class="hljs-keyword">packagingOptions</span> &#123;<br>    ...<br>    <span class="hljs-literal">exclude</span> <span class="hljs-string">&#x27;META-INF/rxkotlin.properties&#x27;</span><br>    <span class="hljs-literal">exclude</span> <span class="hljs-string">&#x27;META-INF/rxkotlin_main.kotlin_module&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Looks like a cache error (with kotlin) to me. Running <code>gradle clean</code> or <code>gradle clear</code> (not sure which is the right spelling, sorry, one of these should exist as a gradle task) and rebuilding should fix the error, because all files in cache will be deleted by the task and regenerated by the project build.</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">./gradlew <span class="hljs-built_in">clean</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/gradle/">gradle</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%89%93%E5%8C%85/">打包</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/f431e3b/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java 容器</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/554224d6/">
+                        <span class="hidden-mobile">kotlin by 关键字</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

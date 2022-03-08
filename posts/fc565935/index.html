@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="map和switchmap的区别 Map() is conceptually identical to the use in RXJava, basically you are changing a parameter of LiveData in another one  SwitchMap() instead you are going to substitute the LiveData i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="livedata">
+<meta property="og:url" content="https://knightwood.github.io/posts/fc565935/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="map和switchmap的区别 Map() is conceptually identical to the use in RXJava, basically you are changing a parameter of LiveData in another one  SwitchMap() instead you are going to substitute the LiveData i">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knightwood.github.io/posts/fc565935/TyporaRaw/Livedata.assets/videotogif_2018.07.22_15.36.40.gif">
+<meta property="og:image" content="https://knightwood.github.io/posts/fc565935/TyporaRaw/Livedata.assets/videotogif_2018.07.24_01.24.14.gif">
+<meta property="article:published_time" content="2021-12-20T12:16:09.000Z">
+<meta property="article:modified_time" content="2022-03-08T15:11:01.617Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://knightwood.github.io/posts/fc565935/TyporaRaw/Livedata.assets/videotogif_2018.07.22_15.36.40.gif">
+  
+  
+  <title>livedata - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="livedata">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-20 20:16" pubdate>
+        2021年12月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      72 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">livedata</h1>
+            
+            <div class="markdown-body">
+              <p>map和switchmap的区别</p>
+<p><strong>Map()</strong> is conceptually identical to the use in RXJava, basically you are changing a parameter of LiveData in another one </p>
+<p><strong>SwitchMap()</strong> instead you are going to substitute the LiveData itself with another one! Typical case is when you retrieve some data from a Repository for instance and to “eliminate” the previous LiveData (to garbage collect, to make it more efficient the memory usually) you pass a <strong>new</strong> LiveData that execute the same action( getting a query for instance) </p>
+<p>译文：相反，您将用另一个替换 LiveData 本身！ 典型的情况是，例如，当您从存储库中检索一些数据并“消除”以前的 LiveData（垃圾收集，通常使内存更有效）时，您传递一个执行相同操作的新 LiveData（获取查询 实例）</p>
+<hr>
+<h4 id="TRANSFORMATIONS"><a href="#TRANSFORMATIONS" class="headerlink" title="TRANSFORMATIONS:"></a>TRANSFORMATIONS:</h4><p>Transformation basically applies a function to the values stored in the <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> object and propagates the result to the downstream. There are currently two types of Transformations we have.</p>
+<ol>
+<li>[**Transformations.map**](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations#map">https://developer.android.com/reference/android/arch/lifecycle/Transformations#map</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function)): The <strong>map</strong> lets you apply a function to the output of <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> and then propagates the result to the downstream.</li>
+<li>[**Transformations.switchMap**:](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap">https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function&gt;)) The <strong>swicthMap</strong> function transformation is a lot like a <strong>map</strong> but for mapping function that emits <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> instead of values. Again <strong>switchMap</strong> functions propagate <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> to downstream instead of single value.</li>
+</ol>
+<h4 id="EXAMPLE-OF-TRANSFORMATIONS-MAP"><a href="#EXAMPLE-OF-TRANSFORMATIONS-MAP" class="headerlink" title="EXAMPLE OF TRANSFORMATIONS.MAP:"></a>EXAMPLE OF TRANSFORMATIONS.MAP:</h4><p>Let’s take a scenario where we need to show <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/support/design/widget/Snackbar">Snackbar</a> whenever a new user added to the database. The <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/support/design/widget/Snackbar">Snackbar</a> shows data of a custom <a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> with username added in it.</p>
+<p><a target="_blank" rel="noopener" href="https://codinginfinite.com/wp-content/uploads/2018/07/videotogif_2018.07.22_15.36.40.gif"><img src="TyporaRaw/Livedata.assets/videotogif_2018.07.22_15.36.40.gif" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p>You see a demo right, let’s create our <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a> class to hold the <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> of <strong>User</strong>.</p>
+<h5 id="TRANSFORMATIONVIEWMODEL-CLASS"><a href="#TRANSFORMATIONVIEWMODEL-CLASS" class="headerlink" title="TRANSFORMATIONVIEWMODEL CLASS:"></a>TRANSFORMATIONVIEWMODEL CLASS:</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TransformationViewModel</span> : <span class="hljs-type">ViewModel</span></span>() &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> userLiveData = MutableLiveData&lt;User&gt;()<br><br>    <span class="hljs-keyword">val</span> userAddedData: LiveData&lt;String&gt; = Transformations.map(userLiveData, ::someFunc)<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">someFunc</span><span class="hljs-params">(user: <span class="hljs-type">User</span>)</span></span> = <span class="hljs-string">&quot;New user <span class="hljs-subst">$&#123;user.username&#125;</span> added to database!&quot;</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">addNewUser</span><span class="hljs-params">(user: <span class="hljs-type">User</span>)</span></span> = apply &#123; userLiveData.value = user &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>There are two things noticeable here.</p>
+<ul>
+<li>First, we are not exposing our user <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> to publically. We have given a public function to just add the User object. By doing this we’re keeping our Immutability principle.</li>
+<li>Second, for adding the map Transformations we need to provide source <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> and function from which you need to return your custom value. You see in our case we’re returning a custom <a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> with username add in it.</li>
+</ul>
+<p>So, we create our <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a> and <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> with map Transformations, let’s see how we gonna use this <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a> inside our <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/app/Activity">Activity</a>.</p>
+<h5 id="MAINACTIVITY"><a href="#MAINACTIVITY" class="headerlink" title="MAINACTIVITY:"></a>MAINACTIVITY:</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MainActivity</span> : <span class="hljs-type">AppCompatActivity</span></span>() &#123;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>        setContentView(R.layout.activity_main)<br>        <span class="hljs-keyword">val</span> viewModel = ViewModelProviders.of(<span class="hljs-keyword">this</span>).<span class="hljs-keyword">get</span>(TransformationViewModel::<span class="hljs-keyword">class</span>.java)<br>        viewModel.userAddedData.observe(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">object</span> : Observer&lt;String&gt;&#123;<br>            <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onChanged</span><span class="hljs-params">(t: <span class="hljs-type">String</span>?)</span></span> &#123;<br>                Snackbar.make(mainActivityRootView, t!!, Snackbar.LENGTH_SHORT).show()<br>            &#125;<br>        &#125;)<br>        addUserButton.setOnClickListener &#123;<br>            viewModel.addNewUser(User(addNewEditText.text.toString()))<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>The <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/app/Activity">Activity</a> is very basic, in here we’re only observing our <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> instance. Whenever the user object added to <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> it automatically calls <em>the <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Observer.html#onChanged(T)">onChanged</a></em> method with the custom <a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.</p>
+<h4 id="EXAMPLE-OF-TRANSFORMATIONS-SWITCHMAP"><a href="#EXAMPLE-OF-TRANSFORMATIONS-SWITCHMAP" class="headerlink" title="EXAMPLE OF TRANSFORMATIONS.SWITCHMAP:"></a>EXAMPLE OF TRANSFORMATIONS.SWITCHMAP:</h4><p>Let’s take another scenario where I need to search user by username and show the result inside the <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView">RecyclerView</a>.</p>
+<p><a target="_blank" rel="noopener" href="https://codinginfinite.com/wp-content/uploads/2018/07/videotogif_2018.07.24_01.24.14.gif"><img src="TyporaRaw/Livedata.assets/videotogif_2018.07.24_01.24.14.gif" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p>You see the demo right let’s create our <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a> class to search users with the name.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserRepo</span></span>&#123;<br>   <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">searchUserWithName</span><span class="hljs-params">(name : <span class="hljs-type">String</span>)</span></span> : LiveData&lt;List&lt;User&gt;&gt;&#123;<br>      ..... logic <span class="hljs-keyword">for</span> search user<br>   &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserViewModel</span> : <span class="hljs-type">ViewModel</span></span>() &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> query = MutableLiveData&lt;String&gt;()<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> userRepo = UserRepo()<br><br>    <span class="hljs-keyword">val</span> userNameResult: LiveData&lt;List&lt;User&gt;&gt; = Transformations.map(<br>            query,<br>            ::temp<br>    )<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">temp</span><span class="hljs-params">(name: <span class="hljs-type">String</span>)</span></span> = userRepo.searchUserWithName(name)<br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">searchUserByName</span><span class="hljs-params">(name: <span class="hljs-type">String</span>)</span></span> = apply &#123; query.value = name &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>You see in our <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a> class we’re getting the data from our <strong>UserRepo</strong> class. So, whenever something is searched, we’ll get users with the name, then the repository creates a new instance of <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> and returned the list of users. And finally based on the result we display the data.</p>
+<p>To clarify the things between [*map*](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations#map">https://developer.android.com/reference/android/arch/lifecycle/Transformations#map</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function)) and <em>[switchMap](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap">https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function&gt;)),</em> I use <em>[map](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations#map">https://developer.android.com/reference/android/arch/lifecycle/Transformations#map</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function))</em> method so that, we could see what happened if we use <em>[map](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations#map">https://developer.android.com/reference/android/arch/lifecycle/Transformations#map</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function))</em> method instead of [*swicthMap*](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap">https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function&gt;)) when we need to return <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a>.</p>
+<h5 id="PROBLEM"><a href="#PROBLEM" class="headerlink" title="PROBLEM:"></a>PROBLEM:</h5><p>Let’s say we’re looking for the username Alice. The repository is creating a new instance of that <strong>User</strong> <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> class and after that, we display the users. After some time we need to look for the username Bob there’s the repository creates a new instance of <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> and our <strong>UI</strong> subscribes to that <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a>. So at this moment, our <strong>UI</strong> subscribes to two instances of <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> because we never remove the previous one. So it means whenever our repository changes the user’s data it sends two times subscription. Now, how do we solve this problem…?</p>
+<p>译文：</p>
+<p>假设我们正在寻找用户名 Alice。 存储库正在创建该 <strong>User</strong> <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> 类的新实例，之后，我们显示用户。 一段时间后，我们需要查找用户名 Bob，存储库会创建一个 <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> 的新实例，并且我们的 <strong>UI</strong> 订阅 <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a>。 所以此时，我们的 <strong>UI</strong> 订阅了两个 <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> 实例，因为我们从未删除前一个。 因此，这意味着每当我们的存储库更改用户的数据时，它都会发送两次订阅。 现在，我们如何解决这个问题……？</p>
+<h5 id="SOLUTION"><a href="#SOLUTION" class="headerlink" title="SOLUTION:"></a>SOLUTION:</h5><p>What we actually need is a mechanism that allows us to stop observing from the previous source whenever we want to observe a new one. In order to this, we would use <em>[switchMap](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap">https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function&gt;)).</em> Under the hood, <em>[switchMap](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap">https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function&gt;))</em> uses the <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/MediatorLiveData">MediatorLiveData</a> that removes the initial source whenever the new source is added. In short, it does all the mechanism removing and adding a new <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Observer">Observer</a> for us.</p>
+<p>译文：</p>
+<p>我们真正需要的是一种机制，当我们想观察一个新的来源时，它可以让我们停止从以前的来源观察。 为此，我们将使用 switchMap。 在底层，switchMap 使用 MediatorLiveData，只要添加了新源，它就会删除初始源。 简而言之，它为我们完成了删除和添加新观察者的所有机制。</p>
+<p>Now our <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a> class will look like this.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserRepo</span></span>&#123;<br>   <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">searchUserWithName</span><span class="hljs-params">(name  : <span class="hljs-type">String</span>)</span></span> : LiveData&lt;List&lt;User&gt;&gt;&#123;<br>         .... logic <span class="hljs-keyword">for</span> search user<br>   &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserViewModel</span> : <span class="hljs-type">ViewModel</span></span>() &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> query = MutableLiveData&lt;String&gt;()<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> userRepo = UserRepo()<br><br>    <span class="hljs-keyword">val</span> userNameResult: LiveData&lt;List&lt;User&gt;&gt; = Transformations.switchMap(<br>            query,<br>            ::temp<br>    )<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">temp</span><span class="hljs-params">(name: <span class="hljs-type">String</span>)</span></span> = userRepo.searchUserWithName(name)<br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">searchUserByName</span><span class="hljs-params">(name: <span class="hljs-type">String</span>)</span></span> = apply &#123; query.value = name &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>All the code remain the same instead of the*[ switchMap](<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap">https://developer.android.com/reference/android/arch/lifecycle/Transformations.html#switchMap</a>(android.arch.lifecycle.LiveData, android.arch.core.util.Function&gt;))* method. Now here we only need our <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/app/Activity">Activity</a> class to observe this <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a>. The following shows the <strong>MainActivity</strong> class.</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">class</span> MainActivity : <span class="hljs-constructor">AppCompatActivity()</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> userList: MutableList&lt;User&gt; = <span class="hljs-constructor">ArrayList()</span><br>    <span class="hljs-keyword">private</span> lateinit var userAdapter: UserAdapter<br><br>    override <span class="hljs-keyword">fun</span> on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>: Bundle?)</span> &#123;<br>        super.on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>)</span><br>        set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">activity_main</span>)</span><br>        userRecyclerView.layoutManager = <span class="hljs-constructor">LinearLayoutManager(<span class="hljs-params">this</span>)</span><br>        userRecyclerView.set<span class="hljs-constructor">HasFixedSize(<span class="hljs-params">true</span>)</span><br>        userAdapter = <span class="hljs-constructor">UserAdapter(<span class="hljs-params">this</span>, <span class="hljs-params">userList</span>)</span><br>        userRecyclerView.adapter = userAdapter<br>        <span class="hljs-keyword">val</span> viewModel = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ViewModelProviders</span>.</span></span><span class="hljs-keyword">of</span>(this).get(UserViewModel::<span class="hljs-keyword">class</span>.java)<br>        searchUserButton.setOnClickListener &#123; viewModel.search<span class="hljs-constructor">UserByName(<span class="hljs-params">addNewEditText</span>.<span class="hljs-params">text</span>.<span class="hljs-params">toString</span>()</span>) &#125;<br>        viewModel.userNameResult.observe(this, Observer &#123;<br>            <span class="hljs-keyword">if</span> (userList.is<span class="hljs-constructor">NotEmpty()</span>)<br>                userList.clear<span class="hljs-literal">()</span><br>            userList.add<span class="hljs-constructor">All(<span class="hljs-params">it</span>!!)</span><br>            userAdapter.notify<span class="hljs-constructor">DataSetChanged()</span><br>        &#125;)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>The <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/app/Activity">Activity</a> is very basic. After setting the <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView">RecyclerView</a> properties, whenever the user clicks the button we’re calling our <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a> class function to search the users with a username. And in the last, we simply observing the <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> coming from our <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a> class.</p>
+<p>Alright, guys, I’m going to end this blog here. You can also download the complete source code of the above example.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/CodingInfinite/LiveDataExample">Download Complete Code</a></p>
+<p>If you’ve any queries regarding this post on Transformations or any problem with <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a> please do comment below.</p>
+<p>Thank you for being here and keep reading…</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/android/">android</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/49c06d08/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">aria2整理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/37ac4483/">
+                        <span class="hidden-mobile">lru缓存</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

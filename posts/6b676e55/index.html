@@ -1,0 +1,623 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="记一次写Intent的扩展前言写项目的时候经常会写到跳转Activiey，写到跳转Activit就一定会写到putExtra，就像下面那样 1234intent.putExtra(&quot;a&quot;, item.a)intent.putExtra(&quot;b&quot;, item.b)intent.putExtra(&quot;c&quot;, item.c)    挺多哈，每次都要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kotlin 技巧-写Intent的扩展">
+<meta property="og:url" content="https://knightwood.github.io/posts/6b676e55/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="记一次写Intent的扩展前言写项目的时候经常会写到跳转Activiey，写到跳转Activit就一定会写到putExtra，就像下面那样 1234intent.putExtra(&quot;a&quot;, item.a)intent.putExtra(&quot;b&quot;, item.b)intent.putExtra(&quot;c&quot;, item.c)    挺多哈，每次都要">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-20T12:16:09.000Z">
+<meta property="article:modified_time" content="2022-03-08T15:13:34.551Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="kotlin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>kotlin 技巧-写Intent的扩展 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="kotlin 技巧-写Intent的扩展">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-20 20:16" pubdate>
+        2021年12月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      21k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      179 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">kotlin 技巧-写Intent的扩展</h1>
+            
+            <div class="markdown-body">
+              <h1 id="记一次写Intent的扩展"><a href="#记一次写Intent的扩展" class="headerlink" title="记一次写Intent的扩展"></a>记一次写Intent的扩展</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写项目的时候经常会写到跳转Activiey，写到跳转Activit就一定会写到putExtra，就像下面那样</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><br>intent.put<span class="hljs-constructor">Extra(<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-params">item</span>.<span class="hljs-params">a</span>)</span><br>intent.put<span class="hljs-constructor">Extra(<span class="hljs-string">&quot;b&quot;</span>, <span class="hljs-params">item</span>.<span class="hljs-params">b</span>)</span><br>intent.put<span class="hljs-constructor">Extra(<span class="hljs-string">&quot;c&quot;</span>, <span class="hljs-params">item</span>.<span class="hljs-params">c</span>)</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>挺多哈，每次都要重复前面相同的内容，所以就想着能不能写个扩展来简写。</p>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>我们最终实现是这样的：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs applescript"><br>Intent(context, TestActivity::<span class="hljs-built_in">class</span>.java)<br>  .putExtraVararg(<br>    <span class="hljs-string">&quot;a&quot;</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">item</span>.a, <br>    <span class="hljs-string">&quot;b&quot;</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">item</span>.b, <br>    <span class="hljs-string">&quot;c&quot;</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">item</span>.c<br>  )<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="仿mapOf"><a href="#仿mapOf" class="headerlink" title="仿mapOf"></a>仿mapOf</h3><p>经常用到<code>mapOf()</code>或者<code>mutableMapOf()</code>就会知道，里面是用了<code>Pair</code>类来生成Map的，所以受此启发，打算用<code>Pair</code>来作为参数实现，那么写的时候就应该是这样写，参数为可变参数类型：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><br><span class="hljs-comment">// 作为Intent的扩展</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> Intent.<span class="hljs-title">putExtraVararg</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">vararg</span> extras: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">String</span>, Any?&gt;</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>: Intent &#123;<br>    <span class="hljs-comment">// 先省略</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p><code>putExtra</code>的第一个参数类型肯定是<code>String</code>类型，第二个参数的类型包括<code>Bundle, Boolean, BooleanArray, Byte, ByteArray, Char, CharArray, String</code>等等，所以就用<code>Any</code>类型，因为是可空的，所以加上<code>?</code>。</p>
+<p>那么调用的时候，就是这样子的</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs applescript"><br>Intent(context, TestActivity::<span class="hljs-built_in">class</span>.java)<br>    .putExtraVararg(<br>        <span class="hljs-string">&quot;a&quot;</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">item</span>.a, <br>        <span class="hljs-string">&quot;b&quot;</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">item</span>.b, <br>        <span class="hljs-string">&quot;c&quot;</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">item</span>.c<br>    )<br></code></pre></td></tr></table></figure>
+
+
+
+<p>是不是就是一开始说的那样，对比平常写的是不是简单了很多。</p>
+<h3 id="参数类型匹配"><a href="#参数类型匹配" class="headerlink" title="参数类型匹配"></a>参数类型匹配</h3><p>写好了参数，那么就要进行对参数类型的匹配进行对应的<code>putExtra</code>。</p>
+<p><code>vararg</code>参数可以用<code>forEach</code>来循环对每个参数类型进行匹配：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><br><span class="hljs-function"><span class="hljs-keyword">fun</span> Intent.<span class="hljs-title">putExtraVararg</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">vararg</span> extras: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">String</span>, Any?&gt;</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>: Intent &#123;<br>    <span class="hljs-keyword">if</span> (extras.isEmpty()) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span><br>    extras.forEach &#123; (key, value) -&gt;<br>        value ?: let &#123;<br>            it.putExtra(key, it.toString())<br>            <span class="hljs-keyword">return</span><span class="hljs-symbol">@forEach</span><br>        &#125;<br>        <span class="hljs-keyword">when</span> (value) &#123;<br>            <span class="hljs-keyword">is</span> Bundle -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Boolean</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> BooleanArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Byte</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> ByteArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Char</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> CharArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> String -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> CharSequence -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Double</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> DoubleArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Float</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> FloatArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Int</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> IntArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Long</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> LongArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Short</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> ShortArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> Parcelable -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> Serializable -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">else</span> -&gt; &#123;<br>                <span class="hljs-keyword">throw</span> IllegalArgumentException(<span class="hljs-string">&quot;Not support <span class="hljs-variable">$value</span> type <span class="hljs-subst">$&#123;value.javaClass&#125;</span>..&quot;</span>)<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>发现没有，还少了<code>ArrayList&lt;String&gt;</code>、<code>ArrayList&lt;CharSequence&gt;</code>、<code>ArrayList&lt;? extends Parcelable&gt;</code>这三个List的参数类型匹配，因为不能直接<code>is</code>来匹配对应的Array类型，在群里问过之后，才得出最终的方法，Array里面有一个匹配对应类型的扩展函数<code>isArrayOf()</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Checks if array can contain element of type [T].</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Suppress(<span class="hljs-meta-string">&quot;REIFIED_TYPE_PARAMETER_NO_INLINE&quot;</span>)</span><br><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;<span class="hljs-keyword">reified</span> T : Any&gt;</span> Array<span class="hljs-type">&lt;*&gt;</span>.<span class="hljs-title">isArrayOf</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Boolean</span> =<br>    T::<span class="hljs-keyword">class</span>.java.isAssignableFrom(<span class="hljs-keyword">this</span>::<span class="hljs-keyword">class</span>.java.componentType)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>so，这样就简单了，我们先匹配<code>Array</code>，然后在匹配对应的<code>ArrayList&lt;String&gt;</code>、<code>ArrayList&lt;CharSequence&gt;</code>、<code>ArrayList&lt;? extends Parcelable&gt;</code>，最后在对应put方法那里用<code>as</code>：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs livescript"><br><span class="hljs-keyword">is</span> <span class="hljs-built_in">Array</span>&lt;*&gt; -&gt; &#123;<br>    @Suppress(<span class="hljs-string">&quot;UNCHECKED_CAST&quot;</span>)<br>    <span class="hljs-keyword">when</span> &#123;<br>        value.isArrayOf&lt;<span class="hljs-built_in">String</span>&gt;<span class="hljs-function"><span class="hljs-params">()</span> -&gt;</span> &#123;<br>            <span class="hljs-built_in">this</span>.putStringArrayListExtra(key, value <span class="hljs-keyword">as</span> ArrayList&lt;<span class="hljs-built_in">String</span>?&gt;)<br>        &#125;<br>        value.isArrayOf&lt;CharSequence&gt;<span class="hljs-function"><span class="hljs-params">()</span> -&gt;</span> &#123;<br>            <span class="hljs-built_in">this</span>.putCharSequenceArrayListExtra(key, value <span class="hljs-keyword">as</span> ArrayList&lt;CharSequence?&gt;)<br>        &#125;<br>        value.isArrayOf&lt;Parcelable&gt;<span class="hljs-function"><span class="hljs-params">()</span> -&gt;</span> &#123;<br>            <span class="hljs-built_in">this</span>.putParcelableArrayListExtra(key, value <span class="hljs-keyword">as</span> ArrayList&lt;out Parcelable?&gt;)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>这样就实现了不同<code>Array</code>类型的<code>putExtra</code>。</p>
+<h2 id="最终"><a href="#最终" class="headerlink" title="最终"></a>最终</h2><p>最后完整的代码为</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><br><span class="hljs-function"><span class="hljs-keyword">fun</span> Intent.<span class="hljs-title">putExtraVararg</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">vararg</span> extras: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">String</span>, Any?&gt;</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>: Intent &#123;<br>    <span class="hljs-keyword">if</span> (extras.isEmpty()) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span><br>    extras.forEach &#123;<br>        <span class="hljs-keyword">val</span> key = it.first<br>        <span class="hljs-keyword">val</span> value = it.second ?: let &#123;<br>            it.putExtra(key, it.toString())<br>        &#125;<br>    &#125;<br>    extras.forEach &#123; (key, value) -&gt;<br>        value ?: let &#123;<br>            it.putExtra(key, it.toString())<br>            <span class="hljs-keyword">return</span><span class="hljs-symbol">@forEach</span><br>        &#125;<br>        <span class="hljs-keyword">when</span> (value) &#123;<br>            <span class="hljs-keyword">is</span> Bundle -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Boolean</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> BooleanArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Byte</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> ByteArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Char</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> CharArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> String -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> CharSequence -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Double</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> DoubleArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Float</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> FloatArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Int</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> IntArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Long</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> LongArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Short</span> -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> ShortArray -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> Array&lt;*&gt; -&gt; &#123;<br>                <span class="hljs-meta">@Suppress(<span class="hljs-meta-string">&quot;UNCHECKED_CAST&quot;</span>)</span><br>                <span class="hljs-keyword">when</span> &#123;<br>                    value.isArrayOf&lt;String&gt;() -&gt; &#123;<br>                        <span class="hljs-keyword">this</span>.putStringArrayListExtra(key, value <span class="hljs-keyword">as</span> ArrayList&lt;String?&gt;)<br>                    &#125;<br>                    value.isArrayOf&lt;CharSequence&gt;() -&gt; &#123;<br>                        <span class="hljs-keyword">this</span>.putCharSequenceArrayListExtra(key, value <span class="hljs-keyword">as</span> ArrayList&lt;CharSequence?&gt;)<br>                    &#125;<br>                    value.isArrayOf&lt;Parcelable&gt;() -&gt; &#123;<br>                        <span class="hljs-keyword">this</span>.putParcelableArrayListExtra(key, value <span class="hljs-keyword">as</span> ArrayList&lt;<span class="hljs-keyword">out</span> Parcelable?&gt;)<br>                    &#125;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">is</span> Parcelable -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">is</span> Serializable -&gt; <span class="hljs-keyword">this</span>.putExtra(key, value)<br>            <span class="hljs-keyword">else</span> -&gt; &#123;<br>                <span class="hljs-keyword">throw</span> IllegalArgumentException(<span class="hljs-string">&quot;Not support <span class="hljs-variable">$value</span> type <span class="hljs-subst">$&#123;value.javaClass&#125;</span>..&quot;</span>)<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>转成Java是这样的：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><code class="hljs php"><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IntentExtKt</span> </span>&#123;<br>   @NotNull<br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">static</span> <span class="hljs-keyword">final</span> Intent putExtraVararg(@NotNull Intent <span class="hljs-variable">$receiver</span>, @NotNull Pair... extras) &#123;<br>      Intrinsics.checkParameterIsNotNull(<span class="hljs-variable">$receiver</span>, <span class="hljs-string">&quot;receiver<span class="hljs-subst">$0</span>&quot;</span>);<br>      Intrinsics.checkParameterIsNotNull(extras, <span class="hljs-string">&quot;extras&quot;</span>);<br>      <span class="hljs-keyword">if</span> (extras.length == <span class="hljs-number">0</span>) &#123;<br>         <span class="hljs-keyword">return</span> <span class="hljs-variable">$receiver</span>;<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>         Pair[] var3 = extras;<br>         <span class="hljs-keyword">int</span> var4 = extras.length;<br><br>         <span class="hljs-keyword">int</span> var5;<br>         Pair element<span class="hljs-variable">$iv</span>;<br>         <span class="hljs-keyword">boolean</span> var8;<br>         <span class="hljs-keyword">String</span> key;<br>         <span class="hljs-keyword">for</span>(var5 = <span class="hljs-number">0</span>; var5 &lt; var4; ++var5) &#123;<br>            element<span class="hljs-variable">$iv</span> = var3[var5];<br>            var8 = <span class="hljs-literal">false</span>;<br>            key = (<span class="hljs-keyword">String</span>)element<span class="hljs-variable">$iv</span>.getFirst();<br>            <span class="hljs-keyword">if</span> (element<span class="hljs-variable">$iv</span>.getSecond() == <span class="hljs-literal">null</span>) &#123;<br>               <span class="hljs-keyword">int</span> var12 = <span class="hljs-literal">false</span>;<br>               <span class="hljs-variable">$receiver</span>.putExtra(key, <span class="hljs-variable">$receiver</span>.toString());<br>            &#125;<br>         &#125;<br><br>         var3 = extras;<br>         var4 = extras.length;<br><br>         <span class="hljs-keyword">for</span>(var5 = <span class="hljs-number">0</span>; var5 &lt; var4; ++var5) &#123;<br>            element<span class="hljs-variable">$iv</span> = var3[var5];<br>            var8 = <span class="hljs-literal">false</span>;<br>            key = (<span class="hljs-keyword">String</span>)element<span class="hljs-variable">$iv</span>.component1();<br>            <span class="hljs-keyword">Object</span> value = element<span class="hljs-variable">$iv</span>.component2();<br>            <span class="hljs-keyword">if</span> (value != <span class="hljs-literal">null</span>) &#123;<br>               <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> Bundle) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (Bundle)value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">Boolean</span>) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (<span class="hljs-keyword">Boolean</span>)value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">boolean</span>[]) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (<span class="hljs-keyword">boolean</span>[])value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> Byte) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, ((Number)value).byteValue());<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> byte[]) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (byte[])value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> Character) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (Character)value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> char[]) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (char[])value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">String</span>) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (<span class="hljs-keyword">String</span>)value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> CharSequence) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (CharSequence)value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">Double</span>) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, ((Number)value).doubleValue());<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">double</span>[]) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (<span class="hljs-keyword">double</span>[])value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">Float</span>) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, ((Number)value).floatValue());<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">float</span>[]) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (<span class="hljs-keyword">float</span>[])value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">Integer</span>) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, ((Number)value).intValue());<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">int</span>[]) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (<span class="hljs-keyword">int</span>[])value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> Long) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, ((Number)value).longValue());<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> long[]) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (long[])value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> Short) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, ((Number)value).shortValue());<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> short[]) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (short[])value);<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">Object</span>[]) &#123;<br>                  <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">Object</span>[])value <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">String</span>[]) &#123;<br>                     <span class="hljs-variable">$receiver</span>.putStringArrayListExtra(key, (ArrayList)value);<br>                  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">Object</span>[])value <span class="hljs-keyword">instanceof</span> CharSequence[]) &#123;<br>                     <span class="hljs-variable">$receiver</span>.putCharSequenceArrayListExtra(key, (ArrayList)value);<br>                  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">Object</span>[])value <span class="hljs-keyword">instanceof</span> Parcelable[]) &#123;<br>                     <span class="hljs-variable">$receiver</span>.putParcelableArrayListExtra(key, (ArrayList)value);<br>                  &#125;<br>               &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> Parcelable) &#123;<br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (Parcelable)value);<br>               &#125; <span class="hljs-keyword">else</span> &#123;<br>                  <span class="hljs-keyword">if</span> (!(value <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Serializable</span>)) &#123;<br>                     <span class="hljs-keyword">throw</span> (<span class="hljs-built_in">Throwable</span>)(<span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;Not support &quot;</span> + value + <span class="hljs-string">&quot; type &quot;</span> + value.getClass() + <span class="hljs-string">&quot;..&quot;</span>));<br>                  &#125;<br><br>                  <span class="hljs-variable">$receiver</span>.putExtra(key, (<span class="hljs-built_in">Serializable</span>)value);<br>               &#125;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>               <span class="hljs-keyword">int</span> var13 = <span class="hljs-literal">false</span>;<br>               <span class="hljs-variable">$receiver</span>.putExtra(key, <span class="hljs-variable">$receiver</span>.toString());<br>            &#125;<br>         &#125;<br><br>         <span class="hljs-keyword">return</span> <span class="hljs-variable">$receiver</span>;<br>      &#125;<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="顺手写别的扩展"><a href="#顺手写别的扩展" class="headerlink" title="顺手写别的扩展"></a>顺手写别的扩展</h3><p>既然用到Intent的扩展，那么就顺手写下Activity的startActivity的扩展</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 同Context的startActivity</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">fun</span> <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Context</span>.</span></span><span class="hljs-keyword">to</span><span class="hljs-constructor">Activity(<span class="hljs-params">packageContext</span>: Context?, <span class="hljs-params">cls</span>: Class&lt;<span class="hljs-operator">*</span>&gt;, <span class="hljs-params">vararg</span> <span class="hljs-params">extras</span>: Pair&lt;String, Any?&gt;)</span> &#123;<br>    start<span class="hljs-constructor">Activity(Intent(<span class="hljs-params">packageContext</span>, <span class="hljs-params">cls</span>)</span>.put<span class="hljs-constructor">ExtraVararg(<span class="hljs-operator">*</span><span class="hljs-params">extras</span>)</span>)<br>&#125;<br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 同Context的startActivity</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">fun</span> <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Context</span>.</span></span><span class="hljs-keyword">to</span><span class="hljs-constructor">Activity(<span class="hljs-params">intent</span>: Intent)</span> &#123;<br>    start<span class="hljs-constructor">Activity(<span class="hljs-params">intent</span>)</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>调用的时候就是这样子的</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xquery"><br><span class="hljs-keyword">context</span>.toActivity(<br>    <span class="hljs-keyword">context</span>,<br>    SearchActivity::class.java,<br>    SearchActivity.SEARCH_TYPE <span class="hljs-keyword">to</span> <span class="hljs-type">item</span>.type,<br>    SearchActivity.SEARCH_UID <span class="hljs-keyword">to</span> <span class="hljs-type">item</span>.uid,<br>    SearchActivity.SEARCH_NAME <span class="hljs-keyword">to</span> <span class="hljs-type">item</span><span class="hljs-built_in">.name</span>,<br>    SearchActivity.SEARCH_KEY <span class="hljs-keyword">to</span> <span class="hljs-type">item</span><span class="hljs-built_in">.key</span>,<br>    SearchActivity.SEARCH_GROUP <span class="hljs-keyword">to</span> <span class="hljs-type">item</span>.<span class="hljs-keyword">group</span><br>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这次的扩展，也学到了关于<code>Array</code>的一些扩展函数，可以说是很美好了。</p>
+<hr>
+<h1 id="借助Kotlin特性打造一个有Kotlin味道的Activity跳转工具类库"><a href="#借助Kotlin特性打造一个有Kotlin味道的Activity跳转工具类库" class="headerlink" title="借助Kotlin特性打造一个有Kotlin味道的Activity跳转工具类库"></a>借助Kotlin特性打造一个有Kotlin味道的Activity跳转工具类库</h1><h3 id="前言-1"><a href="#前言-1" class="headerlink" title="前言"></a>前言</h3><p>相信同学们都有过这种感受：在日常开发中，每次使用<code>startActivityForResult</code>时，要做的事情都好多，好麻烦：</p>
+<ol>
+<li>定义一个<code>requestCode</code>；</li>
+<li>重写<code>onActivityResult</code>方法并在里面去判断<code>requestCode</code>和<code>resultCode</code>；</li>
+<li>如果有携带参数，还要一个个通过<code>putExtra</code>方法<code>put</code>进<em>Intent</em>里；</li>
+<li>目标<em>Activity</em>处理完成后还要把数据一个个<code>put</code>进<em>Intent</em>中，<code>setResult</code>然后<code>finish</code>；</li>
+<li>如果参数是可序列化的泛型类对象(如<em>ArrayList<Model></em>)，取出来的时候不但要显式强制转型，还要把 <em><strong>UNCHECKED_CAST</strong></em> 警告抑制；</li>
+</ol>
+<p>当然了，在Github上已经有好几个开源库把 <em>“需要重写<code>onActivityResult</code>方法来接收处理结果”</em> 的问题解决了（其中的原理相信很多同学都已经了解过了，这个我们等下也会详细讲解的）。<br> 但如果有<strong>携带参数</strong>的话，依然很麻烦：<strong>有多少个参数，就要调用多少次<code>putExtra</code>方法</strong>。<br> 而且最烦的是第5点，转成泛型类对象时，一块黄色的警告在那里，看着挺难受。</p>
+<p>不过还好，随着<em>Kotlin</em>越来越普及，越来越多的开发者都体验到了它的魅力，也许我们可以借助它的一些特性，来做一些事情。。。</p>
+<h3 id="简化Intent-putExtra操作"><a href="#简化Intent-putExtra操作" class="headerlink" title="简化Intent.putExtra操作"></a>简化Intent.putExtra操作</h3><blockquote>
+<p>这个思路我是直接CV了大佬旺的代码，原文链接：<a target="_blank" rel="noopener" href="https://www.jowanxu.top/2019/02/11/Android-Intent-Extension/">https://www.jowanxu.top/2019/02/11/Android-Intent-Extension/</a></p>
+</blockquote>
+<p>在<em>Kotlin</em>的项目中，当我们初始化<em>Map</em>的时候，通常会这样写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> map = mapOf(<br>    <span class="hljs-string">&quot;key0&quot;</span> to <span class="hljs-string">&quot;value0&quot;</span>, <br>    <span class="hljs-string">&quot;key1&quot;</span> to <span class="hljs-string">&quot;value1&quot;</span>, <br>    <span class="hljs-string">&quot;key2&quot;</span> to <span class="hljs-string">&quot;value2&quot;</span><br>)<br><br></code></pre></td></tr></table></figure>
+
+<p><code>Key</code>和<code>Value</code>之间的<code>to</code>，是一个<strong>中缀函数</strong>，它返回一个<em>Pair</em>对象。<br> <code>mapOf</code>方法接收一个类型为<em>Pair</em>的可变参数：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;K, V&gt;</span> <span class="hljs-title">mapOf</span><span class="hljs-params">(<span class="hljs-keyword">vararg</span> pairs: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">K</span>, V&gt;)</span></span><br><br></code></pre></td></tr></table></figure>
+
+<p>最终的实现，它会遍历这个数组<code>pairs</code>，并依次把这些<code>键值对</code>put到一个<em>LinkedHashMap</em>中。</p>
+<p>那么我们也可以参照这个<code>mapOf</code>，来为<em>Intent</em>写一个扩展方法<code>putExtras</code>，让它在使用的时候，就像创建<em>Map</em>对象那样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> Intent.<span class="hljs-title">putExtras</span><span class="hljs-params">(<span class="hljs-keyword">vararg</span> params: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">String</span>, Any&gt;)</span></span>: Intent &#123;<br>    <span class="hljs-keyword">if</span> (params.isEmpty()) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span><br>    params.forEach &#123; (key, value) -&gt;<br>        <span class="hljs-keyword">when</span> (value) &#123;<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Int</span> -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Byte</span> -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Char</span> -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Long</span> -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Float</span> -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Short</span> -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Double</span> -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> <span class="hljs-built_in">Boolean</span> -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> Bundle -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> String -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> IntArray -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> ByteArray -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> CharArray -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> LongArray -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> FloatArray -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> Parcelable -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> ShortArray -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> DoubleArray -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> BooleanArray -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> CharSequence -&gt; putExtra(key, value)<br>            <span class="hljs-keyword">is</span> Array&lt;*&gt; -&gt; &#123;<br>                <span class="hljs-keyword">when</span> &#123;<br>                    value.isArrayOf&lt;String&gt;() -&gt;<br>                        putExtra(key, value <span class="hljs-keyword">as</span> Array&lt;String?&gt;)<br>                    value.isArrayOf&lt;Parcelable&gt;() -&gt;<br>                        putExtra(key, value <span class="hljs-keyword">as</span> Array&lt;Parcelable?&gt;)<br>                    value.isArrayOf&lt;CharSequence&gt;() -&gt;<br>                        putExtra(key, value <span class="hljs-keyword">as</span> Array&lt;CharSequence?&gt;)<br>                    <span class="hljs-keyword">else</span> -&gt; putExtra(key, value)<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">is</span> Serializable -&gt; putExtra(key, value)<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>因为<em>Intent</em>的<code>putExtra</code>方法只接受<em>String</em>类型的Key，所以我们也直接指定的<em>Pair</em>的第一个值的类型为<em>String</em>了。<br> 总体的逻辑很简单，就像<code>mapOf</code>方法那样：遍历<em>Pair</em>数组，判断每一个参数值的类型(<em>不同于Java的是，在Kotlin中用is关键字检查类型符合之后，会自动转换成对应的类型，无须显式转换</em>)，并通过<em>Intent</em>的<code>putExtra</code>方法把参数put进去。</p>
+<p>那么现在给<em>Intent</em>设置多个参数的时候，就可以写成这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> intent = Intent()<br>intent.putExtras(<br>    <span class="hljs-string">&quot;key0&quot;</span> to <span class="hljs-literal">true</span>,<br>    <span class="hljs-string">&quot;key1&quot;</span> to <span class="hljs-number">1.23F</span>,<br>    <span class="hljs-string">&quot;key2&quot;</span> to listOf(<span class="hljs-string">&quot;1&quot;</span>,  <span class="hljs-string">&quot;2&quot;</span>)<br>)<br><br></code></pre></td></tr></table></figure>
+
+<p>哈哈，的确方便又好看了好多。</p>
+<h3 id="简化startActivity操作"><a href="#简化startActivity操作" class="headerlink" title="简化startActivity操作"></a>简化startActivity操作</h3><p>虽然说，在没有工具类的帮助下，<code>startActivity</code>一样也可以一句代码搞定，如果不携带参数的话。<br> 但如果要携带参数，就至少要三句了：</p>
+<ol>
+<li>创建<em>Intent</em>对象；</li>
+<li>把参数put进<em>Intent</em>中；</li>
+<li>调用<code>startActivity</code>方法；</li>
+</ol>
+<p>这种情况我们完全可以借助刚刚的扩展方法<code>putExtras</code>，来把它简化成一行，就像这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">startActivity(<span class="hljs-keyword">this</span>, TestActivity::<span class="hljs-class"><span class="hljs-keyword">class</span>, <span class="hljs-type">&quot;key0&quot; to &quot;value0&quot;</span>, <span class="hljs-type">&quot;key1&quot; to &quot;value1&quot;)</span></span><br><br></code></pre></td></tr></table></figure>
+
+<p><strong>内部是怎么写的呢？</strong> 其实超简单：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">startActivity</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    starter: <span class="hljs-type">Activity</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">    target: <span class="hljs-type">KClass</span>&lt;<span class="hljs-type">out</span> <span class="hljs-type">Activity</span>&gt;,</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">vararg</span> params: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">String</span>, Any&gt;</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span> = starter.startActivity(Intent(starter, target.java).putExtras(*params))<br><br></code></pre></td></tr></table></figure>
+
+<p>我们封装的<code>startActivity</code>方法接收三个参数，分别是：<code>发起的Activity</code>、<code>要启动的Activity</code>、<code>可变参数键值对</code>。<br> <code>target</code>的类型<code>KClass</code>后面的<code>&lt;out Activity&gt;</code>，在<em>Java</em>中等同于<code>&lt;T extends Activity&gt;</code>。<br> <code>params</code>前面的<code>vararg</code>，就是定义成可变参数的意思，等同于<em>Java</em>中的<code>Pair&lt;String, Any&gt;... params</code><br> 最后可以看到，也是直接调用了<em>Activity</em>的<code>startActivity</code>方法，并把调用<code>putExtras</code>扩展方法后的<em>Intent</em>传进去。</p>
+<p>就这么简单。</p>
+<h3 id="简化startActivityForResult操作"><a href="#简化startActivityForResult操作" class="headerlink" title="简化startActivityForResult操作"></a>简化startActivityForResult操作</h3><p>相信很多同学在Java项目上也有用过一些类似的库，就是把重写<code>onActivityResult</code>改成<code>匿名内部类</code>。<br> 不过我们现在用了<em>Kotlin</em>，就可以把<code>匿名内部类</code>改成<code>Lambda</code>了，就像这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">startActivityForResult(<span class="hljs-keyword">this</span>, TestActivity::<span class="hljs-class"><span class="hljs-keyword">class</span>,</span><br><span class="hljs-class">    <span class="hljs-type">&quot;key0&quot; to &quot;value0&quot;</span>,</span><br><span class="hljs-class">    <span class="hljs-type">&quot;key1&quot; to 1.23F</span>,</span><br><span class="hljs-class">    <span class="hljs-type">&quot;key2&quot; to listOf</span></span>(<span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>)<br>) &#123;<br>    <span class="hljs-keyword">if</span> (it == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">//未成功处理，即（ResultCode != RESULT_OK）</span><br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">//处理成功，这里可以操作返回的intent</span><br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>当目标<em>Activity</em>处理完成之后，就会回调到后面的<em>Lambda</em>中。</p>
+<p>其中的原理很简单，就是<strong>临时附加一个无界面的*Fragment*，当这个*Fragment*附加成功之后，调用<code>startActivityForResult</code>方法，并在重写的<code>onActivityResult</code>方法里面去回调外面传进来的<code>Lambda</code>。</strong><br> 来看看代码怎么写：<br> 先是<em>Fragment</em>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GhostFragment</span> : <span class="hljs-type">Fragment</span></span>() &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> requestCode = -<span class="hljs-number">1</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> intent: Intent? = <span class="hljs-literal">null</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> callback: ((result: Intent?) -&gt; <span class="hljs-built_in">Unit</span>)? = <span class="hljs-literal">null</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">init</span><span class="hljs-params">(requestCode: <span class="hljs-type">Int</span>, intent: <span class="hljs-type">Intent</span>, callback: ((<span class="hljs-type">result</span>: <span class="hljs-type">Intent</span>?) -&gt; <span class="hljs-type">Unit</span>))</span></span> &#123;<br>        <span class="hljs-keyword">this</span>.requestCode = requestCode<br>        <span class="hljs-keyword">this</span>.intent = intent<br>        <span class="hljs-keyword">this</span>.callback = callback<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onAttach</span><span class="hljs-params">(context: <span class="hljs-type">Context</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onAttach(context)<br>        <span class="hljs-comment">//附加到Activity之后马上startActivityForResult</span><br>        intent?.let &#123; startActivityForResult(it, requestCode) &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onActivityResult</span><span class="hljs-params">(requestCode: <span class="hljs-type">Int</span>, resultCode: <span class="hljs-type">Int</span>, <span class="hljs-keyword">data</span>: <span class="hljs-type">Intent</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onActivityResult(requestCode, resultCode, <span class="hljs-keyword">data</span>)<br>        <span class="hljs-comment">//检查requestCode</span><br>        <span class="hljs-keyword">if</span> (requestCode == <span class="hljs-keyword">this</span>.requestCode) &#123;<br>            <span class="hljs-comment">//检查resultCode，如果不OK的话，那就直接回传个null</span><br>            <span class="hljs-keyword">val</span> result = <span class="hljs-keyword">if</span> (resultCode == Activity.RESULT_OK &amp;&amp; <span class="hljs-keyword">data</span> != <span class="hljs-literal">null</span>) <span class="hljs-keyword">data</span> <span class="hljs-keyword">else</span> <span class="hljs-literal">null</span><br>            <span class="hljs-comment">//执行回调</span><br>            callback?.let &#123; it(result) &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDetach</span><span class="hljs-params">()</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onDetach()<br>        intent = <span class="hljs-literal">null</span><br>        callback = <span class="hljs-literal">null</span><br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>可以看到有一个<code>init</code>方法，它用来接收外面传进来的<code>requestCode</code>,<code>intent</code>和<code>callback</code>。<br> <strong>那<code>requestCode</code>怎么定义好呢？</strong><br> 为了避免相同的<code>requestCode</code>，我们可以定义一个静态的<em>Int</em>变量，在每次<code>startActivityForResult</code>之后<strong>自增</strong>，如果次数多到要溢出时，重新设置为1就OK了，看代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> sRequestCode = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">set</span>(value) &#123;<br>            field = <span class="hljs-keyword">if</span> (value &gt;= Integer.MAX_VALUE) <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> value<br>        &#125;<br><span class="hljs-number">1234</span><br></code></pre></td></tr></table></figure>
+
+<p>好，现在来创建一个<code>startActivityForResult</code>方法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">startActivityForResult</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    starter: <span class="hljs-type">Activity</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">    target: <span class="hljs-type">KClass</span>&lt;<span class="hljs-type">out</span> <span class="hljs-type">Activity</span>&gt;,</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">vararg</span> params: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">String</span>, Any&gt;,</span></span><br><span class="hljs-params"><span class="hljs-function">    callback: ((<span class="hljs-type">result</span>: <span class="hljs-type">Intent</span>?) -&gt; <span class="hljs-type">Unit</span>)</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span> &#123;<br>    <span class="hljs-comment">//初始化intent</span><br>    <span class="hljs-keyword">val</span> intent = Intent(starter, target.java).putExtras(*params)<br>    <span class="hljs-keyword">val</span> fm = starter.supportFragmentManager<br>    <span class="hljs-comment">//无界面的Fragment</span><br>    <span class="hljs-keyword">val</span> fragment = GhostFragment()<br>    fragment.<span class="hljs-keyword">init</span>(++sRequestCode<span class="hljs-comment">/*先让requestCode自增*/</span>, intent) &#123; result -&gt;<br>        <span class="hljs-comment">//包装一层：在回调执行完成之后把对应的Fragment移除掉</span><br>        callback(result)<br>        fm.beginTransaction().remove(fragment).commitAllowingStateLoss()<br>    &#125;<br>    <span class="hljs-comment">//把Fragment添加进去</span><br>    fm.beginTransaction().add(fragment, GhostFragment::<span class="hljs-keyword">class</span>.java.simpleName).commitAllowingStateLoss()<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>emmm，这个<code>startActivityForResult</code>，就比刚刚的<code>startActivity</code>多了一个<code>callback</code>参数。<br> 可以看到我们并没有直接把这个<code>callback</code>传进fragment里面，而是在外面包装了一层。当这个<code>callback</code>执行完成之后，还会把对应的<em>Fragment</em>从<em>FragmentManager</em>中移除掉，就是为了能让这个<code>Fragment</code>的<code>onDetach</code>方法尽快回调（把<code>callback</code>的引用置空），一定程度上避免内存泄漏（因为外部的<code>callback</code>可能持有生命周期比较短的对象引用）。<br> 在最后，会把<em>Fragment</em>附加到<em>Activity</em>中，当<em>Fragment</em>的<code>onAttach</code>回调时，就会启动目标<em>Activity</em>了。</p>
+<h3 id="简化finish操作"><a href="#简化finish操作" class="headerlink" title="简化finish操作"></a>简化finish操作</h3><p>当<code>startActivityForResult</code>方法启动的<em>Activity</em>处理任务完成之后，通常要把一些数据传回给启动者，这个操作我们也是可以优化的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">finish</span><span class="hljs-params">(src: <span class="hljs-type">Activity</span>, <span class="hljs-keyword">vararg</span> params: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">String</span>, Any&gt;)</span></span> = with(src) &#123;<br>    setResult(Activity.RESULT_OK, Intent().putExtras(*params))<br>    finish()<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>可以看到，把参数<code>put</code>进<em>Intent</em>之后，就调用了<code>setResult</code>方法把<em>Intent</em>放进去，并<code>finish</code>。<br> 那么在使用的时候，就可以这样写了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">finish(<span class="hljs-keyword">this</span>, <span class="hljs-string">&quot;key0&quot;</span> to <span class="hljs-string">&quot;value0&quot;</span>, <span class="hljs-string">&quot;key1&quot;</span> to <span class="hljs-string">&quot;value1&quot;</span>)<br><br></code></pre></td></tr></table></figure>
+
+<p>哈哈，是不是简洁了许多。</p>
+<h3 id="优化Intent-getExtra操作"><a href="#优化Intent-getExtra操作" class="headerlink" title="优化Intent.getExtra操作"></a>优化Intent.getExtra操作</h3><p><strong>还记不记得<code>findViewById</code>？</strong><br> 哈哈哈哈，在<code>compileSdkVersion</code>为26之前，通过<code>findViewById</code>取得的<em>View</em>子类实例时都要进行强制类型转换，26之后，才换成了泛型方法。<br> 现在的<code>getSerializableExtra</code>也存在同样的问题，如果取出来的是一个泛型类的实例，比如<code>List&lt;String&gt;</code>，强制转换后还会出一个 <em><strong>UNCHECKED_CAST</strong></em> 警告，黄色的一块，看着很难受。</p>
+<p>那么现在我们也可以参照<code>findViewById</code>，给<em>Intent</em>创建一个扩展方法：<br> 想一下：<em>Intent</em>的<code>getStringExtra</code>、<code>getIntExtra</code>、<code>getBooleanExtra</code>等一系列方法，内部都是借助<em>Bundle</em>来实现的，CTRL点进去会看到，<em>Bundle</em>是通过一个<em>Map</em>来储存这些键值对的，比如这个<code>getStringExtra</code>方法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> String getString(String key) &#123;<br>    unparcel();<br>    <span class="hljs-keyword">final</span> Object o = mMap.<span class="hljs-keyword">get</span>(key);<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">return</span> (String) o;<br>    &#125; <span class="hljs-keyword">catch</span> (ClassCastException e) &#123;<br>        typeWarning(key, o, <span class="hljs-string">&quot;String&quot;</span>, e);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>可以看到，它从<code>mMap</code>中取出值之后，还是会显式地进行强制类型转换的，<strong>那等我们给*Intent*加了泛型的扩展方法之后，除了可代替<code>getSerializableExtra</code>之外，剩下的那些<code>getXXXExtra</code>，是不是也一样可以代替掉呢？</strong><br> 答案是肯定的。因为这些键值对，都是存放在同一个<em>Map</em>的实例里面，如果拿到了这个实例。。。就可以为所欲为了 ，哈哈哈。<br> <strong>那怎么拿到这个存放键值对的实例呢？</strong><br> 用反射。先拿到<em>Intent</em>里面的<code>mExtras</code>(Bundle的实例)，再通过这个<code>mExtras</code>来获取到<code>mMap</code>(存放键值对的Map实例)。</p>
+<p>不过，我看了不同版本的<em>Bundle</em>代码，发现在5.0之后，<em>Bundle</em>的主要逻辑被抽取到一个叫<em>BaseBundle</em>的类里面了，而在此之前，是没有<em>BaseBundle</em>这个类的，所以等下在获取<code>mMap</code>的<em>Field</em>之前要做一下版本判断。<br> 还有，当我直接用反射拿到<code>mMap</code>的对象引用之后，却发现是<code>null</code>的，再次翻源码后才注意到：<strong>Bundle里面的每一个<code>getXXX</code>方法中，第一句都是会调用<code>unparcel</code>方法的，这个方法里面会调用一个叫<code>initializeFromParcelLocked</code>的方法，没错，<code>mMap</code>正是在这个方法里面初始化的，然后通过*Parcel*的<code>readArrayMapInternal</code>方法来填充键值对</strong> 。所以等下在获取<code>mMap</code>实例之前，还要先调用一下<code>unparcel</code>方法(也是通过反射)。<br> 那现在要用到的内部属性和方法一共有3个了（<code>mExtras</code>、<code>mMap</code>、<code>unparcel</code>），我们可以把它缓存起来，这样就不用每次都重新获取，可以提升运行效率：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">internal</span> <span class="hljs-keyword">object</span> IntentFieldMethod &#123;<br>    <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> mExtras: Field<br>    <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> mMap: Field<br>    <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> unparcel: Method<br><br>    <span class="hljs-keyword">init</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            mExtras = Intent::<span class="hljs-keyword">class</span>.java.getDeclaredField(<span class="hljs-string">&quot;mExtras&quot;</span>)<br>            <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;<br>                mMap = BaseBundle::<span class="hljs-keyword">class</span>.java.getDeclaredField(<span class="hljs-string">&quot;mMap&quot;</span>)<br>                unparcel = BaseBundle::<span class="hljs-keyword">class</span>.java.getDeclaredMethod(<span class="hljs-string">&quot;unparcel&quot;</span>)<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                mMap = Bundle::<span class="hljs-keyword">class</span>.java.getDeclaredField(<span class="hljs-string">&quot;mMap&quot;</span>)<br>                unparcel = Bundle::<span class="hljs-keyword">class</span>.java.getDeclaredMethod(<span class="hljs-string">&quot;unparcel&quot;</span>)<br>            &#125;<br>            mExtras.isAccessible = <span class="hljs-literal">true</span><br>            mMap.isAccessible = <span class="hljs-literal">true</span><br>            unparcel.isAccessible = <span class="hljs-literal">true</span><br>        &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>            e.printStackTrace()<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>然后在扩展方法中直接引用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;O&gt;</span> Intent.<span class="hljs-title">get</span><span class="hljs-params">(key: <span class="hljs-type">String</span>)</span></span>: O? &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">//获取Intent.mExtras实例</span><br>        <span class="hljs-keyword">val</span> extras = IntentFieldMethod.mExtras.<span class="hljs-keyword">get</span>(<span class="hljs-keyword">this</span>) <span class="hljs-keyword">as</span> Bundle<br>        <span class="hljs-comment">//调用unparcel方法来初始化mMap</span><br>        IntentFieldMethod.unparcel.invoke(extras)<br>        <span class="hljs-comment">//获取Bundle.mMap实例</span><br>        <span class="hljs-keyword">val</span> map = IntentFieldMethod.mMap.<span class="hljs-keyword">get</span>(extras) <span class="hljs-keyword">as</span> Map&lt;String, Any&gt;<br>        <span class="hljs-comment">//取出对应的key</span><br>        <span class="hljs-keyword">return</span> map[key] <span class="hljs-keyword">as</span> O<br>    &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>        <span class="hljs-comment">//Ignore</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>emmm，有了这个扩展方法之后，在获取Intent参数时就可以写成这样了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//预先声明好类型</span><br><span class="hljs-keyword">var</span> mData: List&lt;String&gt;? = <span class="hljs-literal">null</span><br>mData = intent.<span class="hljs-keyword">get</span>(<span class="hljs-string">&quot;Key1&quot;</span>)<br><br></code></pre></td></tr></table></figure>
+
+<p>或者这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//取出时再决定类型</span><br><span class="hljs-keyword">val</span> result = intent.<span class="hljs-keyword">get</span>&lt;<span class="hljs-built_in">Int</span>&gt;(<span class="hljs-string">&quot;Key2&quot;</span>)<br><br></code></pre></td></tr></table></figure>
+
+<p>因为我们定义的是泛型的方法，所以无论取出来什么类型的值都好，都不用显式地强制转换了，也没有 <em><strong>UNCHECKED_CAST</strong></em> 警告了，哈哈，是不是很棒。</p>
+<blockquote>
+<p>上面所提到的内部属性和方法，都是没有被标记@hide的，可放心使用。</p>
+</blockquote>
+<p><strong>刚刚说到把那些*Field*和*Method*缓存起来，可以提高效率，那究竟比没有缓存的情况下提高了多少呢？</strong><br> 我分别对以下操作进行了耗时统计：</p>
+<ol>
+<li>直接调用<em>Intent</em>的<code>getXXExtra</code>来获取值；</li>
+<li>重用<em>Field</em>和<em>Method</em>，每次先通过反射获取<code>mMap</code>，然后调用<code>mMap.get</code>方法来获取值；</li>
+<li>不重用，每次都先通过<em>Class</em>取得对应的<em>Field</em>和<em>Method</em>，然后通过反射获取<code>mMap</code>，再通过<code>mMap.get</code>方法来获取值；</li>
+</ol>
+<p>以下是分别循环10W次的总耗时(单位: ms)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java">第一次：<br><span class="hljs-number">15</span><br><span class="hljs-number">182</span><br><span class="hljs-number">1242</span><br>第二次：<br><span class="hljs-number">8</span><br><span class="hljs-number">100</span><br><span class="hljs-number">1145</span><br>第三次：<br><span class="hljs-number">8</span><br><span class="hljs-number">96</span><br><span class="hljs-number">1143</span><br>第四次：<br><span class="hljs-number">8</span><br><span class="hljs-number">104</span><br><span class="hljs-number">1206</span><br>第五次：<br><span class="hljs-number">10</span><br><span class="hljs-number">115</span><br><span class="hljs-number">1365</span><br><br></code></pre></td></tr></table></figure>
+
+<p>可以看到，重用<em>Field</em>和<em>Method</em>的话，效率会提升10倍左右，虽然远没有不使用反射的效率高，但是，重复10W次才100毫秒左右，也就是平均每次才花费0.001ms左右，牺牲这点微不足道的效率给我们带来方便，是非常划算的。</p>
+<h3 id="Kotlin内联函数不为人知的一面"><a href="#Kotlin内联函数不为人知的一面" class="headerlink" title="Kotlin内联函数不为人知的一面"></a>Kotlin内联函数不为人知的一面</h3><p>我们在学习<em>Kotlin</em>的过程中，都会了解到<strong>内联函数</strong>，适当地使用可以提高性能，节省资源。如果一个方法它被标记成了内联函数，那么在编译时，会将它的方法体，替换到调用它的地方，这时候就不算是正常的方法调用了。</p>
+<p>当我写完这个工具类之后，把它发给大佬旺看，他说可以在<code>startActivity</code>和<code>startActivityForResult</code>上面加个具体化的泛型，就像这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;<span class="hljs-keyword">reified</span> TARGET : Activity&gt;</span> <span class="hljs-title">startActivity</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    starter: <span class="hljs-type">Activity</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">vararg</span> params: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">String</span>, Any&gt;</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span> = starter.startActivity(Intent(starter, TARGET::<span class="hljs-keyword">class</span>.java).putExtras(*params))<br><br></code></pre></td></tr></table></figure>
+
+<p>跟原来的代码区别就是把<code>target: KClass&lt;out Activity&gt;</code>换成了<code>&lt;reified TARGET : Activity&gt;</code>。<br> 用<code>reified</code>关键字修饰的泛型与普通的泛型区别就是：前者可以获取到泛型的类型信息，而后者不行。<br> 但是<code>reified</code>依赖内联函数，也就是说，如果使用具体化泛型的话，方法必须用<code>inline</code>修饰。</p>
+<p>改完之后，就可以这样来使用了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">startActivity&lt;TestActivity&gt;(<span class="hljs-keyword">this</span>, <span class="hljs-string">&quot;key0&quot;</span> to <span class="hljs-string">&quot;value0&quot;</span>, <span class="hljs-string">&quot;key1&quot;</span> to <span class="hljs-string">&quot;value1&quot;</span>)<br><br></code></pre></td></tr></table></figure>
+
+<p>哈哈，可读性是不是更高了。</p>
+<p>当一个方法用<code>inline</code>修饰了之后，表示该方法为内联函数，此时无法访问<em>访问权限</em>比自己低的成员，比如一个内联函数为<em>public</em>，那就不能访问该类用<em>private</em>修饰的成员。<br> 我们接下来要修改的<code>startActivityForResult</code>方法就碰上这个问题了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> sRequestCode = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">set</span>(value) &#123;<br>        field = <span class="hljs-keyword">if</span> (value &gt;= Integer.MAX_VALUE) <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> value<br>    &#125;<br>    <br><span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;<span class="hljs-keyword">reified</span> TARGET : Activity&gt;</span> <span class="hljs-title">startActivityForResult</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    starter: <span class="hljs-type">Activity</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">vararg</span> params: <span class="hljs-type">Pair</span>&lt;<span class="hljs-type">String</span>, Any&gt;,</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">crossinline</span> callback: ((<span class="hljs-type">result</span>: <span class="hljs-type">Intent</span>?) -&gt; <span class="hljs-type">Unit</span>)</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span> &#123;<br>    ......<br>    fragment.<span class="hljs-keyword">init</span>(++sRequestCode, intent) &#123;<br>        ......<br>    &#125;<br>    ......<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>上面这段代码AS会报错，因为<code>fragment</code>的<code>init</code>方法需要传<code>sRequestCode</code>进去，而这个<code>sRequestCode</code>是<em>private</em>的，内联函数是<em>public</em>。<br> <strong>那应该怎么做呢？难道说就没有办法可以解决吗？</strong><br> 大佬旺给出的解决方案是：把<code>private</code>改成<code>@PublishedApi internal</code>。<br> 这样做虽然可以正常编译运行，但是，加了<code>@PublishedApi</code>注解之后的<code>sRequestCode</code>，却可以在任何地方访问和修改！这显然违背了开闭原则。虽然说没有人会手贱去修改它，但每次出代码提示的时候，这个<code>sRequestCode</code>就会显示出来。。。很碍眼。</p>
+<p><strong>除了加PublishedApi注解之外，还有别的办法吗？</strong><br> 大佬旺翻了一下资料后说：在方法前加个<code>@Suppress(&quot;NON_PUBLIC_CALL_FROM_PUBLIC_INLINE&quot;)</code>把它抑制了就能编译通过并正常运行了。。。<br> 试了一下果然可以。但是，为什么呢？</p>
+<p><strong>为什么加了Suppress之后就能正常编译和运行？</strong><br> 我看了一下编译成<em>class</em>之后反编译的代码，发现<code>sRequestCode</code>多了个<em>setter</em>和<em>getter</em>方法！<br> 也就是说，在编译过程中，会自动帮我们生成<em>public</em>的<em>setter</em>和<em>getter</em>方法！<br> 这两个<em>public</em>的静态方法，在编译前是没有的，所以也就不会出代码提示了。<br> 我们刚刚的<em>Kotlin</em>代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">......<br>fragment.<span class="hljs-keyword">init</span>(++sRequestCode, intent)<br>......<br><br></code></pre></td></tr></table></figure>
+
+<p>在反编译后，看到的<em>Java</em>代码是这样的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">access$setSRequestCode$p(access$getSRequestCode$p() + <span class="hljs-number">1</span>);<br>fragment.<span class="hljs-keyword">init</span>(access$getSRequestCode$p(), intent);<br><br></code></pre></td></tr></table></figure>
+
+<p>自动生成的<em>setter</em>和<em>getter</em>如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// $FF: synthetic method</span><br><span class="hljs-keyword">public</span> static <span class="hljs-keyword">final</span> int access$getSRequestCode$p() &#123;<br>   <span class="hljs-keyword">return</span> sRequestCode;<br>&#125;<br><br><span class="hljs-comment">// $FF: synthetic method</span><br><span class="hljs-keyword">public</span> static <span class="hljs-keyword">final</span> void access$setSRequestCode$p(int var0) &#123;<br>   sRequestCode = var0;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>哈哈哈，看来加<em>Suppress</em>的这个做法，是完全可行的。<br> 查了一下源码，发现我们常用的<code>synchronized</code>方法(在<em>Kotlin</em>中不是关键字)，也是使用了这个抑制的。<br> 以后在项目中的其他地方有类似的需求，相信同学们已经知道要怎么做了吧~</p>
+<h3 id="好啦，本篇文章到此结束，有错误的地方请指出，谢谢大家！"><a href="#好啦，本篇文章到此结束，有错误的地方请指出，谢谢大家！" class="headerlink" title="好啦，本篇文章到此结束，有错误的地方请指出，谢谢大家！"></a>好啦，本篇文章到此结束，有错误的地方请指出，谢谢大家！</h3><h3 id="Github地址：https-github-com-wuyr-ActivityMessenger-欢迎Star"><a href="#Github地址：https-github-com-wuyr-ActivityMessenger-欢迎Star" class="headerlink" title="Github地址：https://github.com/wuyr/ActivityMessenger 欢迎Star"></a>Github地址：<a target="_blank" rel="noopener" href="https://github.com/wuyr/ActivityMessenger">https://github.com/wuyr/ActivityMessenger</a> 欢迎Star</h3>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/android/">android</a>
+                    
+                      <a class="hover-with-bg" href="/tags/kotlin/">kotlin</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/8c7f1459/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">kotlin 泛型协变</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/c43f5235/">
+                        <span class="hidden-mobile">软件整理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

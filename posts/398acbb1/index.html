@@ -1,0 +1,820 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="android10新存储方案早期的Android开发，对文件操作缺少限制，只要申请个读写内存权限就可以对整个文件目录随便操作，绝大多数应用都会在根目录建一个自己的文件夹用来存储数据，甚至把应用数据库(SQLite)移到外部文件夹中以防止应用卸载后数据被删除。那么这么做有什么好处吗？我想了一下，大概有两点吧。第一，存储在SD卡的文件不会计入到应用程序的占用空间当中，也就是说即使你在SD卡存放了1G的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android10新存储方案">
+<meta property="og:url" content="https://knightwood.github.io/posts/398acbb1/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="android10新存储方案早期的Android开发，对文件操作缺少限制，只要申请个读写内存权限就可以对整个文件目录随便操作，绝大多数应用都会在根目录建一个自己的文件夹用来存储数据，甚至把应用数据库(SQLite)移到外部文件夹中以防止应用卸载后数据被删除。那么这么做有什么好处吗？我想了一下，大概有两点吧。第一，存储在SD卡的文件不会计入到应用程序的占用空间当中，也就是说即使你在SD卡存放了1G的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467496347888.png">
+<meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467496347899.png">
+<meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-164674972928412.png">
+<meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-164674972928513.png">
+<meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467507662931.gif">
+<meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467495390871-16467507662932.gif">
+<meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467495390882-16467507662933.gif">
+<meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467495390883-16467507662934.gif">
+<meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
+<meta property="article:modified_time" content="2022-03-08T15:07:05.216Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467496347888.png">
+  
+  
+  <title>android10新存储方案 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="android10新存储方案">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-23 14:36" pubdate>
+        2021年12月23日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      33k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      277 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android10新存储方案</h1>
+            
+            <div class="markdown-body">
+              <h1 id="android10新存储方案"><a href="#android10新存储方案" class="headerlink" title="android10新存储方案"></a>android10新存储方案</h1><p>早期的Android开发，对文件操作缺少限制，只要申请个读写内存权限就可以对整个文件目录随便操作，绝大多数应用都会在根目录建一个自己的文件夹用来存储数据，甚至把应用数据库(SQLite)移到外部文件夹中以防止应用卸载后数据被删除。那么这么做有什么好处吗？我想了一下，大概有两点吧。第一，存储在SD卡的文件不会计入到应用程序的占用空间当中，也就是说即使你在SD卡存放了1G的文件，你的应用程序在设置中显示的占用空间仍然可能只有几十K。第二，存储在SD卡的文件，即使应用程序被卸载了，这些文件仍然会被保留下来，这有助于实现一些需要数据被永久保留的功能。</p>
+<p>然而，这些“好处”真的是好处吗？或许对于开发者而言这算是好处吧，但对于用户而言，上述好处无异于一些流氓行为。因为这会将用户的SD卡空间搞得乱糟糟的，而且即使我卸载了一个完全不再使用的程序，它所产生的垃圾文件却可能会一直保留在我的手机上。</p>
+<p>另外，存储在SD卡上的文件属于公有文件，所有的应用程序都有权随意访问，这也对数据的安全性带来了很大的挑战。</p>
+<p>其实Android并不是没有做这方面的API，Android早就提供了getCacheDir()、getFilesDir()、getExternalFilesDir()、getExternalCacheDir()等API供开发者使用，奈何开发者不听话，不论是为了应用方便统一管理文件，亦或者想让文件不会因为应用的卸载而被移除，多数开发者都会选择在外部建立自己的专有文件夹来保存文件。</p>
+<p>为了解决文件混乱的问题，以及让用户能够更好地控制自己的文件和更好的保护用户隐私，Google从Android Q版本开始修改了外部存储权限。这种外部存储的新特性被称为分区存储（Scoped Storage）。官方翻译称为“分区存储“，我们一般称为“沙盒模式”，当然也有称为“作用域存储”。</p>
+<p>Android Q仍然使用READ_EXTERNAL_STORAGE和WRITE_EXTERNAL_STORAGE作为面向用户的存储相关运行时权限，但现在即使获取了这些权限，访问外部存储也受到了限制。APP需要这些运行时权限的情景发生了变化，且各种情况下外部存储对APP的可见性也发生了变化。</p>
+<h2 id="迁移"><a href="#迁移" class="headerlink" title="迁移"></a>迁移</h2><p>从Android Q正式发布，官方就开始推行新特性的适配工作，当时官方的说法是从Android Q开始(targetSdkVersion &gt;= 29)将不再允许应用无限制的操作或访问公共目录，强制使用分区存储，但是Android Q版本可以通过在Manifest中声android:requestLegacyExternalStorage=”true”  来继续使用以前的存储方式（当然你也可以选择不升级应用的targetSdkVersion），但是从AndroidR(11)开始,requestLegacyExternalStorage也会失效。</p>
+<p>但是官方又新增了preserveLegacyExternalStorage属性，开启该属性可以使原本未开启分区存储的应用在覆盖安装后仍然可以继续使用旧的存储方式，但是新安装的应用将没有任何办法使用旧的存储方式。关于requestLegacyExternalStorage和preserveLegacyExternalStorage在不同版本的表现，总结如下：</p>
+<p><img src="TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467496347888.png" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p><strong>AndroidP/Q</strong></p>
+<p><img src="TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467496347899.png" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p><strong>AndroidR</strong></p>
+<p>关于targetSdkVersion，Google Play的规定是从今年8月开始，所有新上线的应用的目标API，即targetSdkVersion必须升级到30以上，对现有应用更新新的版本，这个政策的要求将自 11 月开始生效。抛开Google Play的规定不谈，关于Gradle中的minSdkVersion、compileSdkVersion以及targetSdkVersion的具体作用，参考此篇博客：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_23062979/article/details/81294550">https://blog.csdn.net/qq_23062979/article/details/81294550</a></p>
+</blockquote>
+<hr>
+<p>目前Android 10系统对于作用域存储适配的要求还不是那么严格，毕竟之前传统外置存储空间的用法实在是太广泛了。如果你的项目指定的targetSdkVersion低于29，那么即使不做任何作用域存储方面的适配，你的项目也可以成功运行到Android 10手机上。</p>
+<p>而如果你的targetSdkVersion已经指定成了29，也没有关系，假如你还不想进行作用域存储的适配，只需要在AndroidManifest.xml中加入如下配置即可：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">&lt;manifest <span class="hljs-string">...</span> &gt;<br>  &lt;application android<span class="hljs-function">:requestLegacyExternalStorage</span>=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-string">...</span>&gt;<br>    <span class="hljs-string">...</span><br>  &lt;<span class="hljs-string">/application</span>&gt;<br>&lt;<span class="hljs-string">/manifest</span>&gt;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>这段配置表示，即使在Android 10系统上，仍然允许使用之前遗留的外置存储空间的用法来运行程序，这样就不用对代码进行任何修改了。当然，这只是一种权宜之计，在未来的Android系统版本中，这段配置随时都可能会失效（目前Android 11预览版已经确认，这段配置至少在Android 11上不会失效）。因此，我们还是非常有必要现在就来学习一下，到底该如何对作用域存储进行适配。</p>
+<p>另外，本篇文章中演示的所有示例，都可以到ScopedStorageDemo这个开源库中找到其对应的源码。</p>
+<p>开源库地址是：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/guolindev/ScopedStorageDemo">https://github.com/guolindev/ScopedStorageDemo</a></p>
+</blockquote>
+<h2 id="这么做的好处"><a href="#这么做的好处" class="headerlink" title="这么做的好处"></a>这么做的好处</h2><p>对用户而言，当开发者适配完成后，用户的文件目录将不再像以前那么混乱，能够让用户更好的管理自己的文件。</p>
+<p>应用的数据全部存储在沙盒内，卸载应用时所有的文件也随之移除，解决了卸载应用仍然占用存储空间的问题。</p>
+<p>保护用户隐私，应用将不能随便访问公共文件，存储媒体文件等需要通过操作媒体数据库的方式存储在特定的媒体文件夹中，对用户来说，所有的媒体文件都存储在特定的文件夹下，也方便管理。</p>
+<p>对于开发者而言，这样做也能更好的保护自己的应用，应用不能访问其他应用的沙盒目录，应用的沙盒目录存储在 /Android/data/包名 文件夹下，而且在AndroidR版本的手机上，Android/data文件夹也向用户隐藏，通过系统文件管理器或者是连接电脑都无法访问data文件夹（可以通过SAF向用户申请权限来访问，仅用于文件管理类应用，或者获取Root权限）。</p>
+<h2 id="那么到底什么是作用域存储-分区存储呢？"><a href="#那么到底什么是作用域存储-分区存储呢？" class="headerlink" title="那么到底什么是作用域存储/分区存储呢？"></a>那么到底什么是作用域存储/分区存储呢？</h2><p>简单来讲，就是Android系统对SD卡的使用做了很大的限制。从Android 10开始，每个应用程序只能有权在自己的外置存储空间关联目录下读取和创建文件，获取该关联目录的代码是：context.getExternalFilesDir()。关联目录对应的路径大致如下：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/storage/</span>emulated<span class="hljs-regexp">/0/</span>Android<span class="hljs-regexp">/data/</span>&lt;包名&gt;/files<br></code></pre></td></tr></table></figure>
+
+<p>将数据存放到这个目录下，你将可以完全使用之前的写法来对文件进行读写，不需要做任何变更和适配。但同时，刚才提到的那两个“好处”也就不存在了。这个目录中的文件会被计入到应用程序的占用空间当中，同时也会随着应用程序的卸载而被删除。</p>
+<p>那么有些朋友可能会问了，我就是需要访问其他目录该怎么办呢？比如读取手机相册中的图片，或者向手机相册中添加一张图片。为此，Android系统针对文件类型进行了分类，图片、音频、视频这三类文件将可以通过MediaStore API来进行访问，而其他类型的文件则需要使用系统的文件选择器来进行访问。</p>
+<p>另外，我们的应用程序向媒体库贡献的图片、音频或视频，将会自动拥有其读写权限，不需要额外申请READ_EXTERNAL_STORAGE和WRITE_EXTERNAL_STORAGE权限。而如果你要读取其他应用程序向媒体库贡献的图片、音频或视频，则必须要申请READ_EXTERNAL_STORAGE权限才行。WRITE_EXTERNAL_STORAGE权限将会在未来的Android版本中废弃。</p>
+<h2 id="分区存储带来了哪些变化"><a href="#分区存储带来了哪些变化" class="headerlink" title="分区存储带来了哪些变化"></a>分区存储带来了哪些变化</h2><p>分区存储将外部存储分成两部分：</p>
+<ol>
+<li><strong>App-specific directory （沙盒目录）</strong></li>
+</ol>
+<p>APP只能在Context.getExternalFilesDir()目录下通过File的方式创建文件，APP卸载的时候，这个目录下的文件会被删除；无法通过File的方式在其他路径创建文件。</p>
+<ol start="2">
+<li><strong>Public Directory 公共目录</strong> </li>
+</ol>
+<p>公共目录包括：多媒体公共目录（Photos, Images, Videos, Audio）和下载文件目录（Downloads）。</p>
+<p>APP可以通过MediaStore或者SAF（System Access Framework）的方式访问其中的文件。APP卸载后，文件不会被删除。</p>
+<p>Android Q以上移除了WRITE_EXTERNAL_STORAGE权限，应用不需要这个权限就可以向沙盒内存储文件，也可以通过媒体数据库的方式保存媒体数据至特定位置。</p>
+<p>公共目录的媒体文件（Photos, Images, Videos, Audio）通过MediaStore来访问，另外，MediaStore的DATA字段从Android Q开始被标记为deprecated，通过该字段获取的文件路径不再可靠，Android Q以上新增字段RELATIVE_PATH，代表文件的相对路径，在使用MediaStore保存媒体文件时，可以通过设置该字段来设置媒体文件保存的文件夹。</p>
+<p>如：我们要保存一个图片文件，设置RELATIVE_PATH字段为Environment.DIRECTORY_DCIM时，图片会保存到DCIM文件夹下，如果我们想保存图片到DCIM/CustomDir 文件夹下时，可以设置RELATIVE_PATH的值为：Environment.DIRECTORY_DCIM+“/CustomDir”，当然，你也可以改成Environment.DIRECTORY_PICTURES来将图片保存在Pictures文件夹下。</p>
+<p>应用可以通过MediaStore访问其他App创建的多媒体文件，但需要申请READ_EXTERNAL_STORAGE权限。同时，如果用户要修改或者删除其他App创建的多媒体文件，需要用户单独授权。</p>
+<p>App卸载后，对应的沙盒目录也会被删除，如果APP想要在卸载时保留沙盒目录下的数据，要在AndroidManifest.xml中声明android:hasFragileUserData=”true”，这样在 APP卸载时就会有弹出框提示用户是否保留应用数据。</p>
+<h2 id="适配Android-Q"><a href="#适配Android-Q" class="headerlink" title="/  适配Android Q  /"></a>/  适配Android Q  /</h2><p><strong>保存文件至App-specific directory （沙盒目录）</strong></p>
+<p><img src="TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-164674972928412.png" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>沙盒内的文件可以直接使用File的Api进行操作，且不需要申请读写内存权限，代码示例：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">val</span> appFilePath = get<span class="hljs-constructor">ExternalFilesDir(<span class="hljs-params">null</span>)</span>?.path?:<span class="hljs-string">&quot;&quot;</span><br><span class="hljs-keyword">val</span> appImagePath = get<span class="hljs-constructor">ExternalFilesDir(Environment.DIRECTORY_DCIM)</span>?.path?:<span class="hljs-string">&quot;&quot;</span><br><span class="hljs-keyword">val</span> appCustomPath = get<span class="hljs-constructor">ExternalFilesDir(<span class="hljs-string">&quot;Demo&quot;</span>)</span>?.path?:<span class="hljs-string">&quot;&quot;</span><br><span class="hljs-keyword">val</span> appCachePath = get<span class="hljs-constructor">ExternalCacheDir()</span>?.path?:<span class="hljs-string">&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>访问公共目录（MediaStore）</strong></p>
+<p>MediaStore提供下列Uri，可以用MediaProvider查询对应的Uri数据</p>
+<p><img src="TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-164674972928513.png" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>代码示例如下，使用MediaStore查询手机上的图片。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">val</span> <span class="hljs-keyword">external</span> = MediaStore.Images.Media.EXTERNAL_CONTENT_URI<br><span class="hljs-keyword">val</span> projection = <span class="hljs-built_in">array</span><span class="hljs-constructor">Of(MediaStore.Images.Media.<span class="hljs-params">_ID</span>)</span><br><span class="hljs-keyword">val</span> cursor = contentResolver.query(<span class="hljs-keyword">external</span>, projection, null, null, null)<br><span class="hljs-keyword">if</span> (cursor != null<span class="hljs-operator"> &amp;&amp; </span>cursor.move<span class="hljs-constructor">ToFirst()</span>) &#123;<br>    queryUri = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ContentUris</span>.</span></span><span class="hljs-keyword">with</span><span class="hljs-constructor">AppendedId(<span class="hljs-params">external</span>, <span class="hljs-params">cursor</span>.<span class="hljs-params">getLong</span>(0)</span>)<br>    <span class="hljs-comment">// queryUri即上图中对应的uri</span><br>    cursor.close<span class="hljs-literal">()</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>在Android Q以下版本，使用该方法可以拿到媒体文件的绝对路径（比如external/DCIM/xxx.png），即DATA字段，但是在Android Q及以上版本，DATA字段被弃用且不再可靠，新增了RELATIVE_PATH字段表示相对地址，通过该字段可以设置媒体文件保存的位置（具体见下文）。</p>
+<p>Android Q以下版本可以通过DATA字段拿到绝对路径并转换成File类型，对文件进行操作，Android Q之后不再可行。要访问这个uri，通用的方法是通过文件描述符FileDescriptor来实现，示例代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">var</span> pfd: ParcelFileDescriptor? = <span class="hljs-literal">null</span><br><span class="hljs-keyword">try</span> &#123;<br>    pfd = contentResolver.openFileDescriptor(queryUri!!, <span class="hljs-string">&quot;r&quot;</span>)<br>    <span class="hljs-keyword">if</span> (pfd != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">val</span> bitmap = BitmapFactory.decodeFileDescriptor(pfd.fileDescriptor)<br>        imageIv.setImageBitmap(bitmap)<br>    &#125;<br>&#125; <span class="hljs-keyword">catch</span> (e: IOException) &#123;<br>    e.printStackTrace()<br>&#125; <span class="hljs-keyword">finally</span> &#123;<br>    pfd?.close()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>读取MedisStore文件时，如果未申请READ_EXTERNAL_STORAGE权限，那么读取到的图片只有自己应用保存的图片，换句话说，应用读取和操作自己保存的媒体文件不需要申请READ_EXTERNAL_STORAGE权限，但是要访问其他应用创建的媒体文件，需要申请权限。</p>
+<p>在Android Q以下只使用DATA字段，Android Q及以上不使用DATA字段，改为使用RELATEIVE_PATH字段。</p>
+<p><strong>保存文件至公共目录 （MediaStore）</strong></p>
+<p>最常见的一个操作：保存图片/视频到媒体目录。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">val</span> imageMediaPath = <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.Q) &#123;<br>        <span class="hljs-constructor">File(Environment.<span class="hljs-params">getExternalStoragePublicDirectory</span>(Environment.DIRECTORY_DCIM)</span>, <span class="hljs-string">&quot;Demo&quot;</span>).path<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    Environment.DIRECTORY_PICTURES + <span class="hljs-string">&quot;/Demo&quot;</span><br>&#125;<br><br><span class="hljs-keyword">if</span>(Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.Q) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">val</span> bitmap = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Bitmap</span>.</span></span>create<span class="hljs-constructor">Bitmap(400, 400, Bitmap.Config.ARGB_8888)</span><br>        <span class="hljs-comment">//创建了一个红色的图片</span><br>        <span class="hljs-keyword">val</span> canvas = <span class="hljs-constructor">Canvas(<span class="hljs-params">bitmap</span>)</span><br>        canvas.draw<span class="hljs-constructor">Color(Color.RED)</span><br>        <span class="hljs-keyword">val</span> outputFile = <span class="hljs-constructor">File(<span class="hljs-params">path</span>)</span><br>        <span class="hljs-keyword">val</span> fos = <span class="hljs-constructor">FileOutputStream(<span class="hljs-params">outputFile</span>)</span><br>        bitmap.compress(Bitmap.CompressFormat.PNG, <span class="hljs-number">90</span>, fos)<br>        fos.close<span class="hljs-literal">()</span><br>    &#125; catch (e : FileNotFoundException) &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>d(TAG, <span class="hljs-string">&quot;创建失败：$&#123;e.message&#125;&quot;</span>)<br>    &#125; catch (e : IOException) &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>d(TAG, <span class="hljs-string">&quot;创建失败：$&#123;e.message&#125;&quot;</span>)<br>    &#125;<br>&#125;<span class="hljs-keyword">else</span>&#123;<br>    <span class="hljs-keyword">val</span> values = <span class="hljs-constructor">ContentValues()</span><br>    values.put(MediaStore.Images.Media.DISPLAY_NAME, <span class="hljs-string">&quot;red_image.png&quot;</span>)<br>    values.put(MediaStore.Images.Media.DESCRIPTION, <span class="hljs-string">&quot;This is an image&quot;</span>)<br>    values.put(MediaStore.Images.Media.MIME_TYPE, <span class="hljs-string">&quot;image/png&quot;</span>)<br>    values.put(MediaStore.Images.Media.RELATIVE_PATH, imageMediaPath)<br>    <span class="hljs-keyword">val</span> <span class="hljs-keyword">external</span> = MediaStore.Images.Media.EXTERNAL_CONTENT_URI<br>    <span class="hljs-keyword">val</span> insertUri = contentResolver.insert(<span class="hljs-keyword">external</span>, values)<br>    var os: OutputStream? = null<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">if</span> (insertUri != null) &#123;<br>            os = contentResolver.<span class="hljs-keyword">open</span><span class="hljs-constructor">OutputStream(<span class="hljs-params">insertUri</span>)</span><br>        &#125;<br>        <span class="hljs-keyword">if</span> (os != null) &#123;<br>            <span class="hljs-keyword">val</span> bitmap = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Bitmap</span>.</span></span>create<span class="hljs-constructor">Bitmap(400, 400, Bitmap.Config.ARGB_8888)</span><br>            <span class="hljs-comment">//创建了一个红色的图片</span><br>            <span class="hljs-keyword">val</span> canvas = <span class="hljs-constructor">Canvas(<span class="hljs-params">bitmap</span>)</span><br>            canvas.draw<span class="hljs-constructor">Color(Color.RED)</span><br>            <span class="hljs-comment">// 向os流写入数据</span><br>            bitmap.compress(Bitmap.CompressFormat.PNG, <span class="hljs-number">90</span>, os)<br>        &#125;<br>    &#125; catch (e: IOException) &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>d(TAG, <span class="hljs-string">&quot;创建失败：$&#123;e.message&#125;&quot;</span>)<br>    &#125; finally &#123;<br>        os?.close<span class="hljs-literal">()</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>注意：使用MediaStore保存媒体文件，不保证在Android Q以下的手机上也能成功，所以最稳妥的办法就是Android Q以下申请WRITE_EXTERNAL权限，直接使用File的Api保存文件并通知系统扫描媒体数据库，Android Q及以上版本才使用MediaStore方式存储。其他媒体文件（如视频，音频，文件等）同上。另外，使用MediaStore存储的方式不需要通知系统扫描媒体数据库。</p>
+<p><strong>删除公共目录文件（MediaStore）</strong></p>
+<p>Android Q以下版本，删除文件需要申请WRITE_EXTERNAL_STORAGE权限，通过MediaStore的DATA字段获得媒体文件的绝对路径，然后使用File相关API删除，在Android Q及以上版本，DATA字段被弃用，应用也无法通过路径访问公共目录，此时需要用getContentProvider.delete()方法来删除，应用删除自己创建的媒体文件不需要READ_EXTERNAL_STORAGE权限，也不需要用户授权就可以直接删除。</p>
+<p>但是如果应用卸载后又重新安装，删除卸载之前保存的文件就无法直接删除，或者删除其他应用创建的媒体文件也不能直接删除，此时需要申请READ_EXTERNAL_STORAGE权限。Android Q以后，删除时还会抛出RecoverableSecurityException异常，在操作或删除公共目录的文件时，需要Catch该异常，由MediaProvider弹出弹框给用户选择是否允许应用修改或删除图片/视频/音频文件。用户操作的结果，将通过onActivityResult回调返回到APP。如果用户允许，APP将获得该Uri的修改权限，直到设备重启。</p>
+<p>示例代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//这里的imgUri是使用上述代码获取的</span><br><span class="hljs-keyword">val</span> queryUri = imgUri<br><span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.Q) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">val</span> projection = arrayOf(MediaStore.Images.Media.DATA)<br>        <span class="hljs-keyword">val</span> cursor = contentResolver.query(queryUri, projection,<br>                    <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>)<br>        cursor?.let&#123;<br>            <span class="hljs-keyword">val</span> columnIndex = it.getColumnIndex(MediaStore.Images.Media.DATA)<br>            <span class="hljs-keyword">if</span> (columnIndex &gt; -<span class="hljs-number">1</span>) &#123;<br>                <span class="hljs-keyword">val</span> file = File(it.getString(columnIndex))<br>                file.delete()<br>            &#125;<br>        &#125;<br>        cursor?.close()<br>    &#125; <span class="hljs-keyword">catch</span> (e: IOException) &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;delete failed :<span class="hljs-subst">$&#123;e.message&#125;</span>&quot;</span>)<br>    &#125;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        contentResolver.delete(queryUri, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>)<br>    &#125; <span class="hljs-keyword">catch</span> (e: IOException) &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;delete failed :<span class="hljs-subst">$&#123;e.message&#125;</span>&quot;</span>)<br>    &#125; <span class="hljs-keyword">catch</span> (e1: RecoverableSecurityException) &#123;<br>        <span class="hljs-comment">//捕获 RecoverableSecurityException异常，发起请求</span><br>        <span class="hljs-keyword">try</span> &#123;<br>            startIntentSenderForResult(e1.userAction.actionIntent.intentSender,<br>                        REQUEST_CODE, <span class="hljs-literal">null</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)<br>        &#125; <span class="hljs-keyword">catch</span> (e2: IntentSender.SendIntentException) &#123;<br>            e2.printStackTrace()<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>无法访问图片的地理位置数据</strong></p>
+<p>Android Q及以上版本，因为隐私问题，默认不再提供图片的地理位置信息，要获取该信息需要向用户申请ACCESS_MEDIA_LOCATION权限，并使用MediaStore.setRequireOriginal()接口更新文件Uri。</p>
+<p><strong>分享文件的处理（AndroidN）</strong></p>
+<p>在Android N以前，分享文件没有任何限制，拿到文件后通过Uri.fromFile()转换成uri，即可分享文件到其他应用，这样转换出来的uri是file://开头的，在Android N（Android7.0）以后，继续以这种方式分享会抛出FileUriExposedException的异常并崩溃，此时需要用FileProvider来实现文件的分享，具体就不展开讲了，自行百度即可。</p>
+<p><strong>使用SAF访问指定文件目录</strong></p>
+<p>SAF，即Storage Access Framework。根据当前系统中存在的DocumentsProvider，让用户选择特定的文件或文件夹，使调用SAF的APP获取它们的读写权限。APP通过SAF获得文件或目录的读写权限，无需申请任何存储相关的运行时权限。</p>
+<p>/  总结  /</p>
+<p>现在的手机系统，Android Q系统已逐渐成为主流，Android12也马上要发布，所以适配Android Q是十分必要的工作，个人建议是，在开发过程中，不管什么版本，如果文件只有自己应用需要，都保存在沙盒目录（App-special）内，根据文件类型做好文件夹区分，如File，Cache，Pictures等。</p>
+<p>如果需要保存图片或者视频到相册时，Android Q以下系统依旧使用旧的方式，直接使用文件方式保存，Android Q以上使用MediaStore方式存储，读取媒体文件时（最常见的比如读取用户的图片并显示），Android Q以下使用DATA字段，Android Q以上使用RELATIVE_PATH字段，验证媒体文件是否存在时，均使用openFileDescriptor的方式。保存文档等文件同上，这样的意义在于文件不会随着应用的卸载而被删除。</p>
+<p>Android Q以下版本保存图片等媒体文件时不要使用MediaStore的方式，因为Android Q以下并不能保证MediaStore方式的可靠性，有可能手机厂商更改了某些行为，所以这种方式只在Android Q及以上版本使用，Android Q以下版本，申请WRITE_EXTERNAL_STORAGE权限并使用文件操作即可。</p>
+<p>如果有特殊需求需要访问公共目录的文件，使用SAF向用户申请权限，一般是文件管理类应用才有这类需求。</p>
+<p>Android Q之后，无论是向沙盒内保存文件，还是使用MediaStore保存媒体文件，又或者是使用SAF访问特定文件目录，均不需要WRITE_EXTERNAL_STORAGE权限，适配工作做好以后，动态申请的时候根据版本去掉即可。在需要访问用户图片或者其他媒体文件时，再申请READ_EXTERNAL_STORAGE权限，删除其他应用的媒体文件时还需要额外向用户申请读写操作权限。</p>
+<hr>
+<h1 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h1><h2 id="获取相册中的图片"><a href="#获取相册中的图片" class="headerlink" title="/  获取相册中的图片  /"></a>/  获取相册中的图片  /</h2><p>首先来学习一下如何在作用域存储当中获取手机相册里的图片。注意，虽然本篇文章中我是以图片来举例的，但是获取音频、视频的用法也是基本相同的。</p>
+<p>不同于过去可以直接获取到相册中图片的绝对路径，在作用域存储当中，我们只能借助MediaStore API获取到图片的Uri，示例代码如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">val</span> cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, <span class="hljs-string">&quot;$&#123;MediaStore.MediaColumns.DATE_ADDED&#125; desc&quot;</span>)<br><span class="hljs-keyword">if</span> (cursor != null) &#123;<br>    <span class="hljs-keyword">while</span> (cursor.move<span class="hljs-constructor">ToNext()</span>) &#123;<br>        <span class="hljs-keyword">val</span> id = cursor.get<span class="hljs-constructor">Long(<span class="hljs-params">cursor</span>.<span class="hljs-params">getColumnIndexOrThrow</span>(MediaStore.MediaColumns.<span class="hljs-params">_ID</span>)</span>)<br>        <span class="hljs-keyword">val</span> uri = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ContentUris</span>.</span></span><span class="hljs-keyword">with</span><span class="hljs-constructor">AppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, <span class="hljs-params">id</span>)</span><br>        println(<span class="hljs-string">&quot;image uri is $uri&quot;</span>)<br>    &#125;<br>    cursor.close<span class="hljs-literal">()</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>上述代码中，我们先是通过ContentResolver获取到了相册中所有图片的id，然后再借助ContentUris将id拼装成一个完整的Uri对象。一张图片的Uri格式大致如下所示：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">content:<span class="hljs-regexp">//m</span>edia<span class="hljs-regexp">/external/im</span>ages<span class="hljs-regexp">/media/</span><span class="hljs-number">321</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>那么有些朋友可能会问了，获取到了Uri之后，我又该怎样将这张图片显示出来呢？这就有很多种办法了，比如使用Glide来加载图片，它本身就支持传入Uri对象来作为图片路径：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">Glide</span><span class="hljs-selector-class">.with</span>(context)<span class="hljs-selector-class">.load</span>(uri)<span class="hljs-selector-class">.into</span>(imageView)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>而如果你没有使用Glide或其他图片加载框架，想在不借助第三方库的情况下直接将一个Uri对象解析成图片，可以使用如下代码：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">val</span> fd = contentResolver.<span class="hljs-keyword">open</span><span class="hljs-constructor">FileDescriptor(<span class="hljs-params">uri</span>, <span class="hljs-string">&quot;r&quot;</span>)</span><br><span class="hljs-keyword">if</span> (fd != null) &#123;<br>    <span class="hljs-keyword">val</span> bitmap = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">BitmapFactory</span>.</span></span>decode<span class="hljs-constructor">FileDescriptor(<span class="hljs-params">fd</span>.<span class="hljs-params">fileDescriptor</span>)</span><br>    fd.close<span class="hljs-literal">()</span><br>    imageView.set<span class="hljs-constructor">ImageBitmap(<span class="hljs-params">bitmap</span>)</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>上述代码中，我们调用了ContentResolver的openFileDescriptor()方法，并传入Uri对象来打开文件句柄，然后再调用BitmapFactory的decodeFileDescriptor()方法将文件句柄解析成Bitmap对象即可。</p>
+<p>Demo效果：</p>
+<p><img src="TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467507662931.gif" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>这样我们就将获取相册中图片的方式掌握了，并且这种方式在所有的Android系统版本中都适用。</p>
+<p>那么接下来，我们开始学习如何将一张图片添加到相册。</p>
+<h2 id="将图片添加到相册"><a href="#将图片添加到相册" class="headerlink" title="/  将图片添加到相册  /"></a>/  将图片添加到相册  /</h2><p>将一张图片添加到手机相册要相对稍微复杂一点，因为不同系统版本之间的处理方式是不太一样的。</p>
+<p>我们还是通过一段代码示例来直观地学习一下，代码如下所示：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs stylus">fun addBitmapToAlbum(bitmap: Bitmap, displayName: String, mimeType: String, compressFormat: Bitmap.CompressFormat) &#123;<br>    val values = ContentValues()<br>    values<span class="hljs-selector-class">.put</span>(MediaStore<span class="hljs-selector-class">.MediaColumns</span><span class="hljs-selector-class">.DISPLAY_NAME</span>, displayName)<br>    values<span class="hljs-selector-class">.put</span>(MediaStore<span class="hljs-selector-class">.MediaColumns</span><span class="hljs-selector-class">.MIME_TYPE</span>, mimeType)<br>    <span class="hljs-keyword">if</span> (Build<span class="hljs-selector-class">.VERSION</span><span class="hljs-selector-class">.SDK_INT</span> &gt;= Build<span class="hljs-selector-class">.VERSION_CODES</span>.Q) &#123;<br>        values<span class="hljs-selector-class">.put</span>(MediaStore<span class="hljs-selector-class">.MediaColumns</span><span class="hljs-selector-class">.RELATIVE_PATH</span>, Environment.DIRECTORY_DCIM)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        values<span class="hljs-selector-class">.put</span>(MediaStore<span class="hljs-selector-class">.MediaColumns</span><span class="hljs-selector-class">.DATA</span>, <span class="hljs-string">&quot;$&#123;Environment.getExternalStorageDirectory().path&#125;/$&#123;Environment.DIRECTORY_DCIM&#125;/$displayName&quot;</span>)<br>    &#125;<br>    val uri = contentResolver<span class="hljs-selector-class">.insert</span>(MediaStore<span class="hljs-selector-class">.Images</span><span class="hljs-selector-class">.Media</span><span class="hljs-selector-class">.EXTERNAL_CONTENT_URI</span>, values)<br>    <span class="hljs-keyword">if</span> (uri != null) &#123;<br>        val outputStream = contentResolver<span class="hljs-selector-class">.openOutputStream</span>(uri)<br>        <span class="hljs-keyword">if</span> (outputStream != null) &#123;<br>            bitmap<span class="hljs-selector-class">.compress</span>(compressFormat, <span class="hljs-number">100</span>, outputStream)<br>            outputStream<span class="hljs-selector-class">.close</span>()<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>这段代码演示了如何将一个Bitmap对象添加到手机相册当中，我来简单解释一下。</p>
+<p>想要将一张图片添加到手机相册，我们需要构建一个ContentValues对象，然后向这个对象中添加三个重要的数据。一个是DISPLAY_NAME，也就是图片显示的名称，一个是MIME_TYPE，也就是图片的mime类型。还有一个是图片存储的路径，不过这个值在Android 10和之前的系统版本中的处理方式不一样。Android 10中新增了一个RELATIVE_PATH常量，表示文件存储的相对路径，可选值有DIRECTORY_DCIM、DIRECTORY_PICTURES、DIRECTORY_MOVIES、DIRECTORY_MUSIC等，分别表示相册、图片、电影、音乐等目录。而在之前的系统版本中并没有RELATIVE_PATH，所以我们要使用DATA常量（已在Android 10中废弃），并拼装出一个文件存储的绝对路径才行。</p>
+<p>有了ContentValues对象之后，接下来调用ContentResolver的insert()方法即可获得插入图片的Uri。但仅仅获得Uri仍然是不够的，我们还需要向该Uri所对应的图片写入数据才行。调用ContentResolver的openOutputStream()方法获得文件的输出流，然后将Bitmap对象写入到该输出流当中即可。</p>
+<p>以上代码即可实现将Bitmap对象存储到手机相册当中，那么有些朋友可能会问了，如果我要存储的图片并不是Bitmap对象，而是一张网络上的图片，或者是当前应用关联目录下的图片该怎么办呢？</p>
+<p>其实方法都是相似的，因为不管是网络上的图片还是关联目录下的图片，我们都能获取到它的输入流，只要不断读取输入流中的数据，然后写入到相册图片所对应的输出流当中就可以了，示例代码如下：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs stylus">fun writeInputStreamToAlbum(inputStream: InputStream, displayName: String, mimeType: String) &#123;<br>    val values = ContentValues()<br>    values<span class="hljs-selector-class">.put</span>(MediaStore<span class="hljs-selector-class">.MediaColumns</span><span class="hljs-selector-class">.DISPLAY_NAME</span>, displayName)<br>    values<span class="hljs-selector-class">.put</span>(MediaStore<span class="hljs-selector-class">.MediaColumns</span><span class="hljs-selector-class">.MIME_TYPE</span>, mimeType)<br>    <span class="hljs-keyword">if</span> (Build<span class="hljs-selector-class">.VERSION</span><span class="hljs-selector-class">.SDK_INT</span> &gt;= Build<span class="hljs-selector-class">.VERSION_CODES</span>.Q) &#123;<br>        values<span class="hljs-selector-class">.put</span>(MediaStore<span class="hljs-selector-class">.MediaColumns</span><span class="hljs-selector-class">.RELATIVE_PATH</span>, Environment.DIRECTORY_DCIM)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        values<span class="hljs-selector-class">.put</span>(MediaStore<span class="hljs-selector-class">.MediaColumns</span><span class="hljs-selector-class">.DATA</span>, <span class="hljs-string">&quot;$&#123;Environment.getExternalStorageDirectory().path&#125;/$&#123;Environment.DIRECTORY_DCIM&#125;/$displayName&quot;</span>)<br>    &#125;<br>    val bis = BufferedInputStream(inputStream)<br>    val uri = contentResolver<span class="hljs-selector-class">.insert</span>(MediaStore<span class="hljs-selector-class">.Images</span><span class="hljs-selector-class">.Media</span><span class="hljs-selector-class">.EXTERNAL_CONTENT_URI</span>, values)<br>    <span class="hljs-keyword">if</span> (uri != null) &#123;<br>        val outputStream = contentResolver<span class="hljs-selector-class">.openOutputStream</span>(uri)<br>        <span class="hljs-keyword">if</span> (outputStream != null) &#123;<br>            val bos = BufferedOutputStream(outputStream)<br>            val buffer = ByteArray(<span class="hljs-number">1024</span>)<br>            <span class="hljs-selector-tag">var</span> bytes = bis<span class="hljs-selector-class">.read</span>(buffer)<br>            while (bytes &gt;= <span class="hljs-number">0</span>) &#123;<br>                bos<span class="hljs-selector-class">.write</span>(buffer, <span class="hljs-number">0</span> , bytes)<br>                bos<span class="hljs-selector-class">.flush</span>()<br>                bytes = bis<span class="hljs-selector-class">.read</span>(buffer)<br>            &#125;<br>            bos<span class="hljs-selector-class">.close</span>()<br>        &#125;<br>    &#125;<br>    bis<span class="hljs-selector-class">.close</span>()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>这段代码中只是将输入流和输出流的部分重新编写了一下，其他部分和之前存储Bitmap的代码是完全一致的，相信很好理解。</p>
+<p>Demo效果：</p>
+<p><img src="TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467495390871-16467507662932.gif" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>好了，这样我们就将相册图片的读取和存储问题都解决了，下面我们来探讨另外一个常见的需求，如何将文件下载到Download目录。</p>
+<h2 id="下载文件到Download目录"><a href="#下载文件到Download目录" class="headerlink" title="/  下载文件到Download目录  /"></a>/  下载文件到Download目录  /</h2><p>执行文件下载操作是一个很常见的场景，比如说下载pdf、doc文件，或者下载APK安装包等等。在过去，这些文件我们通常都会下载到Download目录，这是一个专门用于存放下载文件的目录。而从Android 10开始，我们已经不能以绝对路径的方式访问外置存储空间了，所以文件下载功能也会受到影响。</p>
+<p>那么该如何解决呢？主要有以下两种方式。</p>
+<p>第一种同时也是最简单的一种方式，就是更改文件的下载目录。将文件下载到应用程序的关联目录下，这样不用修改任何代码就可以让程序在Android 10系统上正常工作。但使用这种方式，你需要知道，下载的文件会被计入到应用程序的占用空间当中，同时如果应用程序被卸载了，该文件也会一同被删除。另外，存放在关联目录下的文件只能被当前的应用程序所访问，其他程序是没有读取权限的。</p>
+<p>以上几个限制条件如果不能满足你的需求，那么就只能使用第二种方式，对Android 10系统进行代码适配，仍然将文件下载到Download目录下。</p>
+<p>其实将文件下载到Download目录，和向相册中添加一张图片的过程是差不多的，Android 10在MediaStore中新增了一种Downloads集合，专门用于执行文件下载操作。但由于每个项目下载功能的实现都各不相同，有些项目的下载实现还十分复杂，因此怎么将以下的示例代码融合到你的项目当中是你自己需要思考的问题。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">fun</span> download<span class="hljs-constructor">File(<span class="hljs-params">fileUrl</span>: String, <span class="hljs-params">fileName</span>: String)</span> &#123;<br>    <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.Q) &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Toast</span>.</span></span>make<span class="hljs-constructor">Text(<span class="hljs-params">this</span>, <span class="hljs-string">&quot;You must use device running Android 10 or higher&quot;</span>, Toast.LENGTH_SHORT)</span>.show<span class="hljs-literal">()</span><br>        return<br>    &#125;<br>    thread &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">val</span> url = <span class="hljs-constructor">URL(<span class="hljs-params">fileUrl</span>)</span><br>            <span class="hljs-keyword">val</span> connection = url.<span class="hljs-keyword">open</span><span class="hljs-constructor">Connection()</span> <span class="hljs-keyword">as</span> HttpURLConnection<br>            connection.requestMethod = <span class="hljs-string">&quot;GET&quot;</span><br>            connection.connectTimeout = <span class="hljs-number">8000</span><br>            connection.readTimeout = <span class="hljs-number">8000</span><br>            <span class="hljs-keyword">val</span> inputStream = connection.inputStream<br>            <span class="hljs-keyword">val</span> bis = <span class="hljs-constructor">BufferedInputStream(<span class="hljs-params">inputStream</span>)</span><br>            <span class="hljs-keyword">val</span> values = <span class="hljs-constructor">ContentValues()</span><br>            values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)<br>            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)<br>            <span class="hljs-keyword">val</span> uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)<br>            <span class="hljs-keyword">if</span> (uri != null) &#123;<br>                <span class="hljs-keyword">val</span> outputStream = contentResolver.<span class="hljs-keyword">open</span><span class="hljs-constructor">OutputStream(<span class="hljs-params">uri</span>)</span><br>                <span class="hljs-keyword">if</span> (outputStream != null) &#123;<br>                    <span class="hljs-keyword">val</span> bos = <span class="hljs-constructor">BufferedOutputStream(<span class="hljs-params">outputStream</span>)</span><br>                    <span class="hljs-keyword">val</span> buffer = <span class="hljs-constructor">ByteArray(1024)</span><br>                    var <span class="hljs-built_in">bytes</span> = bis.read(buffer)<br>                    <span class="hljs-keyword">while</span> (<span class="hljs-built_in">bytes</span> &gt;= <span class="hljs-number">0</span>) &#123;<br>                        bos.write(buffer, <span class="hljs-number">0</span> , <span class="hljs-built_in">bytes</span>)<br>                        bos.flush<span class="hljs-literal">()</span><br>                        <span class="hljs-built_in">bytes</span> = bis.read(buffer)<br>                    &#125;<br>                    bos.close<span class="hljs-literal">()</span><br>                &#125;<br>            &#125;<br>            bis.close<span class="hljs-literal">()</span><br>        &#125; catch(e: Exception) &#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>这段代码总体来讲还是比较好理解的，主要就是添加了一些Http请求的代码，并将MediaStore.Images.Media改成了MediaStore.Downloads，其他部分几乎是没有变化的，我就不再多加解释了。</p>
+<p>注意，上述代码只能在Android 10或更高的系统版本上运行，因为MediaStore.Downloads是Android 10中新增的API。至于Android 9及以下的系统版本，请你仍然使用之前的代码来进行文件下载。</p>
+<p>Demo效果：</p>
+<p><img src="TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467495390882-16467507662933.gif" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<h2 id="使用文件选择器"><a href="#使用文件选择器" class="headerlink" title="/  使用文件选择器  /"></a>/  使用文件选择器  /</h2><p>如果我们要读取SD卡上非图片、音频、视频类的文件，比如说打开一个PDF文件，这个时候就不能再使用MediaStore API了，而是要使用文件选择器。</p>
+<p>但是，我们不能再像之前的写法那样，自己写一个文件浏览器，然后从中选取文件，而是必须要使用手机系统中内置的文件选择器。示例代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">const</span> <span class="hljs-keyword">val</span> PICK_FILE = <span class="hljs-number">1</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">pickFile</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> intent = Intent(Intent.ACTION_OPEN_DOCUMENT)<br>    intent.addCategory(Intent.CATEGORY_OPENABLE)<br>    intent.type = <span class="hljs-string">&quot;*/*&quot;</span><br>    startActivityForResult(intent, PICK_FILE)<br>&#125;<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onActivityResult</span><span class="hljs-params">(requestCode: <span class="hljs-type">Int</span>, resultCode: <span class="hljs-type">Int</span>, <span class="hljs-keyword">data</span>: <span class="hljs-type">Intent</span>?)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onActivityResult(requestCode, resultCode, <span class="hljs-keyword">data</span>)<br>    <span class="hljs-keyword">when</span> (requestCode) &#123;<br>        PICK_FILE -&gt; &#123;<br>            <span class="hljs-keyword">if</span> (resultCode == Activity.RESULT_OK &amp;&amp; <span class="hljs-keyword">data</span> != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">val</span> uri = <span class="hljs-keyword">data</span>.<span class="hljs-keyword">data</span><br>                <span class="hljs-keyword">if</span> (uri != <span class="hljs-literal">null</span>) &#123;<br>                    <span class="hljs-keyword">val</span> inputStream = contentResolver.openInputStream(uri)<br>                    <span class="hljs-comment">// 执行文件读取操作</span><br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>这里在pickFile()方法当中通过Intent去启动系统的文件选择器，注意Intent的action和category都是固定不变的。而type属性可以用于对文件类型进行过滤，比如指定成image/<em>就可以只显示图片类型的文件，这里写成</em>/*表示显示所有类型的文件。注意type属性必须要指定，否则会产生崩溃。</p>
+<p>然后在onActivityResult()方法当中，我们就可以获取到用户选中文件的Uri，之后通过ContentResolver打开文件输入流来进行读取就可以了。</p>
+<p>Demo效果：</p>
+<p><img src="TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467495390883-16467507662934.gif" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<h2 id="第三方SDK不支持怎么办？"><a href="#第三方SDK不支持怎么办？" class="headerlink" title="/  第三方SDK不支持怎么办？  /"></a>/  第三方SDK不支持怎么办？  /</h2><p>阅读完了本篇文章之后，相信你对Android 10作用域存储的用法和适配基本上都已经掌握了。然而我们在实际的开发工作当中还可能会面临一个非常头疼的问题，就是我自己的代码当然可以进行适配，但是项目中使用的第三方SDK还不支持作用域存储该怎么办呢？</p>
+<p>这个情况确实是存在的，比如我之前使用的七牛云SDK，它的文件上传功能要求你传入的就是一个文件的绝对路径，而不支持传入Uri对象，大家应该也会碰到类似的问题。</p>
+<p>由于我们是没有权限修改第三方SDK的，因此最简单直接的办法就是等待第三方SDK的提供者对这部分功能进行更新，在那之前我们先不要将targetSdkVersion指定到29，或者先在AndroidManifest文件中配置一下requestLegacyExternalStorage属性。</p>
+<p>然而如果你不想使用这种权宜之计，其实还有一个非常好的办法来解决此问题，就是我们自己编写一个文件复制功能，将Uri对象所对应的文件复制到应用程序的关联目录下，然后再将关联目录下这个文件的绝对路径传递给第三方SDK，这样就可以完美进行适配了。这个功能的示例代码如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">fun</span> copy<span class="hljs-constructor">UriToExternalFilesDir(<span class="hljs-params">uri</span>: Uri, <span class="hljs-params">fileName</span>: String)</span> &#123;<br>    <span class="hljs-keyword">val</span> inputStream = contentResolver.<span class="hljs-keyword">open</span><span class="hljs-constructor">InputStream(<span class="hljs-params">uri</span>)</span><br>    <span class="hljs-keyword">val</span> tempDir = get<span class="hljs-constructor">ExternalFilesDir(<span class="hljs-string">&quot;temp&quot;</span>)</span><br>    <span class="hljs-keyword">if</span> (inputStream != null<span class="hljs-operator"> &amp;&amp; </span>tempDir != null) &#123;<br>        <span class="hljs-keyword">val</span> file = <span class="hljs-constructor">File(<span class="hljs-string">&quot;$tempDir/$fileName&quot;</span>)</span><br>        <span class="hljs-keyword">val</span> fos = <span class="hljs-constructor">FileOutputStream(<span class="hljs-params">file</span>)</span><br>        <span class="hljs-keyword">val</span> bis = <span class="hljs-constructor">BufferedInputStream(<span class="hljs-params">inputStream</span>)</span><br>        <span class="hljs-keyword">val</span> bos = <span class="hljs-constructor">BufferedOutputStream(<span class="hljs-params">fos</span>)</span><br>        <span class="hljs-keyword">val</span> byteArray = <span class="hljs-constructor">ByteArray(1024)</span><br>        var <span class="hljs-built_in">bytes</span> = bis.read(byteArray)<br>        <span class="hljs-keyword">while</span> (<span class="hljs-built_in">bytes</span> &gt; <span class="hljs-number">0</span>) &#123;<br>            bos.write(byteArray, <span class="hljs-number">0</span>, <span class="hljs-built_in">bytes</span>)<br>            bos.flush<span class="hljs-literal">()</span><br>            <span class="hljs-built_in">bytes</span> = bis.read(byteArray)<br>        &#125;<br>        bos.close<span class="hljs-literal">()</span><br>        fos.close<span class="hljs-literal">()</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>好的，关于Android 10作用域存储的重要知识点就讲到这里，相信你已经可以完全掌握了。下篇文章中我们会继续学习Android 10适配，讲一讲深色主题的功能，敬请期待。</p>
+<p>注：本篇文章中演示的所有示例，都可以到ScopedStorageDemo这个开源库中找到其对应的源码。</p>
+<p>开源库地址是：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/guolindev/ScopedStorageDemo">https://github.com/guolindev/ScopedStorageDemo</a></p>
+</blockquote>
+<hr>
+<h1 id="一文带你了解适配Android-11分区存储"><a href="#一文带你了解适配Android-11分区存储" class="headerlink" title="一文带你了解适配Android 11分区存储"></a>一文带你了解适配Android 11分区存储</h1><h2 id="1-分区存储概念"><a href="#1-分区存储概念" class="headerlink" title="1 分区存储概念"></a><em>1</em> 分区存储概念</h2><p>为了让用户更好地控制自己的文件并减少混乱，Android 10针对应用推出的一个新的存储范例，新的存储模型会让以 Android 10（API 级别 29）及更高版本为目标平台的应用在默认情况下被赋予了对外部存储设备的分区访问权限，即分区存储(scoped storage)。分区存储改变了应用在设备的外部存储设备中存储和访问文件的方式。</p>
+<p>从另一个角度来说，分区存储的推出更好的保护用户的隐私。默认情况下，对于以 Android 10 及更高版本为目标平台的应用，其访问权限范围限定为外部存储，即分区存储。此类应用可以查看外部存储设备内以下类型的文件，无需请求任何与存储相关的用户权限：</p>
+<ul>
+<li><p>特定于应用的目录中的文件（使用 getExternalFilesDir() 访问）。</p>
+</li>
+<li><p>应用创建的照片、视频和音频片段（通过媒体库访问）。</p>
+</li>
+</ul>
+<p>意思是说，我们的app在外部存储设备（即SD卡）上存文件的时候，需要先想明白需要存的数据是属于app私有的还是需要分享的，如果是app私有的，存在getExternalFilesDir()返回的文件夹下，也就是Android/data/包名/files/文件夹；如果是需要分享的，需要采用媒体库（MediaStore）的方式来存取，后面会讲怎么存取。需要指出的是在分区存储模型下存取共享媒体文件是不需要存储权限的，而旧的存储模型是需要存储权限的。</p>
+<p>下表总结了分区存储如何影响文件访问：</p>
+<table>
+<thead>
+<tr>
+<th align="left">文件位置</th>
+<th align="left">所需权限</th>
+<th align="left">访问方法 (*)</th>
+<th align="left">卸载应用时是否移除文件？</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">特定于应用的目录</td>
+<td align="left">无</td>
+<td align="left">getExternalFilesDir()</td>
+<td align="left">是</td>
+</tr>
+<tr>
+<td align="left">媒体集合（照片、视频、音频）</td>
+<td align="left">READ_EXTERNAL_STORAGE（仅当访问其他应用的文件时）</td>
+<td align="left">MediaStore</td>
+<td align="left">否</td>
+</tr>
+<tr>
+<td align="left">下载内容（文档和电子书籍）</td>
+<td align="left">无</td>
+<td align="left">存储访问框架（加载系统的文件选择器）</td>
+<td align="left">否</td>
+</tr>
+</tbody></table>
+<h2 id="2-适配分区存储"><a href="#2-适配分区存储" class="headerlink" title="*2 *适配分区存储"></a>*2 *适配分区存储</h2><h3 id="为什么要适配"><a href="#为什么要适配" class="headerlink" title="为什么要适配"></a><strong>为什么要适配</strong></h3><p>在分区存储模型下，外部存储设备的公共区域是不让访问的，如果强行访问，会在创建或读写文件的api上报错，具体看分区存储模型下，访问SD卡公共区域错误举例。那么有没有办法关闭分区存储模型呢？</p>
+<p>有两种办法，第一种是app的targetSdkVersion永远低于29，这个是不现实的；第二种办法是targetSdkVersion 29时覆盖安装和新安装能关闭，targetSdkVersion 30时覆盖安装能关闭，新安装是没有办法关闭的，具体看requestLegacyExternalStorage和preserveLegacyExternalStorage的理解。而且说不定，Android 12出来后，以Android 12为目标平台的app都是强制执行分区存储模型的。所以分区存储是一定需要适配的，而且越早适配越好。</p>
+<h3 id="怎么适配"><a href="#怎么适配" class="headerlink" title="怎么适配"></a><strong>怎么适配</strong></h3><p>适配分为两部分，新数据的存储和老数据的迁移，我们先说新数据的存储。</p>
+<h4 id="新数据的存储"><a href="#新数据的存储" class="headerlink" title="新数据的存储"></a><strong>新数据的存储</strong></h4><p>把app所有需要存的数据梳理一遍，对于私有数据我们存到SD卡app私有目录下，对于需要共享的媒体数据我们通过MediaStore的方式。数据放到私有目录很简单我们不讲，主要讲怎么共享媒体数据，以视频为例，看下面的代码：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs maxima"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 保存共享媒体资源，必须使用先在MediaStore创建表示视频保存信息的Uri，然后通过Uri写入视频数据的方式。</span><br><span class="hljs-comment"> * 在&quot;分区存储&quot;模型中，这是官方推荐的，因为在Android 10禁止通过File的方式访问媒体资源，Android 11又允许了</span><br><span class="hljs-comment"> * 从Android 10开始默认是分区存储模型</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * 说明：</span><br><span class="hljs-comment"> * 此方法中MediaStore默认的保存目录是/storage/emulated/0/video</span><br><span class="hljs-comment"> * 而Environment.DIRECTORY_MOVIES的目录是/storage/emulated/0/Movies</span><br><span class="hljs-comment"> * @param context</span><br><span class="hljs-comment"> * @return</span><br><span class="hljs-comment"> */</span><br>static Uri getSaveToGalleryVideoUri(Context <span class="hljs-built_in">context</span>, String videoName, String mineType, String subDir) &#123;<br>    ContentValues <span class="hljs-built_in">values</span> = <span class="hljs-built_in">new</span> ContentValues();<br>    <span class="hljs-built_in">values</span>.<span class="hljs-built_in">put</span>(MediaStore.Video.Media.DISPLAY_NAME,  videoName);<br>    <span class="hljs-built_in">values</span>.<span class="hljs-built_in">put</span>(MediaStore.Video.Media.MIME_TYPE, mineType);<br>    <span class="hljs-built_in">values</span>.<span class="hljs-built_in">put</span>(MediaStore.Video.Media.DATE_MODIFIED, System.currentTimeMillis() / <span class="hljs-number">1000</span>);<br>    <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.Q) &#123;<br>        <span class="hljs-built_in">values</span>.<span class="hljs-built_in">put</span>(MediaStore.Video.Media.RELATIVE_PATH, Environment.DIRECTORY_MOVIES + subDir);<br>    &#125;<br><br>    Uri uri = <span class="hljs-built_in">context</span>.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, <span class="hljs-built_in">values</span>);<br>    printMediaInfo(<span class="hljs-built_in">context</span>, uri);<br>    <span class="hljs-built_in">return</span> uri;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>需要保存视频的时候，其实就是先在MediaStore的Video表插入一条记录，获取一个Uri，然后把视频写入这Uri就行了。具体保存位置，我们不用操心，它其实是保存到了Sd卡的Movies文件夹下了，在Android 10以上系统提供RELATIVE_PATH字段用于创建子目录。</p>
+<p>我们会问，高版本可以这样共享视频，那么低版本可以吗？如果可以的话，低版本的也用这种方式，一套方案解决。理论上是可以的，毕竟MediaStore从Android诞生就存在。可实际操作发现了问题，具体看下面代码注释。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 此接口用于获取保存共享视频的输出流，推荐！！！</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * 在低于29的系统上采用getSaveToGalleryVideoUri的方式保存共享视频，会有文件名不能定制、视频保存类型是.3gp、视频保存在video文件夹等问题</span><br><span class="hljs-comment"> * 所以在低版本上采用文件路径的方式写入数据。在低于29的系统上采用文件路径的方式是没有问题的，因为在这些系统上没有分区存储的概念</span><br><span class="hljs-comment"> * 以及，getExternalStoragePublicDirectory函数可用</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * @param context</span><br><span class="hljs-comment"> * @param videoName</span><br><span class="hljs-comment"> * @param mineType</span><br><span class="hljs-comment"> * @return</span><br><span class="hljs-comment"> * @throws FileNotFoundException</span><br><span class="hljs-comment"> */</span><br><span class="hljs-built_in">public</span> static FileOutputStream getSaveToGalleryVideoOutputStream(@NonNull Context context, @NonNull String videoName, @NonNull String mineType) throws FileNotFoundException &#123;<br>    //先在MediaStore中查询，有的话直接返回<br>    Uri uri = SHScopedStorageManager.querySpecialVideoUri(context, videoName);<br>    <span class="hljs-keyword">if</span> (uri != <span class="hljs-keyword">null</span>) &#123;<br>        ParcelFileDescriptor fileDescriptor = context.getContentResolver().openFileDescriptor(uri, &quot;w&quot;);<br>        FileOutputStream outputStream = <span class="hljs-built_in">new</span> FileOutputStream(fileDescriptor.getFileDescriptor());<br>        <span class="hljs-keyword">return</span> outputStream;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (Build.<span class="hljs-keyword">VERSION</span>.SDK_INT &gt;= Build.VERSION_CODES.Q) &#123;<br>        uri = getSaveToGalleryVideoUri(context, videoName, mineType);<br>        <span class="hljs-keyword">if</span> (uri == <span class="hljs-keyword">null</span>)<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>        ParcelFileDescriptor fileDescriptor = context.getContentResolver().openFileDescriptor(uri, &quot;w&quot;);<br>        FileOutputStream outputStream = <span class="hljs-built_in">new</span> FileOutputStream(fileDescriptor.getFileDescriptor());<br>        <span class="hljs-keyword">return</span> outputStream;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">if</span> (TextUtils.isEmpty(videoName)) &#123;<br>            videoName = String.valueOf(<span class="hljs-keyword">System</span>.currentTimeMillis());<br>        &#125;<br>        //通过显示路径方式共享媒体的时候，是需要指定文件后缀，要不然下载文件会没有后缀名<br>        <span class="hljs-keyword">if</span> (!TextUtils.isEmpty(mineType)) &#123;<br>            String <span class="hljs-keyword">extension</span> = MimeTypeMap.getSingleton().getExtensionFromMimeType(mineType);<br>            <span class="hljs-keyword">if</span> (videoName.contains(&quot;.&quot;)) &#123;<br>                videoName = videoName.substring(<span class="hljs-number">0</span>, videoName.indexOf(&quot;.&quot;)) + &quot;.&quot; + <span class="hljs-keyword">extension</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                videoName += &quot;.&quot; + <span class="hljs-keyword">extension</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 直接路径的方式，组合出的文件路径，路径中的文件夹一定要存在，否则转成FileOutputStream的时候会报FileNotFoundException</span><br><span class="hljs-comment">         * 即便是通过DATA注册到MediaStore中，也是如此</span><br><span class="hljs-comment">         */</span><br>        String rootPath = getSaveToGalleryVideoPath();<br>        String videoPath = <span class="hljs-keyword">null</span>;<br>        <span class="hljs-keyword">if</span> (rootPath.endsWith(File.separator)) &#123;<br>            videoPath = rootPath + videoName;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            videoPath = rootPath + File.separator + videoName;<br>        &#125;<br><br>        //通过DATA字段在MediaStore中注册一下<br>        ContentValues <span class="hljs-keyword">values</span> = <span class="hljs-built_in">new</span> ContentValues();<br>        <span class="hljs-keyword">values</span>.put(MediaStore.Video.Media.DISPLAY_NAME, videoName);<br>        <span class="hljs-keyword">values</span>.put(MediaStore.Video.Media.MIME_TYPE, mineType);<br>        <span class="hljs-keyword">values</span>.put(MediaStore.Video.Media.DATA, videoPath);<br>        <span class="hljs-keyword">values</span>.put(MediaStore.Video.Media.DATE_MODIFIED, <span class="hljs-keyword">System</span>.currentTimeMillis() / <span class="hljs-number">1000</span>);<br>        uri = context.getContentResolver().<span class="hljs-keyword">insert</span>(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, <span class="hljs-keyword">values</span>);<br><br>        <span class="hljs-keyword">if</span> (uri == <span class="hljs-keyword">null</span>)<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br><br>        SHScopedStorageManager.printMediaInfo(context, uri);<br>        ParcelFileDescriptor fileDescriptor = context.getContentResolver().openFileDescriptor(uri, &quot;w&quot;);<br>        FileOutputStream outputStream = <span class="hljs-built_in">new</span> FileOutputStream(fileDescriptor.getFileDescriptor());<br><br>        <span class="hljs-keyword">return</span> outputStream;<br>    &#125;<br>&#125;<br><br><span class="hljs-built_in">public</span> static String getSaveToGalleryVideoPath() &#123;<br>    File <span class="hljs-type">path</span> = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);<br>    <span class="hljs-keyword">if</span> (!<span class="hljs-type">path</span>.<span class="hljs-keyword">exists</span>()) &#123;<br>        <span class="hljs-type">path</span>.mkdirs();<br>    &#125;<br>    String pathStr = <span class="hljs-type">path</span>.getAbsolutePath() + VIDEO_DIR;<br>    File file = <span class="hljs-built_in">new</span> File(pathStr);<br>    <span class="hljs-keyword">if</span> (!file.<span class="hljs-keyword">exists</span>()) &#123;<br>        file.mkdirs();<br>    &#125;<br>    <span class="hljs-keyword">return</span> pathStr;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>解决办法，进行了版本区分，对外暴露OutputStream接口，低版本我们采用直接路径的方式，直接把视频保存到Movies目录下，而且还可以有子目录，为了让相册或者别的app能看到保存的视频，我们通过DATA把保存路径注册给了MediaStore，这个在低版本上是可行的，这种方式绝大多数开发者之前都是这么做的，但是，DATA从Android 10开始标记为弃用。</p>
+<p>我们这里会问，我们可不可以在Android 10及以上也用直接路径保存视频到Movies目录下呢？可以，但是会有问题，首先Android 10的分区存储模型下不能使用直接路径，因为使用File api报错，不过我们可以通过requestLegacyExternalStorage禁用分区存储模型；最大的问题是获取Movies目录的接口getExternalStoragePublicDirectory从Android 10开始标记为弃用。而且google还提示了使用直接路径操作媒体文件的性能问题。</p>
+<p>当您使用直接文件路径依序读取媒体文件时，其性能与 MediaStore API 相当。但是，当您使用直接文件路径随机读取和写入媒体文件时，进程的速度可能最多会慢一倍。在此类情况下，我们建议您改为使用 MediaStore API。</p>
+<p>这套适配方案无论是在旧存储模型还是分区存储模型下都能完美运行，把共享视频保存到Medias的指定文件夹下，而且相册和别的app都能扫描的到。共享图片、音频和共享视频思路一样，大家自行编写。</p>
+<h4 id="老数据的迁移"><a href="#老数据的迁移" class="headerlink" title="老数据的迁移"></a><strong>老数据的迁移</strong></h4><p>迁移老数据是为了在分区存储模型下，老数据依旧可以访问，如果不迁移这些散落在SD卡公共区域的数据，一旦开始执行分区存储模型，这些数据app就访问不到了。也就是说，在app还是旧存储模型的时候，需要把数据迁移到能够兼容分区存储要求的文件夹下。这块具体看数据迁移。</p>
+<h2 id="3-数据迁移"><a href="#3-数据迁移" class="headerlink" title="3 数据迁移"></a><em>3</em> 数据迁移</h2><h3 id="理清头绪"><a href="#理清头绪" class="headerlink" title="理清头绪"></a><strong>理清头绪</strong></h3><p>在数据迁移的时候，有个很重要的前提是，app能够访问旧存储模型。我们看看什么情况能访问旧存储模型，得分几种情况讨论：</p>
+<ul>
+<li><ol>
+<li>targetSdkVersion 28的app安装在Android 9（28）的手机上，手机系统升级到Android10或11，app正常访问旧存储模型。这种情况和把targetSDKVersion 28的app安装到Android10或11系统手机上一样的情况。</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><ol start="2">
+<li>target 28在Android 9上，app target升级到30，覆盖安装，旧存储模型访问正常；target 28在Android10上，app target升级到30，覆盖安装，旧存储模型访问正常。</li>
+</ol>
+</li>
+</ul>
+<p>requestLegacyExternalStorage设置成true，在Android 10上新安装的target 30 app，也可以正常访问旧存储模型。</p>
+<p>target28在Android11上，app target升级到30，覆盖安装，旧存储模型不能访问了，需要preserveLegacyExternalStorage设置成true。</p>
+<h4 id="怎么进行数据迁移最好呢？"><a href="#怎么进行数据迁移最好呢？" class="headerlink" title="怎么进行数据迁移最好呢？"></a><strong>怎么进行数据迁移最好呢？</strong></h4><p>targetSDKVersion 28的时候，先大规模的升级一次，此app就包含数据迁移功能，同时共享媒体的方式也按照分区存储模型的规范来，这样不论什么版本系统的用户，都能完成数据迁移，同时进行共享媒体的方式也正确。</p>
+<p>但是，有部分用户就是不升级我们的app，可是我们app以后也得发版，而且target也得升级，假如有一部分用户没升级，等升级的时候，我们的app的target已经是30了，这些用户的系统如果是小于29的，可以正常迁移，如果这些用户的系统版本是29或者30，那也得给这些用户迁移数据呀，target30的app在29的系统上正常迁移，target30的app在30系统上，preserveLegacyExternalStorage设置成true，正常迁移。</p>
+<p>所以我们的数据迁移方案就是，做好数据迁移功能和共享媒体功能，requestLegacyExternalStorage和preserveLegacyExternalStorage都设置成true，target升级不升级都没问题。不过前提是compileSdkVersion得是30。</p>
+<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a><strong>实战</strong></h3><p>在8.0及以上的系统，采用Files.move进行数据迁移，8.0以下的系统采用File.rename进行数据迁移。Files的move方法既可以作用于文件也可以作用于文件夹。</p>
+<p>我们项目中需要move的是文件夹，首先看看对move文件夹的定义：</p>
+<p>Empty directories can be moved. If the directory is not empty, the move is allowed when the directory can be moved without moving the contents of that directory. On UNIX systems, moving a directory within the same partition generally consists of renaming the directory. In that situation, this method works even when the directory contains files. </p>
+<p>从定义中，我们知道在UNIX系统（linux源自UNIX）上同一个partition上，即便被move的文件夹中有内容，也是可以move的，实际就是重命名了一下。</p>
+<p><strong>我们的需求：</strong></p>
+<p>在分区存储模型下，SD卡的公共区域是禁止app使用的，为了保证我们app之前下载到SD的视频在分区存储模型下还能被app识别，所以，在app还是采用旧存储模型的时候，我们需要把这些视频迁移到app在SD卡的私有目录下。这两个目录都在SD卡上，属于同一个partition。说明一下，targetSDKVersion 29或30的app在Android 10和Android 11上，也是有办法让app采用旧存储模型的；targetSDKVersion 29以下的app在任何系统上都是执行旧存储模型。</p>
+<p><strong>我们的实际情况：</strong></p>
+<ul>
+<li>共享数据迁移 把之前保存的需要分享的视频从app自建的目录迁移到分区存储模型下app也能访问到Movies目录，这样做的目的是在分区存储模型下，自己和别的app还是访问到这些视频。</li>
+</ul>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><br>从<span class="hljs-regexp">/storage/</span>emulated<span class="hljs-regexp">/0/</span>shvdownload<span class="hljs-regexp">/video/</span>VideoGallery 迁移到 <span class="hljs-regexp">/storage/</span>emulated<span class="hljs-regexp">/0/</span>Movies/SHVideo<br></code></pre></td></tr></table></figure>
+
+
+
+<p>VideoGallery目录中有文件，SHVideo目录不存在，move可以成功。app在分区存储模型下，在任何版本系统上上述迁移都正常。</p>
+<ul>
+<li>私有数据迁移</li>
+</ul>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><br>从<span class="hljs-regexp">/storage/</span>emulated<span class="hljs-regexp">/0/</span>xxx<span class="hljs-regexp">/data 迁移到 /</span>storage<span class="hljs-regexp">/emulated/</span><span class="hljs-number">0</span><span class="hljs-regexp">/Android/</span>data<span class="hljs-regexp">/包名/</span>files/data<br></code></pre></td></tr></table></figure>
+
+
+
+<p>xxx/data目录中有文件，files/data目录不存在，==在Android 10及以下的系统上，可以move成功；在Android 11的系统上 ，move失败了，报DirectoryNotEmptyException。== 猜测可能是Android 11对Android/data目录有了限制吧！如果，在Android 11上还需要进行这种迁移的话，可以采用遍历文件夹输入输出流拷贝的方式。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stylus">java<span class="hljs-selector-class">.nio</span><span class="hljs-selector-class">.file</span><span class="hljs-selector-class">.DirectoryNotEmptyException</span>: /storage/emulated/<span class="hljs-number">0</span>/xxx/data<br> at sun<span class="hljs-selector-class">.nio</span><span class="hljs-selector-class">.fs</span><span class="hljs-selector-class">.UnixCopyFile</span><span class="hljs-selector-class">.move</span>(UnixCopyFile<span class="hljs-selector-class">.java</span>:<span class="hljs-number">498</span>)<br> at sun<span class="hljs-selector-class">.nio</span><span class="hljs-selector-class">.fs</span><span class="hljs-selector-class">.UnixFileSystemProvider</span><span class="hljs-selector-class">.move</span>(UnixFileSystemProvider<span class="hljs-selector-class">.java</span>:<span class="hljs-number">262</span>)<br> at java<span class="hljs-selector-class">.nio</span><span class="hljs-selector-class">.file</span><span class="hljs-selector-class">.Files</span><span class="hljs-selector-class">.move</span>(Files<span class="hljs-selector-class">.java</span>:<span class="hljs-number">1395</span>)<br> at com<span class="hljs-selector-class">.xxx</span><span class="hljs-selector-class">.sdk</span><span class="hljs-selector-class">.android</span><span class="hljs-selector-class">.storage</span><span class="hljs-selector-class">.SHDataMigrateUtil</span><span class="hljs-selector-class">.moveData</span>(SHDataMigrateUtil<span class="hljs-selector-class">.java</span>:<span class="hljs-number">257</span>)<br>    ...<br></code></pre></td></tr></table></figure>
+
+
+
+<p>File.move 文件夹的时候，如果目标文件夹存在，那么会报java.nio.file.FileAlreadyExistsException异常。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">private</span> boolean move<span class="hljs-constructor">Data(File <span class="hljs-params">source</span>, File <span class="hljs-params">target</span>)</span> &#123;<br>    long start = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>current<span class="hljs-constructor">TimeMillis()</span>;<br>    <span class="hljs-comment">// 只有目标文件夹不存在的时候，move文件夹才能成功</span><br>    <span class="hljs-keyword">if</span> (target.exists<span class="hljs-literal">()</span><span class="hljs-operator"> &amp;&amp; </span>target.is<span class="hljs-constructor">Directory()</span><span class="hljs-operator"> &amp;&amp; </span>(target.<span class="hljs-built_in">list</span><span class="hljs-literal">()</span><span class="hljs-operator"> == </span>null<span class="hljs-operator"> || </span>target.<span class="hljs-built_in">list</span><span class="hljs-literal">()</span>.length<span class="hljs-operator"> == </span><span class="hljs-number">0</span>)) &#123;<br>        target.delete<span class="hljs-literal">()</span>;<br>    &#125;<br>    boolean isSuccess;<br>    <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) &#123;<br>        Path sourceP = source.<span class="hljs-keyword">to</span><span class="hljs-constructor">Path()</span>;<br>        Path targetP = target.<span class="hljs-keyword">to</span><span class="hljs-constructor">Path()</span>;<br><br>        <span class="hljs-keyword">if</span> (target.exists<span class="hljs-literal">()</span>) &#123;<br>            isSuccess = copy<span class="hljs-constructor">Dir(<span class="hljs-params">source</span>, <span class="hljs-params">target</span>)</span>;<br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LogUtils</span>.</span></span>i(TAG, <span class="hljs-string">&quot;moveData copyDir&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Files</span>.</span></span>move(sourceP, targetP);<br>                isSuccess = <span class="hljs-literal">true</span>;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LogUtils</span>.</span></span>i(TAG, <span class="hljs-string">&quot;moveData Files.move&quot;</span>);<br>            &#125; catch (IOException e) &#123;<br>                e.print<span class="hljs-constructor">StackTrace()</span>;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LogUtils</span>.</span></span>i(TAG, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>get<span class="hljs-constructor">StackTraceString(<span class="hljs-params">e</span>)</span>);<br>                <span class="hljs-comment">//在Android11上，move ATOMIC_MOVE会报AtomicMoveNotSupportedException异常</span><br>                <span class="hljs-comment">//在Android11上，move REPLACE_EXISTING会报DirectoryNotEmptyException异常</span><br>                isSuccess = copy<span class="hljs-constructor">Dir(<span class="hljs-params">source</span>, <span class="hljs-params">target</span>)</span>;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LogUtils</span>.</span></span>i(TAG, <span class="hljs-string">&quot;moveData move fail, use copyDir&quot;</span>);<br>            &#125;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">if</span> (target.exists<span class="hljs-literal">()</span>) &#123;<br>            isSuccess = copy<span class="hljs-constructor">Dir(<span class="hljs-params">source</span>, <span class="hljs-params">target</span>)</span>;<br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LogUtils</span>.</span></span>i(TAG, <span class="hljs-string">&quot;moveData copyDir&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            isSuccess = source.rename<span class="hljs-constructor">To(<span class="hljs-params">target</span>)</span>;<br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LogUtils</span>.</span></span>i(TAG, <span class="hljs-string">&quot;moveData renameTo result &quot;</span> + isSuccess);<br>        &#125;<br>    &#125;<br>    long <span class="hljs-keyword">end</span> = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>current<span class="hljs-constructor">TimeMillis()</span>;<br>    long <span class="hljs-keyword">val</span> = <span class="hljs-keyword">end</span> - start;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LogUtils</span>.</span></span>i(TAG, <span class="hljs-string">&quot;moveData migrate data take time &quot;</span> + <span class="hljs-keyword">val</span> +<span class="hljs-string">&quot; from &quot;</span> + source.get<span class="hljs-constructor">AbsolutePath()</span> + <span class="hljs-string">&quot; to &quot;</span> + target.get<span class="hljs-constructor">AbsolutePath()</span>);<br><br>    return isSuccess;<br>&#125; <br><br></code></pre></td></tr></table></figure>
+
+<h2 id="4-requestLegacyExternalStorage和preserveLegacyExternalStorage的理解"><a href="#4-requestLegacyExternalStorage和preserveLegacyExternalStorage的理解" class="headerlink" title="4 requestLegacyExternalStorage和preserveLegacyExternalStorage的理解"></a><em>4</em> requestLegacyExternalStorage和preserveLegacyExternalStorage的理解</h2><p>requestLegacyExternalStorage是Android10引入的，preserveLegacyExternalStorage 是 Android11 引入的。</p>
+<p>如果你已经适配Android 10，如果应用通过升级安装，那么还会使用以前的储存模式（Legacy View），只有通过首次安装或是卸载重新安装才能启用新模式（Filtered View）。</p>
+<p>经过测试，确实是这样，我们在Android10的手机上安装了一个targetSDKVersion是27的app，旧的存储模型是可以正常使用的，然后覆盖安装了target是29的新包，旧存储模型也是可以访问的，但是，卸载重新安装旧存储模型就不能访问了。</p>
+<p>requestLegacyExternalStorage让targetSDKVersion是29（适配了Android 10）的app新安装在Android 10系统上也继续访问旧的存储模型。</p>
+<p>如果某个应用在安装时启用了传统外部存储，则该应用会保持此模式，直到卸载为止。无论设备后续是否升级为搭载 Android 10 或更高版本，或者应用后续是否更新为以 Android 10 或更高版本为目标平台，此兼容性行为均适用。</p>
+<p>这句话是有些问题的，估计当时说这话的时候，是Android10的时候。在Android11中引入了preserveLegacyExternalStorage，看下面的解释：</p>
+<p>按照文档说targetSDKVersion&lt;29时，requestLegacyExternalStorage默认是true的，也就是说这些app是采用旧的存储模型运行的，targetSDKVersion升级到29后，requestLegacyExternalStorage默认是false的，但是覆盖安装的，还是采用旧的存储模式运行。重新安装的，由于requestLegacyExternalStorage是false，就采用分区存储模式运行了，除非requestLegacyExternalStorage显示设置成true。</p>
+<p>也就是说requestLegacyExternalStorage给了app，在Android 10的系统上，无论是覆盖安装还是重新安装都能使用旧存储模式的机会。</p>
+<p>targetSDKVersion升级到30后，在Android 11设备上，requestLegacyExternalStorage会被忽略掉，在Android 10的系统上requestLegacyExternalStorage依旧有效。</p>
+<p>preserveLegacyExternalStorage只是让覆盖安装的app能继续使用旧的存储模型，如果之前是旧的存储模型的话。如果您使用 preserveLegacyExternalStorage，旧版存储模型只在用户卸载您的应用之前保持有效。如果用户在搭载 Android 11 的设备上安装或重新安装您的应用，那么无论 preserveLegacyExternalStorage 的值是什么，您的应用都无法停用分区存储模型。</p>
+<p>app targetSDKVersion适配到30，在Android 11的系统上首次安装，是没有任何机会，让app能继续使用旧存储模型的。</p>
+<h2 id="5-分区存储模型下，访问SD卡公共区域错误举例"><a href="#5-分区存储模型下，访问SD卡公共区域错误举例" class="headerlink" title="5 分区存储模型下，访问SD卡公共区域错误举例"></a><em>5</em> 分区存储模型下，访问SD卡公共区域错误举例</h2><h3 id="File的api"><a href="#File的api" class="headerlink" title="File的api"></a><strong>File的api</strong></h3><ul>
+<li>createNewFile targetSdkVersion 28的app在Android 10的系统上，运行旧存储模型，targetSdkVersion升级到30后，覆盖安装在Android10系统上，也是运行旧存储模型的。targetSdkVersion 30的app首次安装到Android10系统上，是开启分区存储模型的（没有配置requestLegacyExternalStorage），在SD卡的公共目录上调用File的createNewFile()方法会报java.io.IOException: No such file or directory。在旧存储模型下，没有开启读写权限的时候，在SD卡的公共目录上调用File的createNewFile()方法也会报java.io.IOException: No such file or directory</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><br>java<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.IOException</span>: No such file or directory<br>    at java<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.UnixFileSystem</span><span class="hljs-selector-class">.createFileExclusively0</span>(Native Method)<br>    at java<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.UnixFileSystem</span><span class="hljs-selector-class">.createFileExclusively</span>(UnixFileSystem<span class="hljs-selector-class">.java</span>:<span class="hljs-number">317</span>)<br>    at java<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.File</span><span class="hljs-selector-class">.createNewFile</span>(File<span class="hljs-selector-class">.java</span>:<span class="hljs-number">1008</span>)<br>    at com<span class="hljs-selector-class">.xxx</span><span class="hljs-selector-class">.sdk</span><span class="hljs-selector-class">.android</span><span class="hljs-selector-class">.storage</span><span class="hljs-selector-class">.SohuStorageManager</span><span class="hljs-selector-class">.tryGetGalleryPathState</span>(SohuStorageManager<span class="hljs-selector-class">.java</span>:<span class="hljs-number">748</span>)<br>    ...<br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>listFiles 分区存储模式下，SD卡的公共目录调用File的listFiles会返回null，即便此文件夹下有文件。</li>
+</ul>
+<h3 id="FileOutputStream｜FileInputStream"><a href="#FileOutputStream｜FileInputStream" class="headerlink" title="FileOutputStream｜FileInputStream"></a><strong>FileOutputStream｜FileInputStream</strong></h3><p>在分区存储模型下，SD卡的公共目录是不让访问的，除了共享媒体的那几个文件夹。所以，用一个公共目录的路径实例化FileOutputStream或者FileInputStream会报FileNotFoundException异常。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs stylus">java<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.FileNotFoundException</span>: /storage/emulated/<span class="hljs-number">0</span>/xxx/SharePic/<span class="hljs-number">1603277403193</span><span class="hljs-selector-class">.jpg</span>: open failed: ENOENT (No such fileor directory)<br>    at libcore<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.IoBridge</span><span class="hljs-selector-class">.open</span>(IoBridge<span class="hljs-selector-class">.java</span>:<span class="hljs-number">496</span>)<br>    at java<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.FileOutputStream</span>.&lt;init&gt;(FileOutputStream<span class="hljs-selector-class">.java</span>:<span class="hljs-number">235</span>)<br>    at com<span class="hljs-selector-class">.xxx</span><span class="hljs-selector-class">.ui</span><span class="hljs-selector-class">.QrCodeActivity</span><span class="hljs-selector-class">.askSDCardSaveImgPermission</span>(QrCodeActivity<span class="hljs-selector-class">.java</span>:<span class="hljs-number">242</span>)<br>    ...<br><br>java<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.FileNotFoundException</span>: /storage/emulated/<span class="hljs-number">0</span>/xxx/data/testusf: open failed: EACCES (Permission denied)<br>  at libcore<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.IoBridge</span><span class="hljs-selector-class">.open</span>(IoBridge<span class="hljs-selector-class">.java</span>:<span class="hljs-number">496</span>)<br>  at java<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.FileInputStream</span>.&lt;init&gt;(FileInputStream<span class="hljs-selector-class">.java</span>:<span class="hljs-number">159</span>)<br>  at java<span class="hljs-selector-class">.io</span><span class="hljs-selector-class">.FileReader</span>.&lt;init&gt;(FileReader<span class="hljs-selector-class">.java</span>:<span class="hljs-number">72</span>)<br>  at com<span class="hljs-selector-class">.android</span><span class="hljs-selector-class">.xxx</span><span class="hljs-selector-class">.sdk</span><span class="hljs-selector-class">.common</span><span class="hljs-selector-class">.toolbox</span><span class="hljs-selector-class">.FileUtils</span><span class="hljs-selector-class">.readSingleLineStringFromFile</span>(FileUtils<span class="hljs-selector-class">.java</span>:<span class="hljs-number">747</span>)<br><br>本文完。 <br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h1><h2 id="文件系统目录"><a href="#文件系统目录" class="headerlink" title="文件系统目录"></a>文件系统目录</h2><blockquote>
+<p>/storage/emulated/0/ 对应的是手机-&gt;文件管理-&gt; 内部存储空间</p>
+</blockquote>
+<blockquote>
+<p>/storage/emulated/0/Android/ 有些手机这么目录进不去（踩坑），需要借助一些三方app, 比如下载一个’ES文件浏览器’，他去获取访问权限，用他来查看</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>对应的目录地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cacheDir</td>
+<td>/data/user/0/&lt;包名&gt;/cache</td>
+</tr>
+<tr>
+<td>dataDir</td>
+<td>/data/user/0/&lt;包名&gt;</td>
+</tr>
+<tr>
+<td>filesDir</td>
+<td>/data/user/0/&lt;包名&gt;/files</td>
+</tr>
+<tr>
+<td>codeCacheDir</td>
+<td>/data/user/0/&lt;包名&gt;/code_cache</td>
+</tr>
+<tr>
+<td>noBackupFilesDir</td>
+<td>/data/user/0/&lt;包名&gt;/no_backup</td>
+</tr>
+<tr>
+<td>obbDir</td>
+<td>/storage/emulated/0/Android/obb/&lt;包名&gt;</td>
+</tr>
+<tr>
+<td>externalCacheDir</td>
+<td>/storage/emulated/0/Android/data/&lt;包名&gt;/cache</td>
+</tr>
+<tr>
+<td>externalFilesDir</td>
+<td>/storage/emulated/0/Android/data/&lt;包名&gt;/files/Download</td>
+</tr>
+</tbody></table>
+<h2 id="如何读写"><a href="#如何读写" class="headerlink" title="如何读写"></a>如何读写</h2><p><strong>正确的读写</strong></p>
+<ul>
+<li>只在外部存储的应用私有目录下，用直接路径读写文件</li>
+<li>访问或者共享媒体文件，使用MediaStore在公共目录下读写文件</li>
+<li>访问或者共享非媒体文件，使用系统的文件选择器SAF在公共目录Download下读写文件</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/android/">android</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/android/">android</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/8d2ce9e6/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Sqlite基本内容</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/64a98929/">
+                        <span class="hidden-mobile">app_process 来调用高权限 API</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

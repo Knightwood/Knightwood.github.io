@@ -1,0 +1,598 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="概述协变，逆变，抗变等概念是从数学中来的，在编程语言Java&#x2F;Kotlin&#x2F;C#中主要在泛型中使用。其描述的是两个类型集合之间的继承关系。有兴趣可以阅读这篇文章 An Illustrated Guide to Covariance and Contravariance in Kotlin。本文应该属于进阶知识，一般小白程序员不是没听说过就是听说过但是完全搞不明白其中的奥妙。看到即赚到，这又将是你进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kotlin 泛型协变">
+<meta property="og:url" content="https://knightwood.github.io/posts/8c7f1459/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="概述协变，逆变，抗变等概念是从数学中来的，在编程语言Java&#x2F;Kotlin&#x2F;C#中主要在泛型中使用。其描述的是两个类型集合之间的继承关系。有兴趣可以阅读这篇文章 An Illustrated Guide to Covariance and Contravariance in Kotlin。本文应该属于进阶知识，一般小白程序员不是没听说过就是听说过但是完全搞不明白其中的奥妙。看到即赚到，这又将是你进">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-20T12:16:09.000Z">
+<meta property="article:modified_time" content="2022-03-08T15:13:34.401Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="kotlin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>kotlin 泛型协变 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="kotlin 泛型协变">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-20 20:16" pubdate>
+        2021年12月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.4k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      70 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">kotlin 泛型协变</h1>
+            
+            <div class="markdown-body">
+              <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>协变，逆变，抗变等概念是从数学中来的，在编程语言<code>Java/Kotlin/C#</code>中主要在泛型中使用。其描述的是两个类型集合之间的继承关系。有兴趣可以阅读这篇文章 <a target="_blank" rel="noopener" href="https://typealias.com/guides/illustrated-guide-covariance-contravariance/">An Illustrated Guide to Covariance and Contravariance in Kotlin</a>。本文应该属于进阶知识，一般小白程序员不是没听说过就是听说过但是完全搞不明白其中的奥妙。看到即赚到，这又将是你进阶的一个台阶。</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>首先让我们搞明白这三个名词的概念吧：</p>
+<p>假设我们有如下两个类型集合</p>
+<p>第一个集合为： <code>Animal</code>和<code>Dog</code> , <code>Dog</code>是<code>Animal</code>的子类</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">open <span class="hljs-keyword">class</span> <span class="hljs-symbol">Animal</span> <br><span class="hljs-symbol">class</span> <span class="hljs-symbol">Dog</span> : <span class="hljs-symbol">Animal</span>()<br></code></pre></td></tr></table></figure>
+
+<p>第二个集合为 <code>List&lt;Animal&gt;</code> <code>List&lt;Dog&gt;</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs xml">List<span class="hljs-tag">&lt;<span class="hljs-name">Animal</span>&gt;</span><br>List<span class="hljs-tag">&lt;<span class="hljs-name">Dog</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>现在问题来了：由于<code>Dog</code>是<code>Animal</code>的子类，那么<code>List&lt;Dog&gt;</code>就是<code>List&lt;Animal&gt;</code>的子类这句话在Kotlin/Java中对吗？</p>
+<p>相信有一定<code>Java/Kotlin</code>编程经验的都可以回答的出来，答案是<strong>否定</strong>的。我们这里要说的协变，逆变，抗变就是描述上面两个类型集合的关系的。</p>
+<ul>
+<li>协变(Covariance)：<code>List&lt;Dog&gt;</code> 是<code>List&lt;Animal&gt;</code>的子类型</li>
+<li>逆变(Contravariance): <code>List&lt;Animal&gt;</code> 是<code>List&lt;Dog&gt;</code>的子类型</li>
+<li>抗变(Invariant): <code>List&lt;Animal&gt;</code> 与<code>List&lt;Dog&gt;</code>没有任何继承关系</li>
+</ul>
+<blockquote>
+<p>A subtype must <strong>accept at least</strong> the same range of types as its supertype declares.<br> A subtype must <strong>return at most</strong> the same range of types as its supertype declares.</p>
+</blockquote>
+<h1 id="Java中的情形"><a href="#Java中的情形" class="headerlink" title="Java中的情形"></a>Java中的情形</h1><p>由于Kotlin是尝试对Java的改进，所以我们先来看Java的情况：</p>
+<h2 id="抗变"><a href="#抗变" class="headerlink" title="抗变"></a>抗变</h2><p>Java中泛型是<strong>抗变</strong>的，那就意味着<code>List&lt;String&gt;</code>不是<code>List&lt;Object&gt;</code>的子类型。因为如果不这样的话就会产生类型不安全问题。</p>
+<p>例如下面代码可以通过编译的话，就会在运行时抛出异常</p>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mathematica"><span class="hljs-built_in">List</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">String</span><span class="hljs-operator">&gt;</span> <span class="hljs-variable">strs</span> <span class="hljs-operator">=</span> <span class="hljs-variable">new</span> <span class="hljs-variable">ArrayList</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">String</span><span class="hljs-operator">&gt;</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-operator">;</span><br><span class="hljs-built_in">List</span><span class="hljs-operator">&lt;</span><span class="hljs-variable">Object</span><span class="hljs-operator">&gt;</span> <span class="hljs-variable">objs</span> <span class="hljs-operator">=</span> <span class="hljs-variable">strs</span><span class="hljs-operator">;</span> <br><span class="hljs-variable">objs</span><span class="hljs-operator">.</span><span class="hljs-variable">add</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-operator">;</span> <br> <span class="hljs-operator">//</span> 尝试将<span class="hljs-built_in">Integer</span> 转换为<span class="hljs-built_in">String</span><span class="hljs-operator">,</span>发生运行时异常 <span class="hljs-variable">ClassCastException</span><span class="hljs-operator">:</span> <span class="hljs-variable">Cannot</span> <span class="hljs-variable">cast</span> <span class="hljs-built_in">Integer</span> <span class="hljs-variable">to</span> <span class="hljs-built_in">String</span><br><span class="hljs-built_in">String</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> <span class="hljs-variable">strs</span><span class="hljs-operator">.</span><span class="hljs-variable">get</span><span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">)</span><span class="hljs-operator">;</span><br></code></pre></td></tr></table></figure>
+
+<p>所以上面的代码在编译时就会报错，这就保证了类型安全。</p>
+<p>但值得注意的是Java中的<strong>数组是协变的</strong>，所以数组真的会遇到上面的问题，编译可以正常通过，但会发生运行时异常，所以在Java中要优先使用泛型集合。</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript"><span class="hljs-built_in">String</span>[] strs= <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>[]&#123;<span class="hljs-string">&quot;ss007&quot;</span>&#125;;<br><span class="hljs-built_in">Object</span>[] objs= strs;<br>objs[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="协变"><a href="#协变" class="headerlink" title="协变"></a>协变</h2><p><strong>抗变性</strong>会严重制约程序的灵活性，例如有如下方法<code>copyAll</code>,将一个<code>String</code>集合的内容<strong>copy</strong>到一个<code>Object</code>集合中，这是顺理成章的事。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// Java</span><br><span class="hljs-keyword">void</span> <span class="hljs-function"><span class="hljs-title">copyAll</span>(<span class="hljs-params">Collection&lt;<span class="hljs-built_in">Object</span>&gt; to, Collection&lt;<span class="hljs-built_in">String</span>&gt; <span class="hljs-keyword">from</span></span>)</span> &#123;<br>     to.addAll(<span class="hljs-keyword">from</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>但是如果<code>Collection&lt;E&gt;</code>中的<code>addAll</code>方法签名如下的话，<code>copyAll</code>方法就通不过编译，因为通过上面的讲解，我们知道由于抗变性，<code>Collection&lt;String&gt; </code>不是<code>Collection&lt;Object&gt;</code>的子类，所以编译通不过。 </p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">addAll</span><span class="hljs-params">(Collection&lt;E&gt; c)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p>那怎么办呢？</p>
+<p>Java通过<strong>通配符参数</strong>(wildcard type argument)来解决, 把<code>addAll </code>的签名改成如下即可：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">addAll</span><span class="hljs-params">(Collection&lt;? <span class="hljs-keyword">extends</span> E&gt; c)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p><code>? extends E</code> 表示此方法可以接收<code>E</code>或者<code>E</code>的子类的集合。此通配符使得泛型类型<strong>协变</strong>了。</p>
+<h2 id="逆变"><a href="#逆变" class="headerlink" title="逆变"></a>逆变</h2><p>同理有时我们需要将<code>Collection&lt;Object&gt;</code>传递给<code>Collection&lt;String&gt; </code>就使用<code>? super E</code>，其 表示可以接收<code>E</code>或者<code>E</code>的父类，子类的位置却可以接收父类的实例，这就使得泛型类型发生了<strong>逆变</strong></p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">m</span> <span class="hljs-params">(List&lt;? super <span class="hljs-keyword">String</span>)</span></span>&#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="协变与逆变的特性"><a href="#协变与逆变的特性" class="headerlink" title="协变与逆变的特性"></a>协变与逆变的特性</h2><p>当使用<code>? extends E</code> 时，只能调用传入参数的<strong>读取</strong>方法而无法调用其<strong>修改</strong>方法。<br> 当使用<code>? super E</code>时，可以调用输入参数的<strong>修改</strong>方法，但调用<strong>读取</strong>方法的话返回值类型永远是Object，几乎没有用处。</p>
+<p>是不是感觉不好理解，确实不好理解！让我们一起看下<code>code</code>吧，理解了Java的这块，Kotlin的<code>In</code>和<code>out</code>关键字就手到擒来了。</p>
+<p>例如有如下一接口，其有两个方法，一个修改，一个读取。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">interface</span> <span class="hljs-title">BoxJ</span>&lt;<span class="hljs-title">T</span>&gt; &#123;<br>      <span class="hljs-function">T <span class="hljs-title">getAnimal</span>(<span class="hljs-params"></span>)</span>;<br>      <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">putAnimal</span>(<span class="hljs-params">T a</span>)</span>;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>下面是两个使用通配符的方法，注意看注释</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-comment">//协变，可以接受BoxJ&lt;Dog&gt;类型的参数</span><br> <span class="hljs-keyword">private</span> Animal getOutAnimalFromBox(BoxJ&lt;? extends Animal&gt; <span class="hljs-built_in">box</span>) &#123;<br>       Animal animal = <span class="hljs-built_in">box</span>.getAnimal();<br>      <span class="hljs-comment">// box.putAnimal(某个类型) 无法调用该修改方法，因为无法确定 ？究竟是一个什么类型，没办法传入</span><br>       <span class="hljs-keyword">return</span> animal;<br>  &#125;<br><br><span class="hljs-comment">//逆变，可以接受BoxJ&lt;Animal&gt;类型的参数</span><br> <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> putAnimalInBox(BoxJ&lt;? <span class="hljs-keyword">super</span> Dog&gt; <span class="hljs-built_in">box</span>)&#123;<br>        <span class="hljs-built_in">box</span>.putAnimal(<span class="hljs-keyword">new</span> Dog());<br>        <span class="hljs-comment">// 虽然可以调用读取方法，但返回的类型却是Object，因为我们只能确定 ？的最顶层基类是Object</span><br>        <span class="hljs-keyword">Object</span> animal= <span class="hljs-built_in">box</span>.getAnimal();<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>关于Java的通配符如何使用，<a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/java/effectivejava-136174.html"> Effective Java, 3rd Edition</a> 的作者将其总结为：<strong>PECS</strong> : stands for Producer-Extends, Consumer-Super. 结合上面代码分析是不是觉得很精辟。 </p>
+<ul>
+<li>Producer-Extends 只能调用读取方法，向外提供数据，无法调用修改方法</li>
+<li>Consumer-Super  一般只调用修改方法，消费从外面获取的数据，调用读取方法几乎没什么用，拿到的类型永远是<code>Object</code></li>
+</ul>
+<p>建议自己动手尝试一下,不然还是会有点懵</p>
+<p>那Java这种方式有没有弊端呢？Kotlin官方认为有，但是我却没怎么领会，请原谅我。其大概的意思就是说：增加了复杂性，但却没有获得相应的好处。</p>
+<h1 id="Kotlin中的情形"><a href="#Kotlin中的情形" class="headerlink" title="Kotlin中的情形"></a>Kotlin中的情形</h1><h1 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h1><p>本文承接于上一篇：秒懂Kotlin之协变(Covariance)逆变(Contravariance)与抗变(Invariant)，<strong>一定要先阅读这一篇文章</strong>，再阅读本文，不然看不懂！</p>
+<p>上篇讲到Java中泛型是<strong>抗变</strong>的，但是数组却是<strong>协变</strong>的。Kotlin做的更彻底，不仅泛型是抗变的就连数组也变成抗变的了。</p>
+<p>下面的代码是编译不过的</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">val</span> strArray:Array&lt;String&gt; = <span class="hljs-built_in">array</span><span class="hljs-constructor">Of(<span class="hljs-string">&quot;shu&quot;</span>,<span class="hljs-string">&quot;sheng&quot;</span>,<span class="hljs-string">&quot;007&quot;</span>)</span><br><span class="hljs-keyword">val</span> <span class="hljs-built_in">array</span>:Array&lt;Any&gt; = strArray<br></code></pre></td></tr></table></figure>
+
+<p>报错：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">Type</span> <span class="hljs-type">mismatch: </span>inferred <span class="hljs-keyword">type</span> <span class="hljs-type">is </span><span class="hljs-keyword">Array</span>&lt;String&gt; but <span class="hljs-keyword">Array</span>&lt;Any&gt; was expected<br></code></pre></td></tr></table></figure>
+
+<h1 id="泛型型变"><a href="#泛型型变" class="headerlink" title="泛型型变"></a>泛型型变</h1><p>官方文档见：<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/generics.html#variance">Variance</a></p>
+<p>Kotlin中没有通配符，取而代之的是 <strong>Declaration-site variance</strong>和<strong>Use-site variance</strong> 。其通过两个关键字<code>out</code>和<code>in</code>来实现Java中的<code>? extends</code> 与<code>? super </code>的功能.</p>
+<p>假设我们有如下两个类和一个接口</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">open</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Animal</span></span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dog</span> : <span class="hljs-type">Animal</span></span>()<br><br><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Box</span>&lt;<span class="hljs-type">T</span>&gt; </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getAnimal</span><span class="hljs-params">()</span></span>: T<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">putAnimal</span><span class="hljs-params">(a: <span class="hljs-type">T</span>)</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="协变（out）"><a href="#协变（out）" class="headerlink" title="协变（out）"></a>协变（out）</h2><p>我们要定义一个方法，参数类型为<code>Box&lt;Animal&gt;</code>，但是我们希望可以传入<code>Box&lt;Dog&gt;</code>即希望可以发生<strong>协变</strong>。</p>
+<p>Java实现</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">private</span> Animal get<span class="hljs-constructor">OutAnimalFromBox(Box&lt;? <span class="hljs-params">extends</span> Animal&gt; <span class="hljs-params">box</span>)</span> &#123;<br>   Animal animal = box.get<span class="hljs-constructor">Animal()</span>;<br><span class="hljs-comment">//       box.putAnimal(？ ) 没有办法调用修改方法，因为我们不知道？究竟是一个什么类型，没办法传入</span><br>   return animal;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Kotlin对应的实现为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getAnimalFromBox</span><span class="hljs-params">(b: <span class="hljs-type">Box</span>&lt;<span class="hljs-type">out</span> <span class="hljs-type">Animal</span>&gt;)</span></span> : Animal &#123;<br>    <span class="hljs-keyword">val</span> animal: Animal = b.getAnimal()<br><span class="hljs-comment">//    b.putAnimal(Nothing) 无法调用，因为方法需要一个Nothing类型的对象，但是在kotlin中无法获取</span><br>    <span class="hljs-keyword">return</span> animal<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>此方法可以接受<code>Box&lt;Dog&gt;</code>类型的参数了。</p>
+<p>可见此处使用<code>out</code> 代替了<code>? extends</code>。从结果来看确实更合适一点，因为传入的参数只能提供值，而不能消费值。由于<code>out</code>是在方法调用的参数中标记的，处于使用端，所以叫<strong>Use-site variance</strong>与<strong>Use-site variance</strong>对应的就是<strong>Declaration-site variance</strong>了。</p>
+<p>我们发现接口<code> Box&lt;T&gt;</code>中既有消费值的方法<code>fun putAnimal(a: T)</code>，又有提供值的方法<code>fun getAnimal(): T</code>,导致我们必须在使用侧告诉编译器我们要使用哪一类方法。那我们可以在声明接口的时候告诉编译器吗？答案是肯定的，但是就需要将接口拆分为只包含提供值的方法的接口<strong>producer</strong>与只包含消费值的方法的接口<strong>consumer</strong>。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//producer</span><br><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ReadableBox</span>&lt;<span class="hljs-type">out T</span>&gt; </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getAnimal</span><span class="hljs-params">()</span></span>: T<br>&#125;<br><span class="hljs-comment">//consumer</span><br><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">WritableBox</span>&lt;<span class="hljs-type">in T</span>&gt; </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">putAnimal</span><span class="hljs-params">(a: <span class="hljs-type">T</span>)</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>拆分完接口并做了相应的声明后，就可以不在使用端使用<code>out</code>或者<code>in</code>了。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getAnimalFromReadableBox</span><span class="hljs-params">(b: <span class="hljs-type">ReadableBox</span>&lt;<span class="hljs-type">Animal</span>&gt;)</span></span>&#123;<br>    <span class="hljs-keyword">val</span> a: Animal = b.getAnimal()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面的方法可以直接接受<code>ReadableBox&lt;Dog&gt;</code>类型的参数，给人的感觉好像是Kotlin使得泛型协变了。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">getAnimalFromReadableBox(<span class="hljs-keyword">object</span> :ReadableBox&lt;Dog&gt;&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getAnimal</span><span class="hljs-params">()</span></span>: Dog &#123;<br>        <span class="hljs-keyword">return</span> Dog()<br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>此种情况下<code>out</code>和<code>in</code>是在声明时候使用的，所以叫<strong>Declaration-site variance</strong>了。</p>
+<h2 id="逆变（in）"><a href="#逆变（in）" class="headerlink" title="逆变（in）"></a>逆变（in）</h2><p>我们要定义一个方法，参数类型为<code>Box&lt;Dog&gt;</code>，但是我们希望可以传入<code>Box&lt;Animal&gt;</code>，即希望可以发生<strong>逆变</strong>。</p>
+<p>Java实现</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> putAnimalInBox(BoxJ&lt;? <span class="hljs-keyword">super</span> Dog&gt; <span class="hljs-built_in">box</span>)&#123;<br>    <span class="hljs-built_in">box</span>.putAnimal(<span class="hljs-keyword">new</span> Dog());<br>    <span class="hljs-keyword">Object</span> animal= <span class="hljs-built_in">box</span>.getAnimal();<span class="hljs-comment">// 可以调用读取方法，但是返回的类型确实Object，因为我们只能确定？的大基类是Object</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Kotlin对应实现</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">putAnimalInBox</span><span class="hljs-params">(b: <span class="hljs-type">Box</span>&lt;<span class="hljs-type">in</span> <span class="hljs-type">Dog</span>&gt;)</span></span>&#123;<br>    b.putAnimal(Dog())<br>    <span class="hljs-keyword">val</span> animal:Any? = b.getAnimal()<span class="hljs-comment">// 可以调用读取方法，但是返回的类型确实Any?，因为我们只能确定？的大基类是Any?</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>此方法可以接受<code>Box&lt;Animal&gt;</code>类型的参数了</p>
+<p>可见此处使用<code>in</code> 代替了<code>? super</code>,从结果来看确实更合适一点，因为传入的参数只适合消费值，而不适合获取值，获取到的值失去了有用的类型信息。由于<code>in</code>是在方法调用的参数中标记的，处于使用端，所以叫<strong>Use-site variance</strong></p>
+<p>让我们来看一下使用<strong>Declaration-site variance</strong>实现逆变</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">putAnimalToWritableBox</span><span class="hljs-params">(b:<span class="hljs-type">WritableBox</span>&lt;<span class="hljs-type">Dog</span>&gt;)</span></span>&#123;<br>    b.putAnimal(Dog())<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面的方法可以直接接受<code>WritableBox&lt;Animal&gt;</code>类型的参数，给人的感觉好像是Kotlin使得泛型逆变了。  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">putAnimalToWritableBox(<span class="hljs-keyword">object</span> :WritableBox&lt;Animal&gt;&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">putAnimal</span><span class="hljs-params">(a: <span class="hljs-type">Animal</span>)</span></span> &#123;<br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h1 id="in-amp-out-怎么记？"><a href="#in-amp-out-怎么记？" class="headerlink" title="in &amp; out 怎么记？"></a>in &amp; out 怎么记？</h1><ul>
+<li>out 相当于java里面<T extends Type>，in相当于 <T super Type></li>
+</ul>
+<p><strong>Out (协变)</strong></p>
+<p>如果你的类是将泛型作为内部方法的返回，那么可以用 out：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Production</span>&lt;<span class="hljs-type">out T</span>&gt; </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">produce</span><span class="hljs-params">()</span></span>: T<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以称其为 production class/interface，因为其主要是产生（produce）指定泛型对象。因此，可以这样来记：<em>produce = output = out</em>。</p>
+<p><strong>In(逆变)</strong></p>
+<p>如果你的类是将泛型对象作为函数的参数，那么可以用 in：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Consumer</span>&lt;<span class="hljs-type">in T</span>&gt; </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">consume</span><span class="hljs-params">(item: <span class="hljs-type">T</span>)</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以称其为 consumer class/interface，因为其主要是消费指定泛型对象。因此，可以这样来记：<em>consume = input = in。</em></p>
+<p><strong>Invariant(不变)</strong></p>
+<p>如果既将泛型作为函数参数，又将泛型作为函数的输出，那就既不用 in 或 out。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ProductionConsumer</span>&lt;<span class="hljs-type">T</span>&gt; </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">produce</span><span class="hljs-params">()</span></span>: T<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">consume</span><span class="hljs-params">(item: <span class="hljs-type">T</span>)</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h2><p>假设我们有一个汉堡（burger）对象，它是一种快餐，当然更是一种食物</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">open</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Food</span></span><br><span class="hljs-keyword">open</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FastFood</span> : <span class="hljs-type">Food</span></span>() <br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Burger</span> : <span class="hljs-type">FastFood</span></span>()<br></code></pre></td></tr></table></figure>
+
+<p><strong>1. 汉堡提供者</strong></p>
+<p>根据上面定义的类和接口来设计提供 <em>food, fastfood</em> 和 <em>burger</em> 的类：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FoodStore</span> : <span class="hljs-type">Production</span>&lt;<span class="hljs-type">Food</span>&gt; </span>&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">produce</span><span class="hljs-params">()</span></span>: Food &#123;<br>        println(<span class="hljs-string">&quot;Produce food&quot;</span>)<br>        <span class="hljs-keyword">return</span> Food()<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FastFoodStore</span> : <span class="hljs-type">Production</span>&lt;<span class="hljs-type">FastFood</span>&gt; </span>&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">produce</span><span class="hljs-params">()</span></span>: FastFood &#123;<br>        println(<span class="hljs-string">&quot;Produce food&quot;</span>)<br>        <span class="hljs-keyword">return</span> FastFood()<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InOutBurger</span> : <span class="hljs-type">Production</span>&lt;<span class="hljs-type">Burger</span>&gt; </span>&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">produce</span><span class="hljs-params">()</span></span>: Burger &#123;<br>        println(<span class="hljs-string">&quot;Produce burger&quot;</span>)<br>        <span class="hljs-keyword">return</span> Burger()<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在，我们可以这样赋值：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> production1 : Production&lt;Food&gt; = FoodStore()<br><span class="hljs-keyword">val</span> production2 : Production&lt;Food&gt; = FastFoodStore()<br><span class="hljs-keyword">val</span> production3 : Production&lt;Food&gt; = InOutBurger()<br></code></pre></td></tr></table></figure>
+
+<p>很显然，汉堡商店属于是快餐商店，当然也属于食品商店。</p>
+<blockquote>
+<p><strong>因此，对于 out 泛型，我们能够将使用子类泛型的对象赋值给使用父类泛型的对象。</strong></p>
+</blockquote>
+<p>而如果像下面这样反过来使用子类 - Burger 泛型，就会出现错误，因为快餐（fastfood）和食品（food）商店不仅仅提供汉堡（burger）。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> production1 : Production&lt;Burger&gt; = FoodStore()  <span class="hljs-comment">// Error</span><br><span class="hljs-keyword">val</span> production2 : Production&lt;Burger&gt; = FastFoodStore()  <span class="hljs-comment">// Error</span><br><span class="hljs-keyword">val</span> production3 : Production&lt;Burger&gt; = InOutBurger()<br></code></pre></td></tr></table></figure>
+
+<p><strong>2. 汉堡消费者</strong></p>
+<p>再让我们根据上面的类和接口来定义汉堡消费者类：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Everybody</span> : <span class="hljs-type">Consumer</span>&lt;<span class="hljs-type">Food</span>&gt; </span>&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">consume</span><span class="hljs-params">(item: <span class="hljs-type">Food</span>)</span></span> &#123;<br>        println(<span class="hljs-string">&quot;Eat food&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ModernPeople</span> : <span class="hljs-type">Consumer</span>&lt;<span class="hljs-type">FastFood</span>&gt; </span>&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">consume</span><span class="hljs-params">(item: <span class="hljs-type">FastFood</span>)</span></span> &#123;<br>        println(<span class="hljs-string">&quot;Eat fast food&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">American</span> : <span class="hljs-type">Consumer</span>&lt;<span class="hljs-type">Burger</span>&gt; </span>&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">consume</span><span class="hljs-params">(item: <span class="hljs-type">Burger</span>)</span></span> &#123;<br>        println(<span class="hljs-string">&quot;Eat burger&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在，我们能够将 <em>Everybody, ModernPeople</em> 和 American 都指定给汉堡消费者（Consumer<Burger>）：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> consumer1 : Consumer&lt;Burger&gt; = Everybody()<br><span class="hljs-keyword">val</span> consumer2 : Consumer&lt;Burger&gt; = ModernPeople()<br><span class="hljs-keyword">val</span> consumer3 : Consumer&lt;Burger&gt; = American()<br></code></pre></td></tr></table></figure>
+
+<p>很显然这里美国的汉堡的消费者既是现代人，更是人类。</p>
+<blockquote>
+<p><strong>因此，对于 in 泛型，我们可以将使用父类泛型的对象赋值给使用子类泛型的对象。</strong></p>
+</blockquote>
+<p>同样，如果这里反过来使用父类 - Food 泛型，就会报错：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> consumer1 : Consumer&lt;Food&gt; = Everybody()<br><span class="hljs-keyword">val</span> consumer2 : Consumer&lt;Food&gt; = ModernPeople()  <span class="hljs-comment">// Error</span><br><span class="hljs-keyword">val</span> consumer3 : Consumer&lt;Food&gt; = American()  <span class="hljs-comment">// Error</span><br></code></pre></td></tr></table></figure>
+
+<p>根据以上的内容，我们还可以这样来理解什么时候用 in 和 out：</p>
+<ul>
+<li>父类泛型对象可以赋值给子类泛型对象，用 in；</li>
+<li>子类泛型对象可以赋值给父类泛型对象，用 out。</li>
+</ul>
+<p>作者：极小光<br>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c5ef8b30d768">https://www.jianshu.com/p/c5ef8b30d768</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/kotlin/">kotlin</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/5e9164d5/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">打包aar</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/6b676e55/">
+                        <span class="hidden-mobile">kotlin 技巧-写Intent的扩展</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

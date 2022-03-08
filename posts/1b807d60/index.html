@@ -1,0 +1,615 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="目录  1. 概述1.1 CIA 三要素在讨论今天的主题之前，有必要先搞清楚到底什么是安全？在计算机领域，所谓的 “安全” 其实是指 “信息安全”，它的基本含义可以概括为三个要素，简称 CIA 三要素：  1、机密性（Confidentiality）： 指确保数据在传输和存储过程中的私密性。主要的手段是加密、权限管理和敏感信息脱敏； 2、完整性（Integrity）： 指确保数据内容完成，没有被篡">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加密方式">
+<meta property="og:url" content="https://knightwood.github.io/posts/1b807d60/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="目录  1. 概述1.1 CIA 三要素在讨论今天的主题之前，有必要先搞清楚到底什么是安全？在计算机领域，所谓的 “安全” 其实是指 “信息安全”，它的基本含义可以概括为三个要素，简称 CIA 三要素：  1、机密性（Confidentiality）： 指确保数据在传输和存储过程中的私密性。主要的手段是加密、权限管理和敏感信息脱敏； 2、完整性（Integrity）： 指确保数据内容完成，没有被篡">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9712e36edd5b48f79b42a230969e5a7c~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1e9bbe5da27a45faba3826de0675089e~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d9d7edc5b6d417e8ebcb142477b1b7f~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69aa7c60a39d4b90a029d37b2d95631f~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5db3edf0bbf0452fb3380d5217258dde~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b54361d96c8477588c95577bf61bad6~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5148e9add67240718f84ddd3cd4b2fd6~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b84db63d6eb245e1a06d8194432d1e05~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-12-20T12:16:09.000Z">
+<meta property="article:modified_time" content="2022-03-08T15:13:33.908Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="杂谈">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9712e36edd5b48f79b42a230969e5a7c~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  <title>加密方式 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="加密方式">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-20 20:16" pubdate>
+        2021年12月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      51 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">加密方式</h1>
+            
+            <div class="markdown-body">
+              <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9712e36edd5b48f79b42a230969e5a7c~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="img"></p>
+<hr>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><h4 id="1-1-CIA-三要素"><a href="#1-1-CIA-三要素" class="headerlink" title="1.1 CIA 三要素"></a>1.1 CIA 三要素</h4><p>在讨论今天的主题之前，有必要先搞清楚到底什么是安全？在计算机领域，所谓的 “安全” 其实是指 “信息安全”，它的基本含义可以概括为三个要素，简称 <strong>CIA 三要素</strong>：</p>
+<ul>
+<li><strong>1、机密性（Confidentiality）：</strong> 指确保数据在传输和存储过程中的私密性。主要的手段是加密、权限管理和敏感信息脱敏；</li>
+<li><strong>2、完整性（Integrity）：</strong> 指确保数据内容完成，没有被篡改。主要手段是数字签名；</li>
+<li><strong>3、可用性（Avaliability）：</strong> 指确保服务保持可用状态。例如能够承受 Dos 等网络攻击。</li>
+</ul>
+<h4 id="1-2-非安全信道的风险"><a href="#1-2-非安全信道的风险" class="headerlink" title="1.2 非安全信道的风险"></a>1.2 非安全信道的风险</h4><p>数据需要通过信道进行传输，狭义上的信道是指报纸、有线网络、无线电波等通信媒介，而广义上说，信道可以理解为数据从分发到接收的整个过程。在非安全信道中，主要会面临以下三个安全风险：</p>
+<ul>
+<li><strong>1、窃听风险：</strong> 现代计算机网络建立在 TCP/IP 协议族提供传输能力上，数据在传输线路上的每个环节都可能被窃听，从而导致敏感数据泄露；</li>
+<li><strong>2、篡改风险：</strong> 数据在传输过程中可能被篡改，例如中间人攻击。攻击者可以和通信双方分别建立独立的连接，使得通信双方误以为它们正在进行一个私密连接，但察觉不到数据被篡改；</li>
+<li><strong>3、伪装风险：</strong> 攻击者可以伪装成合法的身份。</li>
+</ul>
+<h4 id="1-3-如何实现传输安全？"><a href="#1-3-如何实现传输安全？" class="headerlink" title="1.3 如何实现传输安全？"></a>1.3 如何实现传输安全？</h4><p>我们今天的主题 “加密 + 签名 + 证书”，本质上就是在非安全信道中实现数据安全传输的解决方案。要实现数据安全传输，其实就是要高效地解决非安全信道中的三个风险：</p>
+<ul>
+<li><strong>1、加密 —— 防窃听 ：</strong> 将明文转换为密文，只有期望的接收方有能力将密文解密为明文，即使密文被攻击者窃取也无法理解数据的内容；</li>
+<li><strong>2、验证完整性 —— 防止篡改：</strong> 对原始数据计算摘要，并将数据和摘要一起交付给通信对方。接收方收到后也对数据计算摘要，并比较是否和接受的摘要一致，借此判断接收的数据是否被篡改。不过，因为收到的摘要也可能被篡改，所以需要使用更安全的手段：数字签名；</li>
+<li><strong>3、认证数据来源 —— 防止伪装：</strong> 数字签名能够验证数据完整性，同时也能认证数据来源，防止伪装。</li>
+</ul>
+<hr>
+<h1 id="2-加密-——-防窃听"><a href="#2-加密-——-防窃听" class="headerlink" title="2. 加密 —— 防窃听"></a>2. 加密 —— 防窃听</h1><h4 id="2-1-什么是加密？"><a href="#2-1-什么是加密？" class="headerlink" title="2.1 什么是加密？"></a>2.1 什么是加密？</h4><p>加密（Encryption）是将明文（Plaintext）转换为密文（Ciphertext）的过程，只有期望的接收方有能力将密文解密为明文，即使密文被攻击者窃取也无法理解数据的内容。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1e9bbe5da27a45faba3826de0675089e~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>在古典密码时期，数据保密性取决于算法的保密性，一旦加密算法被破解或泄露，就失去了数据的安全性。而进入现代密码时期，柯克霍夫原则成为加密系统的基本设计原则：<strong>数据的安全性基于密钥而不是算法的保密</strong>。</p>
+<p>根据柯克霍夫原则，现代的保密通信模型是基于密钥的保密模型模型。在这个模型中，加密和解密使用相同密钥，就是 <strong>对称加密密码体制</strong>；反之，加密和解密使用是不同密钥，就是 <strong>非对称密码体制。</strong></p>
+<h4 id="2-2-对称加密和非对称加密的区别？"><a href="#2-2-对称加密和非对称加密的区别？" class="headerlink" title="2.2 对称加密和非对称加密的区别？"></a>2.2 对称加密和非对称加密的区别？</h4><ul>
+<li><strong>1、密钥管理：</strong> 对称加密算法中需要将密钥发送给通信对方，存在密钥泄漏风险；非对称加密公钥是公开的，私钥是保密的，防止了私钥外传；</li>
+<li><strong>2、密钥功能：</strong> 公钥加密的数据，只可使用私钥对其解密。反之，私钥加密的数据，只可使用公钥对其解密（注意：公钥加密的数据无法使用公钥解密，因为公钥是公开的，如果公钥可以解密的话，就失去了加密的安全性）；</li>
+<li><strong>3、计算性能：</strong> 非对称加密算法的计算效率低，因此实际中往往采用两种算法结合的复合算法：先使用非对称加密建立安全信道传输对称密钥，再使用该密钥进行对称加密；</li>
+<li><strong>4、认证功能：</strong> 非对称加密算法中，私钥只有一方持有，具备认证性和抗抵赖性（<strong>第 3 节 数字签名算法</strong> 应用了此特性）。</li>
+</ul>
+<p>考虑到性能的因素，在 HTTPS 协议中采用的是 “对称加密” 和 “非对称加密” 结合的 “混合加密” 方案：<strong>在建立通信时，采用非对称加密的方式来协商 “会话密钥”，在通信过程中基于该密钥进行对称加密通信。</strong></p>
+<h4 id="2-3-数据加密标准-——-DES"><a href="#2-3-数据加密标准-——-DES" class="headerlink" title="2.3 数据加密标准 —— DES"></a>2.3 数据加密标准 —— DES</h4><p>1977 年，数据加密标准（Data Encryption Standard, DES）成为美国联邦信息处理标准，并逐渐成为事实标准，很多主流的对称加密算法都是从 DES 算法发展过来的。</p>
+<p><strong>DES  算法的主要缺点是加密强度和计算性能较差</strong></p>
+<ul>
+<li><strong>1、密钥长度太短：</strong> DES 算法密钥长度只有 56 bit，理论最大加密长度为 256。随着计算机算力的提高，用穷举法可以在较短时间破解密钥；</li>
+<li><strong>2、不能对抗差分和线性密码分析；</strong></li>
+<li><strong>3、计算性能较差：</strong> 增加 DES 密钥长度，加解密的计算开销呈指数增长。</li>
+</ul>
+<h4 id="2-4-高级加密标准-——-AES"><a href="#2-4-高级加密标准-——-AES" class="headerlink" title="2.4 高级加密标准 —— AES"></a>2.4 高级加密标准 —— AES</h4><p>高级加密标准（Advanced Encryption Standard, AES），又称 Rijndael [rain-dahl]加密法，是目前最流行的对称加密算法之一。</p>
+<p>相对于 DES 算法，AES 算法的主要优点如下：</p>
+<ul>
+<li><strong>1、密钥长度更大：</strong> 密钥长度最小为 12 bit，最大为 256 bit。用穷举法难以破解；</li>
+<li><strong>2、使用 WTS 设计策略，可对抗差分和线性密码分析；</strong></li>
+<li><strong>3、计算性能高：</strong> 计算和内存开销低，适用于受限设备。</li>
+</ul>
+<h4 id="2-5-RSA-算法"><a href="#2-5-RSA-算法" class="headerlink" title="2.5 RSA 算法"></a>2.5 RSA 算法</h4><p>1977 年，麻省理工学院的三位教授 Rivest、Shamir 和 Adleman 共同提出了 RSA 加密算法，其中 RSA 分别是他们姓氏的首字母。RSA 是经典的非对称加密算法，同时也是经典的数字签名算法。</p>
+<p>RSA 算法的安全性依赖于一个数学难题 —— <strong>“大数因式分解”：两个大素数相乘非常容易，但对一个极大整数做因式分解的复杂度极高</strong>。如果存在某种快速因素分解的算法，那么 RSA 算法的可靠性将会大大折扣。RSA 算法存在一个系统性风险：<strong>“不支持前向加密”</strong>。在 RSA 算法中，服务端公钥是相对固定的，一但服务端私钥被破解，则之前所有发送过得加密数据都会被破解。</p>
+<p>关于 RSA 算法的原理解析，可参考：<a href="https://link.juejin.cn/?target=https://zhuanlan.zhihu.com/p/375258787">浅析 RSA 算法</a>。</p>
+<h4 id="2-6-DH-算法"><a href="#2-6-DH-算法" class="headerlink" title="2.6 DH 算法"></a>2.6 DH 算法</h4><p>DH 算法的安全性依赖于一个数学难题 —— <strong>“离散对数”：已知对数计算出真数非常简单，但已知真数求对数的复杂度极高。</strong> 如果存在某种求对数的算法，那么 DH 算法的可靠性将会大大折扣。</p>
+<p>目前，DH 算法有多种实现，主要区别如下：</p>
+<ul>
+<li>static DH 算法：一方的私钥是静态的（通常是服务器私钥固定），不具备前向安全性；</li>
+<li>DHE 算法：双方的私钥都在密钥交换节点随机生成，具备前向安全性；</li>
+<li>ECDHE 算法：利用 ECC 椭圆曲线特性，可以用更少的计算量计算公钥和私钥。</li>
+</ul>
+<p>关于 DH 算法的原理解析，可参考：<a href="https://link.juejin.cn/?target=https://mp.weixin.qq.com/s/pLyR8zuw4l7Z6sdUZ4IL5w">这 HTTPS，真滴牛逼！</a></p>
+<h4 id="2-7-安全系统中为什么要使用随机数？"><a href="#2-7-安全系统中为什么要使用随机数？" class="headerlink" title="2.7 安全系统中为什么要使用随机数？"></a>2.7 安全系统中为什么要使用随机数？</h4><p>在 RSA 算法生成密钥对的过程中，我们需要随机生成两个大素数。事实上，除了在 RSA 算法中，很多安全系统中都需要一个随机数，为什么呢？—— <strong>关键在于随机数不可预测性，可以提高破解和报文重放攻击难度。</strong></p>
+<h4 id="2-8-计算机如何生成随机数？"><a href="#2-8-计算机如何生成随机数？" class="headerlink" title="2.8 计算机如何生成随机数？"></a>2.8 计算机如何生成随机数？</h4><p>随机数是计算机安全领域中非常重要的一个点，很多场景中都需要一个随机数来生成随机事件，比如密钥的生成、文件名、sessionId/orderId/token 等。现代的随机数生成模型依然采用的是 1946 年冯·诺依曼设计的随机数模型：</p>
+<p>1、输入任意一个数作为 “种子”，通过随机数算法得到一个随机数； 2、将生成的随机数作为新的种子，代入下一轮计算； 3、重复 1、2 步骤，就可以生成多个具有统计意义的随机数。</p>
+<p><strong>然而，通过这种模型生成的随机数并不是绝对随机的</strong>。只要取样范围足够大，随机结果一定会陷入循环，因此这种模型生成的随机数只能称为 <strong>“伪随机数”</strong>，而随机结果陷入循环的周期称为 <strong>“随机周期”</strong>。</p>
+<p>要得到真正意义的随机数，需要硬件层面支持。1999 年 Intel 在其 i810 芯片组上集成了世界上第一款真随机数生成器，它的方案是将电路的热噪声（分子的不规则运动）作为数据来源，缺点是效率太低，因此目前计算机中采用的随机数依旧是软件实现的伪随机数。虽然软件无法做到真随机，但可以提高生成器的随机性。比如采用更强壮的随机算法（Java#SecurityRandom）、采用更复杂的种子（系统时间、鼠标位置、网络速度、硬盘读写速度）、扩大随机数的取值范围、组合多个随机算法等。</p>
+<hr>
+<h1 id="3-数字签名-——-验证完整性-amp-认证数据来源"><a href="#3-数字签名-——-验证完整性-amp-认证数据来源" class="headerlink" title="3. 数字签名 —— 验证完整性 &amp; 认证数据来源"></a>3. 数字签名 —— 验证完整性 &amp; 认证数据来源</h1><h4 id="3-1-什么是数字签名？"><a href="#3-1-什么是数字签名？" class="headerlink" title="3.1 什么是数字签名？"></a>3.1 什么是数字签名？</h4><p><strong>数字签名（Digital Signature）也叫作数字指纹（Digital Fingerprint），它是消息摘要算法和非对称加密算法的结合体，能够验证数据的完整性，并且认证数据的来源</strong>。</p>
+<p>数据签名算法的模型分为两个主要阶段：</p>
+<ul>
+<li><strong>1、签名：</strong> 先计算数据的 [摘要]，再使用私钥对 [摘要] 进行加密生成 [签名]，将 [数据 + 签名] 一并发送给接收方；</li>
+<li><strong>2、验证：</strong> 先使用相同的摘要算法计算接收数据的 [摘要]，再使用预先得到的公钥解密 [签名]，对比 [解密的签名] 和 [计算的摘要] 是否一致。若一致，则说明数据没有被篡改。</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d9d7edc5b6d417e8ebcb142477b1b7f~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="img"></p>
+<blockquote>
+<p><strong>提示：</strong> 接收方如何安全地预先得到发送方的公钥，见 <strong>第 4 节</strong>。</p>
+</blockquote>
+<h4 id="3-2-为什么数字签名可以验证完整性？"><a href="#3-2-为什么数字签名可以验证完整性？" class="headerlink" title="3.2 为什么数字签名可以验证完整性？"></a>3.2 为什么数字签名可以验证完整性？</h4><p>验证完整性主要依赖于消息摘要算法的特性，摘要算法的原理是根据一定的运算规则提取原始数据中的信息，被提取的信息就是原始数据的消息摘要，也称为数据指纹。著名的摘要算法有 MD5 算法和 SHA 系列算法。</p>
+<p>摘要算法具有以下特点：</p>
+<ul>
+<li><strong>一致性：</strong> 相同数据多次计算的摘要是相同的，不同的数据（在不考虑碰撞时）的摘要是不同的；</li>
+<li><strong>不可逆性：</strong> 只能正向提取原始数据的摘要，无法从摘要反推出原始数据；</li>
+<li><strong>高效性：</strong> 摘要的生成过程高效快速；</li>
+</ul>
+<p>摘要算法的模型分为两个主要步骤：</p>
+<ul>
+<li><strong>生成摘要：</strong> 先计算数据的 [摘要]，再将 [数据 + 摘要] 一并发送给接收方；</li>
+<li><strong>验证摘要：</strong> 使用相同的摘要算法计算接收数据的 [摘要]，对比 [收到的摘要] 与 [计算的摘要]是否一致。若一致，则说明数据是完整的。</li>
+</ul>
+<p>需要注意的是，<strong>单纯依靠摘要算法不能严格地验证数据完整性</strong>。因为在非安全信道中，数据和摘要都存在篡改风险，攻击者在篡改数据时也可以篡改摘要。因此，摘要算法需要配合加密算法才能严格验证完整性。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69aa7c60a39d4b90a029d37b2d95631f~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="3-3-为什么数字签名可以认证数据来源？"><a href="#3-3-为什么数字签名可以认证数据来源？" class="headerlink" title="3.3 为什么数字签名可以认证数据来源？"></a>3.3 为什么数字签名可以认证数据来源？</h4><p>这是因为签名时引入了发送方的私有信息（私钥），只有 ”合法的发送方“ 才能产生其他人无法伪造的一段数字签名（加密字符串），这个数字签名就证明了数据的真实来源。当接收方采用 ”合法途径“ 获得发送方的公有信息是（公钥），并且成功验证数字签名，那么正说明数据来自 ”合法的接收方“。</p>
+<p>另外，在签名时引入发送方私有信息，在验证时使用发送方公有信息，这正好符合 “非对称加密” 的特点。因此签名时引入的私有信息正是私钥，验证时使用的公有信息正式公钥。</p>
+<h4 id="3-4-摘要算法存在碰撞，是不是不安全？"><a href="#3-4-摘要算法存在碰撞，是不是不安全？" class="headerlink" title="3.4 摘要算法存在碰撞，是不是不安全？"></a>3.4 摘要算法存在碰撞，是不是不安全？</h4><p>摘要算法（散列算法）本质上是一种 <strong>压缩映射</strong>，因此一定存在不同原始数据映射到同一个散列值的情况，这就是发生了碰撞（散列冲突，Hash Collision）。事实上，MD5、SHA-1 等散列算法已经陆续被找到快速散列碰撞的的方法，攻击者可以构造内存篡改但摘要一致的文件从而绕过检查。但不代表完全不安全，因为篡改为有价值的伪造内容还有困难？？</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5db3edf0bbf0452fb3380d5217258dde~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="3-5-为什么摘要中需要加盐？"><a href="#3-5-为什么摘要中需要加盐？" class="headerlink" title="3.5 为什么摘要中需要加盐？"></a>3.5 为什么摘要中需要加盐？</h4><p>为了提高安全性，在对原始数据生成摘要之前，我们往往会先向原始数据中加盐，再生成摘要。为什么要这么做呢？</p>
+<p>这是为了避免 <strong>“彩虹表（Rainbow tables）” 攻击</strong>，提高简单数据的安全性。因为摘要算法有一致性的特点，相同数据多次计算的摘要是相同的。利用这个特性，攻击者可以预先生成一系列简单数据的摘要，并存储 “摘要 - 数据” 的映射，这个映射关系就是彩虹表。在获取到数据摘要后，如果发现摘要存在彩虹表中，就可以轻易地反推出原始数据。</p>
+<p>用户在设置密码时，也要避免使用 123456 这种简单密码，因为容易被彩虹表攻击破解。为了提高安全性，在传输手机号、密码等敏感信息的过程中，往往会在原始密码中加盐。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b54361d96c8477588c95577bf61bad6~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="3-6-可以先使用私钥对原数据签名，再对签名进行摘要吗？"><a href="#3-6-可以先使用私钥对原数据签名，再对签名进行摘要吗？" class="headerlink" title="3.6 可以先使用私钥对原数据签名，再对签名进行摘要吗？"></a>3.6 可以先使用私钥对原数据签名，再对签名进行摘要吗？</h4><p>不可以，主要有两个原因：</p>
+<ul>
+<li><strong>1、可行性：</strong> 接收方需要通过摘要验证数据完整性，然而接收方无法对数据进行签名，因此无法验证数据摘要一致性；</li>
+<li><strong>2、时间效率：</strong> 对原始数据进行签名（加密）时间太长，而摘要算法本身是压缩映射，可以缩短签名消耗的时间。</li>
+</ul>
+<hr>
+<h1 id="4-数字证书-——-安全地发放公钥"><a href="#4-数字证书-——-安全地发放公钥" class="headerlink" title="4. 数字证书 —— 安全地发放公钥"></a>4. 数字证书 —— 安全地发放公钥</h1><p>在 <strong>第 3 节</strong> 中，我们提到接收方需要使用发送方的公钥来验证数据真实性。那么，接收方怎样才能安全地获得发送方公钥呢？这就需要数字证书来保证。</p>
+<h4 id="4-1-什么是数字证书？"><a href="#4-1-什么是数字证书？" class="headerlink" title="4.1 什么是数字证书？"></a>4.1 什么是数字证书？</h4><p>数字签名和数字证书总是成对出现，二者不可分离。<strong>数字签名主要用来验证数据完整性和认证数据来源，而数字证书主要用来安全地发放公钥。</strong> 数字证书主要包含三个部分：<strong>用户的信息、用户的公钥和 CA 对该证书实体信息的签名</strong>。</p>
+<p>数字证书的模型主要分为两个步骤：</p>
+<ul>
+<li><strong>1、颁发证书：</strong><ul>
+<li>1.1 申请者将签名算法、公钥、有效时间等信息发送给 CA 机构；</li>
+<li>1.2 CA 机构验证申请者身份后，将申请者发送的信息打成一个实体，并计算摘要；</li>
+<li>1.3 CA 机构使用自己的私钥对摘要进行加密，生成证书签名（Certificate Signature）；</li>
+<li>1.4 CA 机构将证书签名添加在数字证书上，构成完整的数字生出。</li>
+</ul>
+</li>
+<li><strong>2、验证证书</strong><ul>
+<li>2.1 验证方使用相同的摘要算法计算证书实体的摘要；</li>
+<li>2.2 使用 CA 机构的公钥（浏览器和操作系统中集成了 CA 的公钥信息）解密证书签名；</li>
+<li>2.3 对比解密后的数据与计算的摘要是否一致，如果一致则是可信任的证书。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5148e9add67240718f84ddd3cd4b2fd6~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="4-2-什么是证书颁发机构-CA？"><a href="#4-2-什么是证书颁发机构-CA？" class="headerlink" title="4.2 什么是证书颁发机构 CA？"></a>4.2 什么是证书颁发机构 CA？</h4><p>证书颁发机构（certifcation authroity, CA）是负责数字证书的审批、颁发、归档和吊销等功能的机构，具有权威性。CA 机构分为 “根 CA” 和 “中间 CA”，原则上要避免根 CA 机构直接颁发最终实体证书，而需要由中间 CA 机构颁发最终实体证书。这是为了避免证书失效的影响范围，一旦根证书失效或被伪造，那么整个证书链都有问题。</p>
+<h4 id="4-3-什么是证书链？"><a href="#4-3-什么是证书链？" class="headerlink" title="4.3 什么是证书链？"></a>4.3 什么是证书链？</h4><p>证书链是多个数字证书建立的的证书验证链条。数字证书主要包含三个部分：用户信息、用户密钥以及 CA 机构对该证书实体的签名。为了验证证书实体的合法性，需要获得颁发该证书的 CA 机构公钥，这个公钥就存在于上一级证书中。因此，为了验证证书的合法性，就需要沿着证书链向上追溯直到根证书为止。</p>
+<p>根证书是自签名证书，用户下载根证书就表示信任该根证书所有签发的证书。在操作系统或浏览器中，已经内置了一部分受信任的根证书。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b84db63d6eb245e1a06d8194432d1e05~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="4-4-数字证书的标准"><a href="#4-4-数字证书的标准" class="headerlink" title="4.4 数字证书的标准"></a>4.4 数字证书的标准</h4><p>数字证书主要包含三个部分：<strong>用户的信息、用户的公钥和 CA 对该证书实体信息的签名</strong>。目前的数字证书采用的是公钥基础设施（PKI）制定的 X.509 标准，目前已经有 3 个版本，其中比较常见的是 X.509 第三版的标准。主要格式如下：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>版本 (Version)</td>
+<td>证书的版本信息</td>
+</tr>
+<tr>
+<td>序列号 (Serial Number)</td>
+<td>证书的唯一标识</td>
+</tr>
+<tr>
+<td>签名算法标识 (Hash)</td>
+<td>证书签名采用的算法</td>
+</tr>
+<tr>
+<td>有效期 (Validity)</td>
+<td>证书有效期的开始日期和结束日期</td>
+</tr>
+<tr>
+<td>持有者信息 (Subject)</td>
+<td>证书的持有者</td>
+</tr>
+<tr>
+<td>公钥 (Subject Public Key Info)</td>
+<td>持有者构建的公共密钥</td>
+</tr>
+<tr>
+<td>颁布者信息 (Issuer)</td>
+<td>证书颁布者</td>
+</tr>
+<tr>
+<td>签名 (Certificate Signature)</td>
+<td>颁布者对证书实体的签名</td>
+</tr>
+</tbody></table>
+<p>作者：彭丑丑<br>链接：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6995549209348816909">https://juejin.cn/post/6995549209348816909</a><br>来源：掘金<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%9D%82%E8%B0%88/">杂谈</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/f46218d0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ohmyzsh整理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/577c5f28/">
+                        <span class="hidden-mobile">加密方式2</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

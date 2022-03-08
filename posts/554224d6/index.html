@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本篇文章来自willwaywang6的投稿，文章详细分析了Kotlin中by关键字，相信会对大家有所帮助！同时也感谢作者贡献的精彩文章。 willwaywang6的博客地址：  https:&#x2F;&#x2F;blog.csdn.net&#x2F;willway_wang  &#x2F;  前言  &#x2F; Kotlin 中的 by 关键字在 Java 中是没有的，这使我对它感到非常陌生。 Kotlin 中为什么要新增 by 关键字呢？b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kotlin by 关键字">
+<meta property="og:url" content="https://knightwood.github.io/posts/554224d6/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="本篇文章来自willwaywang6的投稿，文章详细分析了Kotlin中by关键字，相信会对大家有所帮助！同时也感谢作者贡献的精彩文章。 willwaywang6的博客地址：  https:&#x2F;&#x2F;blog.csdn.net&#x2F;willway_wang  &#x2F;  前言  &#x2F; Kotlin 中的 by 关键字在 Java 中是没有的，这使我对它感到非常陌生。 Kotlin 中为什么要新增 by 关键字呢？b">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-28T06:15:09.000Z">
+<meta property="article:modified_time" content="2022-03-08T15:10:00.268Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="kotlin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>kotlin by 关键字 - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="kotlin by 关键字">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-28 14:15" pubdate>
+        2021年12月28日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      25k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      211 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">kotlin by 关键字</h1>
+            
+            <div class="markdown-body">
+              <p>本篇文章来自willwaywang6的投稿，文章详细分析了Kotlin中by关键字，相信会对大家有所帮助！同时也感谢作者贡献的精彩文章。</p>
+<p>willwaywang6的博客地址：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/willway_wang">https://blog.csdn.net/willway_wang</a></p>
+</blockquote>
+<p>/  前言  /</p>
+<p>Kotlin 中的 by 关键字在 Java 中是没有的，这使我对它感到非常陌生。</p>
+<p>Kotlin 中为什么要新增 by 关键字呢？by 关键字在 Kotlin 中是如何使用的？</p>
+<p>本文会介绍 by 关键字的使用分类，具体的示例，Kotlin 内置的 by 使用，希望能够帮助到大家。</p>
+<p>by 关键字的使用分为两种：<strong>类委托</strong>和<strong>委托属性</strong>。</p>
+<p>/  类委托  /</p>
+<p>现在有一个需求，统计向一个 HashSet 尝试添加元素的尝试次数，该怎么实现？</p>
+<h3 id="使用继承方式实现"><a href="#使用继承方式实现" class="headerlink" title="使用继承方式实现"></a><strong>使用继承方式实现</strong></h3><p>简单，<strong>继承</strong>一个 HashSet，创建一个变量，负责统计尝试添加元素的个数，代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountingSet1</span>&lt;<span class="hljs-type">T</span>&gt;: <span class="hljs-type">HashSet</span>&lt;<span class="hljs-type">T</span>&gt;</span>() &#123;<br><br>    <span class="hljs-keyword">var</span> objectAdded = <span class="hljs-number">0</span><br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">add</span><span class="hljs-params">(element: <span class="hljs-type">T</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        objectAdded++<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.add(element)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">addAll</span><span class="hljs-params">(elements: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">T</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-comment">// 因为 super.addAll 内部调用了 add 方法，所以这里不必统计添加个数了。</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.addAll(elements)<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> cset = CountingSet1&lt;<span class="hljs-built_in">Int</span>&gt;()<br>    cset.add(<span class="hljs-number">1</span>)<br>    cset.addAll(listOf(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>))<br>    println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;cset.objectAdded&#125;</span> objects were added, <span class="hljs-subst">$&#123;cset.size&#125;</span> remain&quot;</span>)<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">打印如下：</span><br><span class="hljs-comment">4 objects were added, 3 remain</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>需求是满足了。</p>
+<p>但是这样的实现，CountingSet1 和 HashSet 的具体实现是高度耦合的，也就是说，CountingSet1 严重依赖于 HashSet 类的实现细节。</p>
+<p><strong>这有什么问题吗？</strong></p>
+<p>当基类的实现被修改或者新的方法被添加进去时，可能改变之前进行继承时的类行为，从而导致子类的行为不符合预期。</p>
+<p>当某个类是 final 类时，它是不可以被继承的，这时就不能采用继承的方式来复用它的代码了。</p>
+<p><strong>那我们该怎么办呢？</strong></p>
+<p>想一下，我们新建的类无非是想复用 HashSet的功能，前面我们是采用继承的方式，除了采用继承的方式之外，我们还可以采用组合的方式。</p>
+<p>实际上，在 《Java编程思想》中有写道：</p>
+<blockquote>
+<p>由于继承在面向对象程序设计中如此重要，所以它经常被高度强调，于是程序员新手就会有这样的印象：处处都应该使用继承。这会导致难以使用并过分复杂的设计。<strong>实际上，在建立新类时，应该优先考虑组合，因为它更加简单灵活。</strong>如果采用这种方式，设计会变得更加清晰。</p>
+</blockquote>
+<h3 id="使用组合方式实现"><a href="#使用组合方式实现" class="headerlink" title="使用组合方式实现"></a><strong>使用组合方式实现</strong></h3><p>使用<strong>组合</strong>方式实现如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountingSet2</span>&lt;<span class="hljs-type">T</span>&gt; : <span class="hljs-type">MutableSet</span>&lt;<span class="hljs-type">T</span>&gt; </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> innerSet = HashSet&lt;T&gt;()<br>    <span class="hljs-keyword">var</span> objectAdded = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">add</span><span class="hljs-params">(element: <span class="hljs-type">T</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        objectAdded++<br>        <span class="hljs-keyword">return</span> innerSet.add(element)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">addAll</span><span class="hljs-params">(elements: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">T</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        objectAdded += elements.size<br>        <span class="hljs-keyword">return</span> innerSet.addAll(elements)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">clear</span><span class="hljs-params">()</span></span> &#123;<br>        innerSet.clear()<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">iterator</span><span class="hljs-params">()</span></span>: MutableIterator&lt;T&gt; &#123;<br>        <span class="hljs-keyword">return</span> innerSet.iterator()<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">remove</span><span class="hljs-params">(element: <span class="hljs-type">T</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> innerSet.remove(element)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">removeAll</span><span class="hljs-params">(elements: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">T</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> innerSet.removeAll(elements)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">retainAll</span><span class="hljs-params">(elements: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">T</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> innerSet.retainAll(elements)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">val</span> size: <span class="hljs-built_in">Int</span><br>        <span class="hljs-keyword">get</span>() = innerSet.size<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">contains</span><span class="hljs-params">(element: <span class="hljs-type">T</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> innerSet.contains(element)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">containsAll</span><span class="hljs-params">(elements: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">T</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> innerSet.containsAll(elements)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">isEmpty</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> innerSet.isEmpty()<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> cset = CountingSet2&lt;<span class="hljs-built_in">Int</span>&gt;()<br>    cset.add(<span class="hljs-number">1</span>)<br>    cset.addAll(listOf(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>))<br>    println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;cset.objectAdded&#125;</span> objects were added, <span class="hljs-subst">$&#123;cset.size&#125;</span> remain&quot;</span>)<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">打印如下：</span><br><span class="hljs-comment">4 objects were added, 3 remain</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>同样实现了需求。</p>
+<p>可以看到，CountingSet2 实现了 MutableSet 接口，具体的实现是委托给了 innerSet 来完成的。</p>
+<p><strong>这有什么好处呢？</strong></p>
+<p>CountingSet2 与 HashSet 不再耦合了，它们都实现了 MutableSet 接口。</p>
+<p>这种方式从代码设计上看确实好，但是却需要非常多的模板代码，这点很烦人啊。</p>
+<h3 id="使用类委托实现"><a href="#使用类委托实现" class="headerlink" title="使用类委托实现"></a><strong>使用类委托实现</strong></h3><p>现在就该 Kotlin 的类委托出场了，它可以解决需要写非常多的模板代码的问题。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountingSet3</span>&lt;<span class="hljs-type">T</span>&gt;</span>(<br>    <span class="hljs-keyword">val</span> innerSet: MutableSet&lt;T&gt; = HashSet&lt;T&gt;()<br>) : MutableSet&lt;T&gt; <span class="hljs-keyword">by</span> innerSet &#123;<br>    <span class="hljs-keyword">var</span> objectAdded = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">add</span><span class="hljs-params">(element: <span class="hljs-type">T</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        objectAdded++<br>        <span class="hljs-keyword">return</span> innerSet.add(element)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">addAll</span><span class="hljs-params">(elements: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">T</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        objectAdded += elements.size<br>        <span class="hljs-keyword">return</span> innerSet.addAll(elements)<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> cset = CountingSet3&lt;<span class="hljs-built_in">Int</span>&gt;()<br>    cset.add(<span class="hljs-number">1</span>)<br>    cset.addAll(listOf(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>))<br>    println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;cset.objectAdded&#125;</span> objects were added, <span class="hljs-subst">$&#123;cset.size&#125;</span> remain&quot;</span>)<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">打印如下：</span><br><span class="hljs-comment">4 objects were added, 3 remain</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>完美实现了需求。</p>
+<p>Kotlin 是如何帮我们减少了模板代码了呢？</p>
+<p>使用 Android Studio 的 Tools -&gt; Kotlin -&gt; Show Kotlin Bytecode，再点击 Decompile 按钮，查看对应的 Java 代码：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">public</span> final <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountingSet3</span> <span class="hljs-title">implements</span> <span class="hljs-title">Set</span>, <span class="hljs-title">KMutableSet</span> </span>&#123;<br>   <span class="hljs-keyword">private</span> int objectAdded;<br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">private</span> final <span class="hljs-built_in">Set</span> innerSet;<br><br>   <span class="hljs-keyword">public</span> final int <span class="hljs-function"><span class="hljs-title">getObjectAdded</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.objectAdded;<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> final <span class="hljs-built_in">void</span> <span class="hljs-function"><span class="hljs-title">setObjectAdded</span>(<span class="hljs-params">int var1</span>)</span> &#123;<br>      <span class="hljs-built_in">this</span>.objectAdded = var1;<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">add</span>(<span class="hljs-params"><span class="hljs-built_in">Object</span> element</span>)</span> &#123;<br>      int var10001 = <span class="hljs-built_in">this</span>.objectAdded++;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.add(element);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">addAll</span>(<span class="hljs-params"><span class="hljs-meta">@NotNull</span> Collection elements</span>)</span> &#123;<br>      Intrinsics.checkNotNullParameter(elements, <span class="hljs-string">&quot;elements&quot;</span>);<br>      <span class="hljs-built_in">this</span>.objectAdded += elements.size();<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.addAll(elements);<br>   &#125;<br><br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">public</span> final <span class="hljs-built_in">Set</span> <span class="hljs-function"><span class="hljs-title">getInnerSet</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet;<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-title">CountingSet3</span>(<span class="hljs-params"><span class="hljs-meta">@NotNull</span> <span class="hljs-built_in">Set</span> innerSet</span>)</span> &#123;<br>      Intrinsics.checkNotNullParameter(innerSet, <span class="hljs-string">&quot;innerSet&quot;</span>);<br>      <span class="hljs-built_in">super</span>();<br>      <span class="hljs-built_in">this</span>.innerSet = innerSet;<br>   &#125;<br><br>   <span class="hljs-comment">// $FF: synthetic method</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-title">CountingSet3</span>(<span class="hljs-params"><span class="hljs-built_in">Set</span> var1, int var2, DefaultConstructorMarker var3</span>)</span> &#123;<br>      <span class="hljs-keyword">if</span> ((var2 &amp; <span class="hljs-number">1</span>) != <span class="hljs-number">0</span>) &#123;<br>         var1 = (<span class="hljs-built_in">Set</span>)(<span class="hljs-keyword">new</span> HashSet());<br>      &#125;<br><br>      <span class="hljs-built_in">this</span>(var1);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-title">CountingSet3</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-built_in">this</span>((<span class="hljs-built_in">Set</span>)<span class="hljs-literal">null</span>, <span class="hljs-number">1</span>, (DefaultConstructorMarker)<span class="hljs-literal">null</span>);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> int <span class="hljs-function"><span class="hljs-title">getSize</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.size();<br>   &#125;<br><br>   <span class="hljs-comment">// $FF: bridge method</span><br>   <span class="hljs-keyword">public</span> final int <span class="hljs-function"><span class="hljs-title">size</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.getSize();<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-function"><span class="hljs-title">clear</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-built_in">this</span>.innerSet.clear();<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">contains</span>(<span class="hljs-params"><span class="hljs-built_in">Object</span> element</span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.contains(element);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">containsAll</span>(<span class="hljs-params"><span class="hljs-meta">@NotNull</span> Collection elements</span>)</span> &#123;<br>      Intrinsics.checkNotNullParameter(elements, <span class="hljs-string">&quot;elements&quot;</span>);<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.containsAll(elements);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">isEmpty</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.isEmpty();<br>   &#125;<br><br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">public</span> Iterator <span class="hljs-function"><span class="hljs-title">iterator</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.iterator();<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">remove</span>(<span class="hljs-params"><span class="hljs-built_in">Object</span> element</span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.remove(element);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">removeAll</span>(<span class="hljs-params"><span class="hljs-meta">@NotNull</span> Collection elements</span>)</span> &#123;<br>      Intrinsics.checkNotNullParameter(elements, <span class="hljs-string">&quot;elements&quot;</span>);<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.removeAll(elements);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">retainAll</span>(<span class="hljs-params"><span class="hljs-meta">@NotNull</span> Collection elements</span>)</span> &#123;<br>      Intrinsics.checkNotNullParameter(elements, <span class="hljs-string">&quot;elements&quot;</span>);<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.innerSet.retainAll(elements);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">Object</span>[] <span class="hljs-function"><span class="hljs-title">toArray</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> CollectionToArray.toArray(<span class="hljs-built_in">this</span>);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-built_in">Object</span>[] <span class="hljs-function"><span class="hljs-title">toArray</span>(<span class="hljs-params"><span class="hljs-built_in">Object</span>[] var1</span>)</span> &#123;<br>      <span class="hljs-keyword">return</span> CollectionToArray.toArray(<span class="hljs-built_in">this</span>, var1);<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>这不就是 CountingSet2 的代码吗？</p>
+<p>原来 Kotlin 的编译器默默地帮我们生成了这些模板代码，而仅仅要求我们通过声明并初始化一个 HashSet 类型的成员变量，并在类声明后添加 by innerSet：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">class</span> <span class="hljs-symbol">CountingSet3</span>&lt;<span class="hljs-symbol">T</span>&gt;(<br>    <span class="hljs-symbol">val</span> <span class="hljs-symbol">innerSet: <span class="hljs-symbol">MutableSet</span></span>&lt;<span class="hljs-symbol">T</span>&gt; = <span class="hljs-symbol">HashSet</span>&lt;<span class="hljs-symbol">T</span>&gt;()<br>) : <span class="hljs-symbol">MutableSet</span>&lt;<span class="hljs-symbol">T</span>&gt; <span class="hljs-symbol">by</span> <span class="hljs-symbol">innerSet</span> &#123;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>需要注意的是：</p>
+<ul>
+<li>CountingSet3 必须实现一个接口，而不能继承于一个类；</li>
+<li>innerSet 的类型必须是 CountingSet3 所实现接口的子类型；</li>
+<li>可以直接在 by 创建委托对象，如下所示：</li>
+</ul>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">class</span> <span class="hljs-symbol">CountingSet4</span>&lt;<span class="hljs-symbol">T</span>&gt;(<br>) : <span class="hljs-symbol">MutableSet</span>&lt;<span class="hljs-symbol">T</span>&gt; <span class="hljs-symbol">by</span> <span class="hljs-symbol">HashSet</span>&lt;<span class="hljs-symbol">T</span>&gt;() &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>但是，这样的话，在 CountingSet4 类中无法获取到委托对象的引用了。</p>
+<p>Kotlin 的类委托虽然看起来很简洁，但是它自身又有一些限制：类必须实现一个接口，委托类必须是类所实现接口的子类型。这是需要注意的。</p>
+<p>同时，我们在实际开发中，<strong>要尽力去使用这种委托的思想，来使代码解耦，使代码更加清晰</strong>。这一点，比掌握 Kotlin 的类委托更加重要。</p>
+<p>/  委托属性  /</p>
+<p>委托属性是一个依赖于约定的功能，也是Kotlin 中最独特和最强大的功能之一。</p>
+<p>本部分我们仍然是从一个小例子开始，展示一下委托属性的使用，作用；然后，会说明委托属性的一些特点以及其他使用。</p>
+<p>需求：现在有一个简单的 Person 类：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person2</span> </span>&#123;<br>    <span class="hljs-keyword">var</span> name: <span class="hljs-built_in">String</span> = <span class="hljs-string">&quot;&quot;</span><br>    <span class="hljs-keyword">var</span> lastname: <span class="hljs-built_in">String</span> = <span class="hljs-string">&quot;&quot;</span>  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>需要对 name 和 lastname 赋值时，做一些格式化工作：首字母大写其余字母小写，并统计格式化操作的次数，再获取 name 和 lastname 值的时候，把它们的值的长度拼接在值得后面返回。</p>
+<h3 id="仅仅完成需求的代码"><a href="#仅仅完成需求的代码" class="headerlink" title="仅仅完成需求的代码"></a><strong>仅仅完成需求的代码</strong></h3><p>这不难，代码实现如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person2</span> </span>&#123;<br>    <span class="hljs-keyword">var</span> name: String = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-keyword">set</span>(value) &#123;<br>            field = value.lowercase().replaceFirstChar &#123; it.uppercase() &#125;<br>            updateCount++<br>        &#125;<br>        <span class="hljs-keyword">get</span>() &#123;<br>            <span class="hljs-keyword">return</span> field + <span class="hljs-string">&quot;-&quot;</span> + field.length<br>        &#125;<br><br>    <span class="hljs-keyword">var</span> lastname: String = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-keyword">set</span>(value) &#123;<br>            field = value.lowercase().replaceFirstChar &#123; it.uppercase() &#125;<br>            updateCount++<br>        &#125;<br>        <span class="hljs-keyword">get</span>() &#123;<br>            <span class="hljs-keyword">return</span> field + <span class="hljs-string">&quot;-&quot;</span> + field.length<br>        &#125;<br>    <span class="hljs-keyword">var</span> updateCount = <span class="hljs-number">0</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> person2 = Person2()<br>    person2.name = <span class="hljs-string">&quot;peter&quot;</span><br>    person2.lastname = <span class="hljs-string">&quot;wang&quot;</span><br>    println(<span class="hljs-string">&quot;name=<span class="hljs-subst">$&#123;person2.name&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;lastname=<span class="hljs-subst">$&#123;person2.lastname&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;updateCount=<span class="hljs-subst">$&#123;person2.updateCount&#125;</span>&quot;</span>)<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">打印日志：</span><br><span class="hljs-comment">name=Peter-5</span><br><span class="hljs-comment">lastname=Wang-4</span><br><span class="hljs-comment">updateCount=2</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>ps：这里面使用 Kotlin 中的支持字段 field ，需要学习可以查看笔者的这篇文章：<strong>Kotlin 的 Backing Fields 和 Backing Properties</strong>（<a target="_blank" rel="noopener" href="https://blog.csdn.net/willway_wang/article/details/100184784%EF%BC%89%E3%80%82">https://blog.csdn.net/willway_wang/article/details/100184784）。</a></p>
+<p>OK，查看日志，可以看到需求实现了。</p>
+<h3 id="抽取重复代码为方法"><a href="#抽取重复代码为方法" class="headerlink" title="抽取重复代码为方法"></a><strong>抽取重复代码为方法</strong></h3><p>但是，这里面有着重复的代码，并且如果其他类也需要这样的格式化操作，这些代码也不可以复用。</p>
+<p>为了提供代码复用性，我们可以把代码抽取出来，放在一个方法里面。代码实现如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person3</span> </span>&#123;<br>    <span class="hljs-keyword">var</span> name: String = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-keyword">set</span>(value) &#123;<br>            field = format(value)<br>        &#125;<br>        <span class="hljs-keyword">get</span>() &#123;<br>            <span class="hljs-keyword">return</span> getter(field)<br>        &#125;<br><br>    <span class="hljs-keyword">var</span> lastname: String = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-keyword">set</span>(value) &#123;<br>            field = format(value)<br>        &#125;<br>        <span class="hljs-keyword">get</span>() &#123;<br>            <span class="hljs-keyword">return</span> getter(field)<br>        &#125;<br>    <span class="hljs-keyword">var</span> updateCount = <span class="hljs-number">0</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">format</span><span class="hljs-params">(value: <span class="hljs-type">String</span>)</span></span>: String &#123;<br>        updateCount++<br>        <span class="hljs-keyword">return</span> value.lowercase().replaceFirstChar &#123; it.uppercase() &#125;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getter</span><span class="hljs-params">(value: <span class="hljs-type">String</span>)</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> value + <span class="hljs-string">&quot;-&quot;</span> + value.length<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> person = Person3()<br>    person.name = <span class="hljs-string">&quot;peter&quot;</span><br>    person.lastname = <span class="hljs-string">&quot;wang&quot;</span><br>    println(<span class="hljs-string">&quot;name=<span class="hljs-subst">$&#123;person.name&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;lastname=<span class="hljs-subst">$&#123;person.lastname&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;updateCount=<span class="hljs-subst">$&#123;person.updateCount&#125;</span>&quot;</span>)<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">name=Peter-5</span><br><span class="hljs-comment">lastname=Wang-4</span><br><span class="hljs-comment">updateCount=2</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>查看日志打印，这样做可以实现需求。</p>
+<h3 id="使用类来封装重复代码"><a href="#使用类来封装重复代码" class="headerlink" title="使用类来封装重复代码"></a><strong>使用类来封装重复代码</strong></h3><p>现在需求又来了，有一个 Student 类：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span> </span>&#123;<br>    <span class="hljs-keyword">var</span> name: <span class="hljs-built_in">String</span> = <span class="hljs-string">&quot;&quot;</span><br><br>    <span class="hljs-keyword">var</span> address: <span class="hljs-built_in">String</span> = <span class="hljs-string">&quot;&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>也需要对属性做同样的格式化操作并统计进行格式化操作的次数，在获取值的时候把长度拼接在后面。</p>
+<p>这时，我们可以使用面向对象的思想来解决，把 format 方法和 getter 方法封装在一个类里面：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Delegate</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">format</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>, value: <span class="hljs-type">String</span>)</span></span>: String &#123;<br>        <span class="hljs-keyword">if</span> (thisRef <span class="hljs-keyword">is</span> Person4) &#123;<br>            thisRef.updateCount++<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (thisRef <span class="hljs-keyword">is</span> Student2) &#123;<br>            thisRef.updateCount++<br>        &#125;<br>        <span class="hljs-keyword">return</span> value.lowercase().replaceFirstChar &#123; it.uppercase() &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getter</span><span class="hljs-params">(value: <span class="hljs-type">String</span>)</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> value + <span class="hljs-string">&quot;-&quot;</span> + value.length<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>Person 类修改如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person4</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> val delegate = Delegate()<br><br>    <span class="hljs-keyword">var</span> name: <span class="hljs-built_in">String</span> = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-function"><span class="hljs-title">set</span>(<span class="hljs-params">value</span>)</span> &#123;<br>            field = delegate.format(<span class="hljs-built_in">this</span>, value)<br>        &#125;<br>        <span class="hljs-function"><span class="hljs-title">get</span>(<span class="hljs-params"></span>)</span> &#123;<br>            <span class="hljs-keyword">return</span> delegate.getter(field)<br>        &#125;<br><br>    <span class="hljs-keyword">var</span> lastname: <span class="hljs-built_in">String</span> = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-function"><span class="hljs-title">set</span>(<span class="hljs-params">value</span>)</span> &#123;<br>            field = delegate.format(<span class="hljs-built_in">this</span>, value)<br>        &#125;<br>        <span class="hljs-function"><span class="hljs-title">get</span>(<span class="hljs-params"></span>)</span> &#123;<br>            <span class="hljs-keyword">return</span> delegate.getter(field)<br>        &#125;<br><br>    <span class="hljs-keyword">var</span> updateCount = <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>Student 类修改如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student2</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> val delegate = Delegate()<br><br>    <span class="hljs-keyword">var</span> name: <span class="hljs-built_in">String</span> = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-function"><span class="hljs-title">set</span>(<span class="hljs-params">value</span>)</span> &#123;<br>            field = delegate.format(<span class="hljs-built_in">this</span>, value)<br>        &#125;<br>        <span class="hljs-function"><span class="hljs-title">get</span>(<span class="hljs-params"></span>)</span> &#123;<br>            <span class="hljs-keyword">return</span> delegate.getter(field)<br>        &#125;<br>    <span class="hljs-keyword">var</span> address: <span class="hljs-built_in">String</span> = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-function"><span class="hljs-title">set</span>(<span class="hljs-params">value</span>)</span> &#123;<br>            field = delegate.format(<span class="hljs-built_in">this</span>, value)<br>        &#125;<br>        <span class="hljs-function"><span class="hljs-title">get</span>(<span class="hljs-params"></span>)</span> &#123;<br>            <span class="hljs-keyword">return</span> delegate.getter(field)<br>        &#125;<br>    <span class="hljs-keyword">var</span> updateCount = <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="把值的存储委托给委托类处理"><a href="#把值的存储委托给委托类处理" class="headerlink" title="把值的存储委托给委托类处理"></a><strong>把值的存储委托给委托类处理</strong></h3><p>既然 getter 和 setter 方法都委托给 Delegate 类来实现，我们何不把值也交给 Delegate 类来存储呢？</p>
+<p>如果把 name 和 lastname 的值存在 Delegate 里面的话，它们就不可以共用一个 Delegate 对象了。</p>
+<p>然后，Delegate 类两个方法的作用就是设置和获取值，所以方法也需要改一下。对吧？</p>
+<p>修改 Delegate 类为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Delegate2</span> </span>&#123;<br>    <span class="hljs-keyword">var</span> formattedString: String = <span class="hljs-string">&quot;&quot;</span><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>, value: <span class="hljs-type">String</span>)</span></span> &#123;<br>        <span class="hljs-keyword">if</span> (thisRef <span class="hljs-keyword">is</span> Person5) &#123;<br>            thisRef.updateCount++<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (thisRef <span class="hljs-keyword">is</span> Student2) &#123;<br>            thisRef.updateCount++<br>        &#125;<br>        formattedString = value.lowercase().replaceFirstChar &#123; it.uppercase() &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">()</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> formattedString + <span class="hljs-string">&quot;-&quot;</span> + formattedString.length<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>修改 Person 类为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person5</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> nameDelegate = Delegate2()<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> lastnameDelegate = Delegate2()<br>    <span class="hljs-keyword">var</span> name: String<br>        <span class="hljs-keyword">set</span>(value) &#123;<br>            nameDelegate.setValue(<span class="hljs-keyword">this</span>, value)<br>        &#125;<br>        <span class="hljs-keyword">get</span>() &#123;<br>            <span class="hljs-keyword">return</span> nameDelegate.getValue()<br>        &#125;<br><br>    <span class="hljs-keyword">var</span> lastname: String<br>        <span class="hljs-keyword">set</span>(value) &#123;<br>            lastnameDelegate.setValue(<span class="hljs-keyword">this</span>, value)<br>        &#125;<br>        <span class="hljs-keyword">get</span>() &#123;<br>            <span class="hljs-keyword">return</span> lastnameDelegate.getValue()<br>        &#125;<br>    <span class="hljs-keyword">var</span> updateCount = <span class="hljs-number">0</span><br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">打印日志：</span><br><span class="hljs-comment">name=Peter-5</span><br><span class="hljs-comment">lastname=Wang-4</span><br><span class="hljs-comment">updateCount=2</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>到这里，需要强调的是，Person5 里的 name 和 lastname 不具有存储值的功能了，它们是自定义了 setter 和 getter 的属性。</p>
+<h3 id="使用-Kotlin-的委托属性来简化代码"><a href="#使用-Kotlin-的委托属性来简化代码" class="headerlink" title="使用 Kotlin 的委托属性来简化代码"></a><strong>使用 Kotlin 的委托属性来简化代码</strong></h3><p>对于上面的代码实现，我们仍然感到有些累赘，不简洁。</p>
+<p>Kotlin 的委托属性可以帮我们解决这些烦恼。</p>
+<p>委托属性的基本语法是这样的：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css">class Foo &#123;<br>    <span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">p</span>: Type by <span class="hljs-built_in">Delegate</span>()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>等价于</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> &#123;<br>    <span class="hljs-keyword">private</span> val <span class="hljs-built_in">delegate</span> = Delegate()<br>    <span class="hljs-keyword">var</span> p: <span class="hljs-function">Type</span><br><span class="hljs-function">        <span class="hljs-title">set</span>(<span class="hljs-params"><span class="hljs-keyword">value</span>: Type</span>)</span> = <span class="hljs-built_in">delegate</span>.setValue(<span class="hljs-keyword">this</span>, ..., <span class="hljs-keyword">value</span>)<br>        <span class="hljs-keyword">get</span>() = <span class="hljs-built_in">delegate</span>.getValue(<span class="hljs-keyword">this</span>, ...)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>属性 p 将它的访问器逻辑委托给 Delegate 这个辅助对象来处理。</p>
+<p>by 关键字的作用是对它后面的表达式求值来获取这个对象，在这里就是获取到了 Delegate 对象。</p>
+<p>编译器会创建一个隐藏的辅助属性，并使用委托对象的实例对它进行初始化，在这里就是把 Delegate 对象赋值给了 delegate 属性。</p>
+<p>那么，Kotlin 是如何知道把属性 p 的 setter 逻辑委托给辅助对象 delegate 的哪个方法，把属性 p 的 getter 逻辑委托给辅助对象 delegate 的哪个方法呢？</p>
+<p>这里就要说到<strong>约定</strong>的概念了，委托类必须具有 getValue 和 setValue 方法（如果是可变属性的话），定义在 ReadWriteProperty 接口里：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-keyword">interface</span> ReadOnlyProperty<span class="hljs-type">&lt;in T, out V&gt;</span> &#123;</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">T</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: V<br>&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ReadWriteProperty</span>&lt;<span class="hljs-type">in T, V</span>&gt; : <span class="hljs-type">ReadOnlyProperty</span>&lt;<span class="hljs-type">T, V</span>&gt; </span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">T</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: V<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">T</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">V</span>)</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>当对 Foo 对象的 p 属性赋值时，会调用 Delegate 对象的 setValue 方法，设置对应的值；</p>
+<p>当获取 Foo 对象的 p 的值时，会调用 Delegate 对象的 getValue 方法，获取对应的值。</p>
+<p>修改委托类为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Delegate3</span> : <span class="hljs-type">ReadWriteProperty</span>&lt;<span class="hljs-type">Any, String</span>&gt; </span>&#123;<br>    <span class="hljs-keyword">var</span> formattedString = <span class="hljs-string">&quot;&quot;</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> formattedString + <span class="hljs-string">&quot;-&quot;</span> + formattedString.length<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">String</span>)</span></span> &#123;<br>        <span class="hljs-keyword">if</span> (thisRef <span class="hljs-keyword">is</span> Person6) &#123;<br>            thisRef.updateCount++<br>        &#125;<br>        formattedString = value.lowercase().replaceFirstChar &#123; it.uppercase() &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>修改 Person 类为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person6</span> </span>&#123;<br>    <span class="hljs-keyword">var</span> name: String <span class="hljs-keyword">by</span> Delegate3()<br>    <span class="hljs-keyword">var</span> lastname: String <span class="hljs-keyword">by</span> Delegate3()<br>    <span class="hljs-keyword">var</span> updateCount = <span class="hljs-number">0</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> person = Person6()<br>    person.name = <span class="hljs-string">&quot;peter&quot;</span><br>    person.lastname = <span class="hljs-string">&quot;wang&quot;</span><br>    println(<span class="hljs-string">&quot;name=<span class="hljs-subst">$&#123;person.name&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;lastname=<span class="hljs-subst">$&#123;person.lastname&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;updateCount=<span class="hljs-subst">$&#123;person.updateCount&#125;</span>&quot;</span>)<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">打印如下：</span><br><span class="hljs-comment">name=Peter-5</span><br><span class="hljs-comment">lastname=Wang-4</span><br><span class="hljs-comment">updateCount=2</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>OK，完美符合需求。</p>
+<p>使用 Android Studio 的 Tools -&gt; Kotlin -&gt; Show Kotlin Bytecode，再点击 Decompile 按钮，查看 Delegate3 和 Person6 对应的 Java 代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Delegate3</span> <span class="hljs-title">implements</span> <span class="hljs-title">ReadWriteProperty</span> </span>&#123;<br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">private</span> String formattedString = <span class="hljs-string">&quot;&quot;</span>;<br><br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> String getFormattedString() &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formattedString;<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> void setFormattedString(<span class="hljs-meta">@NotNull</span> String var1) &#123;<br>      <span class="hljs-keyword">this</span>.formattedString = var1;<br>   &#125;<br><br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">public</span> String getValue(<span class="hljs-meta">@NotNull</span> Object thisRef, <span class="hljs-meta">@NotNull</span> KProperty property) &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formattedString + <span class="hljs-string">&quot;-&quot;</span> + <span class="hljs-keyword">this</span>.formattedString.length();<br>   &#125;<br><br>   <span class="hljs-comment">// $FF: synthetic method</span><br>   <span class="hljs-comment">// $FF: bridge method</span><br>   <span class="hljs-keyword">public</span> Object getValue(Object var1, KProperty var2) &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getValue(var1, var2);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> void setValue(<span class="hljs-meta">@NotNull</span> Object thisRef, <span class="hljs-meta">@NotNull</span> KProperty property, <span class="hljs-meta">@NotNull</span> String value) &#123;<br>      <span class="hljs-keyword">if</span> (thisRef instanceof Person6) &#123;<br>         ((Person6)thisRef).setUpdateCount(((Person6)thisRef).getUpdateCount() + <span class="hljs-number">1</span>);<br>      &#125;<br><br>      Delegate3 var10000 = <span class="hljs-keyword">this</span>;<br>      boolean var5 = <span class="hljs-literal">false</span>;<br>      String var10001 = value.toLowerCase(Locale.ROOT);<br>      Intrinsics.checkNotNullExpressionValue(var10001, <span class="hljs-string">&quot;(this as java.lang.Strin….toLowerCase(Locale.ROOT)&quot;</span>);<br>      String var4 = var10001;<br>      var5 = <span class="hljs-literal">false</span>;<br>      CharSequence var6 = (CharSequence)var4;<br>      boolean var7 = <span class="hljs-literal">false</span>;<br>      <span class="hljs-keyword">if</span> (var6.length() &gt; <span class="hljs-number">0</span>) &#123;<br>         StringBuilder var20 = new StringBuilder();<br>         char it = var4.charAt(<span class="hljs-number">0</span>);<br>         StringBuilder var15 = var20;<br>         int var9 = <span class="hljs-literal">false</span>;<br>         boolean var11 = <span class="hljs-literal">false</span>;<br>         String var12 = String.valueOf(it);<br>         boolean var13 = <span class="hljs-literal">false</span>;<br>         <span class="hljs-keyword">if</span> (var12 == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">throw</span> new NullPointerException(<span class="hljs-string">&quot;null cannot be cast to non-null type java.lang.String&quot;</span>);<br>         &#125;<br><br>         String var19 = var12.toUpperCase(Locale.ROOT);<br>         Intrinsics.checkNotNullExpressionValue(var19, <span class="hljs-string">&quot;(this as java.lang.Strin….toUpperCase(Locale.ROOT)&quot;</span>);<br>         String var16 = var19;<br>         var10000 = <span class="hljs-keyword">this</span>;<br>         var20 = var15.append(var16.toString());<br>         byte var17 = <span class="hljs-number">1</span>;<br>         boolean var18 = <span class="hljs-literal">false</span>;<br>         <span class="hljs-keyword">if</span> (var4 == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">throw</span> new NullPointerException(<span class="hljs-string">&quot;null cannot be cast to non-null type java.lang.String&quot;</span>);<br>         &#125;<br><br>         String var10002 = var4.substring(var17);<br>         Intrinsics.checkNotNullExpressionValue(var10002, <span class="hljs-string">&quot;(this as java.lang.String).substring(startIndex)&quot;</span>);<br>         var10001 = var20.append(var10002).toString();<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>         var10001 = var4;<br>      &#125;<br><br>      var10000.formattedString = var10001;<br>   &#125;<br><br>   <span class="hljs-comment">// $FF: synthetic method</span><br>   <span class="hljs-comment">// $FF: bridge method</span><br>   <span class="hljs-keyword">public</span> void setValue(Object var1, KProperty var2, Object var3) &#123;<br>      <span class="hljs-keyword">this</span>.setValue(var1, var2, (String)var3);<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person6</span> </span>&#123;<br>   <span class="hljs-comment">// $FF: synthetic field</span><br>   static <span class="hljs-keyword">final</span> KProperty[] $$delegatedProperties = new KProperty[]&#123;<br>   (KProperty)Reflection.mutableProperty1(new MutablePropertyReference1Impl(Person6.<span class="hljs-keyword">class</span>, <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;getName()Ljava/lang/String;&quot;</span>, <span class="hljs-number">0</span>)), <br>   (KProperty)Reflection.mutableProperty1(new MutablePropertyReference1Impl(Person6.<span class="hljs-keyword">class</span>, <span class="hljs-string">&quot;lastname&quot;</span>, <span class="hljs-string">&quot;getLastname()Ljava/lang/String;&quot;</span>, <span class="hljs-number">0</span>))&#125;;<br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Delegate3 name$delegate = new Delegate3();<br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Delegate3 lastname$delegate = new Delegate3();<br>   <span class="hljs-keyword">private</span> int updateCount;<br><br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> String getName() &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name$delegate.getValue(<span class="hljs-keyword">this</span>, $$delegatedProperties[<span class="hljs-number">0</span>]);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> void setName(<span class="hljs-meta">@NotNull</span> String var1) &#123;<br>      <span class="hljs-keyword">this</span>.name$delegate.setValue(<span class="hljs-keyword">this</span>, $$delegatedProperties[<span class="hljs-number">0</span>], var1);<br>   &#125;<br><br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> String getLastname() &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.lastname$delegate.getValue(<span class="hljs-keyword">this</span>, $$delegatedProperties[<span class="hljs-number">1</span>]);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> void setLastname(<span class="hljs-meta">@NotNull</span> String var1) &#123;<br>      <span class="hljs-keyword">this</span>.lastname$delegate.setValue(<span class="hljs-keyword">this</span>, $$delegatedProperties[<span class="hljs-number">1</span>], var1);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> int getUpdateCount() &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.updateCount;<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> void setUpdateCount(int var1) &#123;<br>      <span class="hljs-keyword">this</span>.updateCount = var1;<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>可以看到，这和我们在上一节中写的大致是一样的。</p>
+<p>thisRef 就是发起委托的对象。</p>
+<p>值得注意的是，在 Person6.java 中创建了一个 $$delegatedProperties 对象，它是一个 KProperty 类型的数组，它的元素封装了类，属性名，getter 方法签名等信息，也会传递给委托类，这是用来做什么的？</p>
+<p>本例子中我们确实用不到这些信息。KProperty 主要是用来封装属性的元信息，提供给委托类使用，比如在委托类的 setValue 方法中通知属性发生变化时，就会用到 KProperty 里的属性名信息了。</p>
+<h3 id="对委托属性约定的再认识"><a href="#对委托属性约定的再认识" class="headerlink" title="对委托属性约定的再认识"></a><strong>对委托属性约定的再认识</strong></h3><p>**<br>**</p>
+<p>虽然 Kotlin 提供了 ReadWriteProperty 和 ReadOnlyProperty 封装了约定的方法给我们使用，但是当我们定义委托类时并不是一定要实现 Kotlin 提供的接口。</p>
+<p>实际上，只要保持委托类里的 setValue 和 getValue 方法与约定的 setValue 方法和 getValue 方法一致就可以了。</p>
+<p>修改委托类为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Delegate4</span>  </span>&#123;<br>    <span class="hljs-keyword">var</span> formattedString = <span class="hljs-string">&quot;&quot;</span><br>    <span class="hljs-comment">// 注意这里的 operator 不可以省略</span><br>    <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> formattedString + <span class="hljs-string">&quot;-&quot;</span> + formattedString.length<br>    &#125;<br>    <span class="hljs-comment">// 注意这里的 operator 不可以省略</span><br>    <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">String</span>)</span></span> &#123;<br>        <span class="hljs-keyword">if</span> (thisRef <span class="hljs-keyword">is</span> Person7) &#123;<br>            thisRef.updateCount++<br>        &#125;<br>        formattedString = value.lowercase().replaceFirstChar &#123; it.uppercase() &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>修改 Person 类为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person7</span> </span>&#123;<br>    <span class="hljs-keyword">var</span> name: String <span class="hljs-keyword">by</span> Delegate4()<br>    <span class="hljs-keyword">var</span> lastname: String <span class="hljs-keyword">by</span> Delegate4()<br>    <span class="hljs-keyword">var</span> updateCount = <span class="hljs-number">0</span><br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> person = Person7()<br>    person.name = <span class="hljs-string">&quot;peter&quot;</span><br>    person.lastname = <span class="hljs-string">&quot;wang&quot;</span><br>    println(<span class="hljs-string">&quot;name=<span class="hljs-subst">$&#123;person.name&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;lastname=<span class="hljs-subst">$&#123;person.lastname&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;updateCount=<span class="hljs-subst">$&#123;person.updateCount&#125;</span>&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>约定方法可以使用扩展函数来实现：</p>
+<p>比如，Delegate 类不符合委托属性的约定方法，代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Delegate5</span>  </span>&#123;<br>    <span class="hljs-keyword">var</span> formattedString = <span class="hljs-string">&quot;&quot;</span><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">get</span><span class="hljs-params">()</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> formattedString + <span class="hljs-string">&quot;-&quot;</span> + formattedString.length<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">set</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>, value: <span class="hljs-type">String</span>)</span></span> &#123;<br>        <span class="hljs-keyword">if</span> (thisRef <span class="hljs-keyword">is</span> Person8) &#123;<br>            thisRef.updateCount++<br>        &#125;<br>        formattedString = value.lowercase().replaceFirstChar &#123; it.uppercase() &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>这时可以使用扩展函数来实现约定方法，新建 Delegate5Extension.kt：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> Delegate5.<span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">String</span>)</span></span> =<br>    <span class="hljs-keyword">set</span>(thisRef, value)<br><br><span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> Delegate5.<span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span> = <span class="hljs-keyword">get</span>()<br></code></pre></td></tr></table></figure>
+
+
+
+<p>修改 Person 类为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person8</span> </span>&#123;<br>    <span class="hljs-keyword">var</span> name: String <span class="hljs-keyword">by</span> Delegate5()<br>    <span class="hljs-keyword">var</span> lastname: String <span class="hljs-keyword">by</span> Delegate5()<br>    <span class="hljs-keyword">var</span> updateCount = <span class="hljs-number">0</span><br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> person = Person8()<br>    person.name = <span class="hljs-string">&quot;peter&quot;</span><br>    person.lastname = <span class="hljs-string">&quot;wang&quot;</span><br>    println(<span class="hljs-string">&quot;name=<span class="hljs-subst">$&#123;person.name&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;lastname=<span class="hljs-subst">$&#123;person.lastname&#125;</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;updateCount=<span class="hljs-subst">$&#123;person.updateCount&#125;</span>&quot;</span>)<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">打印日志：</span><br><span class="hljs-comment">name=Peter-5</span><br><span class="hljs-comment">lastname=Wang-4</span><br><span class="hljs-comment">updateCount=2</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>/  Kotlin内置委托  /</p>
+<h3 id="lazy-函数"><a href="#lazy-函数" class="headerlink" title="lazy() 函数"></a><strong>lazy() 函数</strong></h3><p>lazy() 函数用于实现属性的惰性初始化，即只有在第一次访问属性时，才对它进行初始化。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>(name: String) &#123;<br>    <span class="hljs-keyword">val</span> emails: List&lt;String&gt; <span class="hljs-keyword">by</span> lazy &#123; loadEmailsByName(name) &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">loadEmailsByName</span><span class="hljs-params">(name: <span class="hljs-type">String</span>)</span></span>: List&lt;String&gt; &#123;<br>        println(<span class="hljs-string">&quot;loadEmailsByName called&quot;</span>)<br>        <span class="hljs-keyword">return</span> listOf(<span class="hljs-string">&quot;Email1&quot;</span>, <span class="hljs-string">&quot;Email2&quot;</span>, <span class="hljs-string">&quot;Email3&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> p = Person(<span class="hljs-string">&quot;Peter&quot;</span>)<br>    println(p.emails)<br>    println(p.emails)<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">打印日志：</span><br><span class="hljs-comment">loadEmailsByName called</span><br><span class="hljs-comment">[Email1, Email2, Email3]</span><br><span class="hljs-comment">[Email1, Email2, Email3]</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>可以看到，两次访问 emails 属性，只有第一次调用了 loadEmailsByName 方法。</p>
+<p>如果把访问 emails 属性的代码注释掉，会看到没有任何打印，说明 emails 属性确实是惰性初始化的。</p>
+<p>为什么 lazy() 函数可以放在 by 后面用于获取委托对象呢？</p>
+<p>这是因为 Lazy.kt 中定义了符合约定的扩展函数：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T&gt;</span> Lazy<span class="hljs-type">&lt;T&gt;</span>.<span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>?, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: T = value<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Delegates-notNull"><a href="#Delegates-notNull" class="headerlink" title="Delegates.notNull()"></a><strong>Delegates.notNull()</strong></h3><p>Delegates.notNull() 用于实现属性的延迟初始化，和 lateinit 类似。</p>
+<p>它们的区别是：</p>
+<ul>
+<li>notNull 会给每个属性额外创建一个对象，而 lateinit 不会；</li>
+<li>notNull 可以用于基本数据类型的延迟初始化，而 lateinit 不可以。</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person4</span> </span>&#123;<br>    <span class="hljs-keyword">val</span> fullname: String <span class="hljs-keyword">by</span> Delegates.notNull&lt;String&gt;()<br>    <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> fullname2: String<br>    <span class="hljs-comment">// lateinit var age: Int</span><br><br>    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> &#123;<br>        <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> list: MutableList&lt;String&gt;<br>        <span class="hljs-keyword">val</span> l : List&lt;String&gt; <span class="hljs-keyword">by</span> Delegates.notNull&lt;List&lt;String&gt;&gt;()<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>/  最后  /</p>
+<p>本文比较详细地介绍了 Kotlin 为什么要出现 by 关键字，以及它的两种用法。通过小的例子一步一步引出 by 关键字的使用。</p>
+<p>需要说明的是，本文对于 by 关键字的委托属性的用法的实际应用并没有一一说明，这部分需要查看 <strong>Delegated properties-Kotlin官方文档</strong>(<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/delegated-properties.html)%E3%80%82">https://kotlinlang.org/docs/delegated-properties.html)。</a></p>
+<p>另外，本文没有把委托属性在属性值变化监听的应用例子写在文章里，主要考虑到大家对 PropertyChangeSupport 这个接口比较陌生，不太适合做基本实例说明。不过，这个例子在本文提供的代码中是包含的。需要说明的是，Kotlin 的内置的 Delegates.observable 和 Delegates.vetoable 就是对属性值变化监听或者否决的代码封装。</p>
+<p>代码在这里（<a target="_blank" rel="noopener" href="https://github.com/jhwsx/BlogCodes/tree/master/KotlinByStudy%EF%BC%89%E3%80%82">https://github.com/jhwsx/BlogCodes/tree/master/KotlinByStudy）。</a></p>
+<p>文章的参考部分是不可多得的学习资料。大家也可以看看。</p>
+<p>/  参考  /</p>
+<p><strong>Delegation-Kotlin官方文档</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/delegation.html">https://kotlinlang.org/docs/delegation.html</a></p>
+</blockquote>
+<p><strong>Delegated properties-Kotlin官方文档</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/delegated-properties.html">https://kotlinlang.org/docs/delegated-properties.html</a></p>
+</blockquote>
+<p><strong>Delegating Delegates to Kotlin-AndroidDevelopersBlog（出自谷歌技术推广工程师，使用的例子比较贴切）</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://medium.com/androiddevelopers/delegating-delegates-to-kotlin-ee0a0b21c52b">https://medium.com/androiddevelopers/delegating-delegates-to-kotlin-ee0a0b21c52b</a></p>
+</blockquote>
+<p><strong>Built-in Delegates-AndroidDevelopersBlog*<em>（出自谷歌技术推广工程师，使用的例子比较贴切）*</em></strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://medium.com/androiddevelopers/built-in-delegates-4811947e781f">https://medium.com/androiddevelopers/built-in-delegates-4811947e781f</a></p>
+</blockquote>
+<p><strong>Built-in Delegates-MAD Skills*<em>（出自谷歌技术推广工程师，这个是视频）*</em></strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=s5qn5QhFntY&amp;list=PLWz5rJ2EKKc_T0fSZc9obnmnWcjvmJdw_&amp;index=3">https://www.youtube.com/watch?v=s5qn5QhFntY&amp;list=PLWz5rJ2EKKc_T0fSZc9obnmnWcjvmJdw_&amp;index=3</a></p>
+</blockquote>
+<p><strong>[译]带你揭开Kotlin中属性代理和懒加载语法糖衣（对 lazy 进行的详细地说明）</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/65914552">https://zhuanlan.zhihu.com/p/65914552</a></p>
+</blockquote>
+<p><strong>Kotlin “By” Class Delegation: Favor Composition Over Inheritance（作者详细地说明了类委托，介绍了组合优于继承，并举出 Android 中的 AppCompatDelegate 的例子，Guava 开源库中集合中使用组合代替继承的例子。）</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://medium.com/rocket-fuel/kotlin-by-class-delegation-favor-composition-over-inheritance-a1b97fecd839">https://medium.com/rocket-fuel/kotlin-by-class-delegation-favor-composition-over-inheritance-a1b97fecd839</a></p>
+</blockquote>
+<p><strong>Kotlin ‘By’ Property Delegation: Create Reusable Code</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://medium.com/rocket-fuel/kotlin-by-property-delegation-create-reusable-code-f2bc2253e227">https://medium.com/rocket-fuel/kotlin-by-property-delegation-create-reusable-code-f2bc2253e227</a> </p>
+</blockquote>
+<hr>
+<h2 id="1-类委托"><a href="#1-类委托" class="headerlink" title="1.类委托"></a>1.类委托</h2><h3 id="（1）概念"><a href="#（1）概念" class="headerlink" title="（1）概念"></a>（1）概念</h3><p> 本类需要实现的<strong>方法/属性</strong>，借用其他已实现该<strong>方法/属性</strong>的对象作为自己的实现；</p>
+<p> 一旦使用了某类作为委托类，该类就能借用该委托类实现的方法/属性。</p>
+<h3 id="（2）定义"><a href="#（2）定义" class="headerlink" title="（2）定义"></a>（2）定义</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个生物接口，有一个run抽象方法和一个抽象属性</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Creature</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">run</span><span class="hljs-params">()</span></span><br>    <span class="hljs-keyword">val</span> type: String<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个委托类，实现了Creature接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DelegateClass</span> : <span class="hljs-type">Creature &#123;</span></span><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">val</span> type: String<br>        <span class="hljs-keyword">get</span>() = <span class="hljs-string">&quot;委托类该属性&quot;</span><br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">run</span><span class="hljs-params">()</span></span> &#123;<br>        println(<span class="hljs-string">&quot;代理类执行run方法&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="①委托类作为构造器形参传入（常用）"><a href="#①委托类作为构造器形参传入（常用）" class="headerlink" title="①委托类作为构造器形参传入（常用）"></a>①委托类作为构造器形参传入（常用）</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个Human类，实现了Creature接口，委托类作为形参传入，由形参委托类对象作为委托对象</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Human</span></span>(delegateClass: DelegateClass) : Creature <span class="hljs-keyword">by</span> delegateClass<br></code></pre></td></tr></table></figure>
+
+<h4 id="②新建委托类对象"><a href="#②新建委托类对象" class="headerlink" title="②新建委托类对象"></a>②新建委托类对象</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个Dog类，实现了Creature接口，新建一个委托类作为委托对象</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dog</span> : <span class="hljs-type">Creature by DelegateClass</span></span>()<br></code></pre></td></tr></table></figure>
+
+<h4 id="③新建委托类对象，并自己实现方法-属性"><a href="#③新建委托类对象，并自己实现方法-属性" class="headerlink" title="③新建委托类对象，并自己实现方法/属性"></a>③新建委托类对象，并自己实现方法/属性</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个pig类，实现了Creature接口，新建一个委托类作为委托对象，并自己实现了抽象方法</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Pig</span> : <span class="hljs-type">Creature by DelegateClass</span></span>() &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">run</span><span class="hljs-params">()</span></span> &#123;<br>        println(<span class="hljs-string">&quot;自己执行实现的run方法&quot;</span>)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">val</span> type: String<br>        <span class="hljs-keyword">get</span>() = <span class="hljs-string">&quot;自己实现的type属性&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>调用示例：</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">(args: <span class="hljs-type">Array</span>&lt;<span class="hljs-type">String</span>&gt;)</span></span> &#123;<br>    <span class="hljs-comment">//作为形参（委托对象可复用）</span><br>    <span class="hljs-keyword">val</span> delegateClass = DelegateClass()<br>    <span class="hljs-keyword">val</span> human = Human(delegateClass)<br>    human.run()<span class="hljs-comment">//结果：代理类执行run方法</span><br>    println(human.type)<span class="hljs-comment">//结果：委托类该属性</span><br>    <span class="hljs-keyword">val</span> human2 = Human(delegateClass)<br>    human2.run()<span class="hljs-comment">//结果：代理类执行run方法</span><br>    println(human2.type)<span class="hljs-comment">//结果：委托类该属性</span><br><br>    <span class="hljs-comment">//新建对象</span><br>    <span class="hljs-keyword">val</span> dog = Dog()<br>    dog.run()<span class="hljs-comment">//结果：代理类执行run方法</span><br>    println(dog.type)<span class="hljs-comment">//结果：委托类该属性</span><br><br>    <span class="hljs-comment">//新建对象并自己实现方法/属性</span><br>    <span class="hljs-keyword">val</span> pig = Pig()<br>    pig.run()<span class="hljs-comment">//结果：自己执行实现的run方法</span><br>    println(pig.type)<span class="hljs-comment">//结果：自己实现的type属性</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-属性委托"><a href="#2-属性委托" class="headerlink" title="2.属性委托"></a>2.属性委托</h2><h3 id="（1）概念-1"><a href="#（1）概念-1" class="headerlink" title="（1）概念"></a>（1）概念</h3><p> 多个类的类似属性交给委托类统一实现，避免每个类都要单独重复实现一次。</p>
+<h3 id="（2）定义-1"><a href="#（2）定义-1" class="headerlink" title="（2）定义"></a>（2）定义</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个委托类Jobs，</span><br><span class="hljs-comment"> * 为属性name创建了operator修饰的getValue和setValue方法</span><br><span class="hljs-comment"> * 该属性可被其他了委托该类共享</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Jobs</span> </span>&#123;<br>    <span class="hljs-keyword">var</span> name: String = <span class="hljs-string">&quot;工作名&quot;</span><br>    <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">SoftWareDev</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">String</span>)</span></span> &#123;<br>        <span class="hljs-keyword">this</span>.name = value<br>    &#125;<br><br>    <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">SoftWareDev</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">SoftWareDev</span></span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个AndroidDev类，实现SoftWareDev接口</span><br><span class="hljs-comment"> * 属性name委托Jobs类实现</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AndroidDev</span> : <span class="hljs-type">SoftWareDev &#123;</span></span><br>    <span class="hljs-keyword">var</span> name: String <span class="hljs-keyword">by</span> Jobs()<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个PhpDev类，实现了SoftWareDev接口</span><br><span class="hljs-comment"> * 属性name委托Jobs类实现</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PhpDev</span> : <span class="hljs-type">SoftWareDev &#123;</span></span><br>    <span class="hljs-keyword">var</span> name: String <span class="hljs-keyword">by</span> Jobs()<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个类实现了SoftWareDev接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExtensionClass</span> : <span class="hljs-type">SoftWareDev</span></span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 为ExtensionClass扩展属性，该属性由委托类Jobs实现</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">val</span> ExtensionClass.name <span class="hljs-keyword">by</span> Jobs()<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">(args: <span class="hljs-type">Array</span>&lt;<span class="hljs-type">String</span>&gt;)</span></span> &#123;<br>    <span class="hljs-keyword">val</span> androidDev = AndroidDev()<br>    androidDev.name = <span class="hljs-string">&quot;android开发&quot;</span><br>    println(androidDev.name)<span class="hljs-comment">//结果：android开发</span><br>    <span class="hljs-keyword">val</span> phpDev = PhpDev()<br>    println(phpDev.name)<span class="hljs-comment">//结果：工作名</span><br>    println(ExtensionClass().name)<span class="hljs-comment">//结果：工作名</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="（3）关于委托类的委托属性的getValue、setValue形参说明"><a href="#（3）关于委托类的委托属性的getValue、setValue形参说明" class="headerlink" title="（3）关于委托类的委托属性的getValue、setValue形参说明"></a>（3）关于委托类的委托属性的getValue、setValue形参说明</h3><h4 id="①getValue-thisRef-property"><a href="#①getValue-thisRef-property" class="headerlink" title="①getValue(thisRef, property)"></a>①getValue(thisRef, property)</h4><ul>
+<li>thisRef：代表委托属性所属对象，因此thisDef类型需要与委托属性所属对象<strong>类型一致</strong>，或者是其<strong>父类</strong>，如上面代码thisRef类型为SoftWareDev，是AndroidDev和PhpDev两个类的<strong>父类类型</strong>；</li>
+<li>property：代表目标属性，该属性必须是<strong>KProperty&lt;*&gt;类型</strong>或其<strong>父类类型</strong>；</li>
+<li>返回值：返回目标属性<strong>相同的类型</strong>，或者其<strong>子类类型</strong>。</li>
+</ul>
+<h4 id="②setValue-thisRef-property-value"><a href="#②setValue-thisRef-property-value" class="headerlink" title="②setValue(thisRef, property, value)"></a>②setValue(thisRef, property, value)</h4><ul>
+<li>thisRef：同上；</li>
+<li>property：同上；</li>
+<li>value：为目标属性设置的新的值，因此该值类型必须与目标属性<strong>类型一致</strong>，或者是其<strong>父类</strong>。</li>
+</ul>
+<p>总结：传入形参类型需与目标类型一致或者是其父类类型，返回值类型需与目标类型一致或者是其子类类型。</p>
+<h3 id="（4）关于ReadOnlyProperty和ReadWriteProperty接口"><a href="#（4）关于ReadOnlyProperty和ReadWriteProperty接口" class="headerlink" title="（4）关于ReadOnlyProperty和ReadWriteProperty接口"></a>（4）关于ReadOnlyProperty和ReadWriteProperty接口</h3><ul>
+<li>ReadOnlyProperty接口定义了getValue方法；</li>
+<li>ReadWriteProperty接口定义了getValue、setValue方法。</li>
+</ul>
+<p>因此，委托类可以实现ReadOnlyProperty（val声明待委托属性时）或者ReadWriteProperty（var声明待委托属性时）接口来进行委托属性的定义。</p>
+<p>上面Jobs类完全可以这么实现：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 定义一个委托类Jobs，</span><br><span class="hljs-comment"> * 实现了ReadWriteProperty接口，重写setValue、getValue方法</span><br><span class="hljs-comment"> * 该属性可被其他了委托该类共享</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Jobs</span> : <span class="hljs-type">ReadWriteProperty</span>&lt;<span class="hljs-type">SoftWareDev,String</span>&gt;</span>&#123;<br>    <span class="hljs-keyword">var</span> name: String = <span class="hljs-string">&quot;工作名&quot;</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">SoftWareDev</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">String</span>)</span></span> &#123;<br>        <span class="hljs-keyword">this</span>.name = value<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">SoftWareDev</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name<br>    &#125;<br>&#125;<br> 复制 全<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/kotlin/">kotlin</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/dc8ff4bf/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">jitpack打包</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/9097d82a/">
+                        <span class="hidden-mobile">idea配置java注解处理器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
