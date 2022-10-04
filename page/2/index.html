@@ -191,6 +191,53 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/posts/9dcd67b4/" target="_self">
+          配置 AndroidStudio
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/posts/9dcd67b4/" target="_self">
+          
+          androidstudio4.2之后配置文件位置 System directory﻿  现在位置在： 1C:\Users\123\AppData\Local\Google  自定义位置； 12D:\ProgramData\androidStudioData\123\AppData\Local\Google指定为idea.system.path   Configuration directory
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-12-23 14:36" pubdate>
+              2021-12-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/android/">android</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E8%BD%AF%E4%BB%B6/">软件</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/posts/8d2ce9e6/" target="_self">
           Sqlite基本内容
         </a>
@@ -287,15 +334,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/posts/64a98929/" target="_self">
-          app_process 来调用高权限 API
+        <a href="/posts/398acbb1/" target="_self">
+          android10新存储方案
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/posts/64a98929/" target="_self">
+        <a href="/posts/398acbb1/" target="_self">
           
-          使用 app_process 来调用高权限 API就从 app_process 开始吧。 app_processapp_process 是 Android 上的一个原生程序，是 APP 进程的主入口点。总之就是个可以让虚拟机从 main() 方法开始执行一个 Java 程序的东西啦。 参数和用法这个命令没有帮助程序，还好 源代码 里说得很清楚 1Usage: app_process [java-o
+          android10新存储方案早期的Android开发，对文件操作缺少限制，只要申请个读写内存权限就可以对整个文件目录随便操作，绝大多数应用都会在根目录建一个自己的文件夹用来存储数据，甚至把应用数据库(SQLite)移到外部文件夹中以防止应用卸载后数据被删除。那么这么做有什么好处吗？我想了一下，大概有两点吧。第一，存储在SD卡的文件不会计入到应用程序的占用空间当中，也就是说即使你在SD卡存放了1G的
         </a>
       </p>
 
@@ -334,15 +381,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/posts/398acbb1/" target="_self">
-          android10新存储方案
+        <a href="/posts/64a98929/" target="_self">
+          app_process 来调用高权限 API
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/posts/398acbb1/" target="_self">
+        <a href="/posts/64a98929/" target="_self">
           
-          android10新存储方案早期的Android开发，对文件操作缺少限制，只要申请个读写内存权限就可以对整个文件目录随便操作，绝大多数应用都会在根目录建一个自己的文件夹用来存储数据，甚至把应用数据库(SQLite)移到外部文件夹中以防止应用卸载后数据被删除。那么这么做有什么好处吗？我想了一下，大概有两点吧。第一，存储在SD卡的文件不会计入到应用程序的占用空间当中，也就是说即使你在SD卡存放了1G的
+          使用 app_process 来调用高权限 API就从 app_process 开始吧。 app_processapp_process 是 Android 上的一个原生程序，是 APP 进程的主入口点。总之就是个可以让虚拟机从 main() 方法开始执行一个 Java 程序的东西啦。 参数和用法这个命令没有帮助程序，还好 源代码 里说得很清楚 1Usage: app_process [java-o
         </a>
       </p>
 
@@ -421,15 +468,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/posts/3f6454bb/" target="_self">
-          java注解
+        <a href="/posts/fcdbf97b/" target="_self">
+          java注解-网络博客
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/posts/3f6454bb/" target="_self">
+        <a href="/posts/fcdbf97b/" target="_self">
           
-          process方法的调用方式注释处理分多轮完成。每一轮都从编译器开始搜索源文件中的注释并选择适合这些注释的注释处理器。依次在相应的源上调用每个注释处理器。 如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没有新文件产生。 依次在相应的源上调用每个注释处理器。如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没
+          一、介绍本文介绍了 Java 源代码级别的注释处理，并提供了使用此技术在编译期间生成其他源文件的示例。 2.注解处理的应用源代码级注释处理首先出现在 Java 5 中。它是一种在编译阶段生成额外源文件的便捷技术。 源文件不必是 Java 文件——您可以根据源代码中的注释生成任何类型的描述、元数据、文档、资源或任何其他类型的文件。 注释处理在许多无处不在的 Java 库中被积极使用，例如，在 Que
         </a>
       </p>
 
@@ -470,15 +517,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/posts/fcdbf97b/" target="_self">
-          java注解-网络博客
+        <a href="/posts/3f6454bb/" target="_self">
+          java注解
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/posts/fcdbf97b/" target="_self">
+        <a href="/posts/3f6454bb/" target="_self">
           
-          一、介绍本文介绍了 Java 源代码级别的注释处理，并提供了使用此技术在编译期间生成其他源文件的示例。 2.注解处理的应用源代码级注释处理首先出现在 Java 5 中。它是一种在编译阶段生成额外源文件的便捷技术。 源文件不必是 Java 文件——您可以根据源代码中的注释生成任何类型的描述、元数据、文档、资源或任何其他类型的文件。 注释处理在许多无处不在的 Java 库中被积极使用，例如，在 Que
+          process方法的调用方式注释处理分多轮完成。每一轮都从编译器开始搜索源文件中的注释并选择适合这些注释的注释处理器。依次在相应的源上调用每个注释处理器。 如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没有新文件产生。 依次在相应的源上调用每个注释处理器。如果在此过程中生成了任何文件，则以生成的文件作为其输入开始另一轮。这个过程一直持续到在处理阶段没
         </a>
       </p>
 
@@ -602,48 +649,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E8%BD%AF%E4%BB%B6%EF%BC%8C%E7%BB%88%E7%AB%AF/">软件，终端</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/posts/49c06d08/" target="_self">
-          aria2整理
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/posts/49c06d08/" target="_self">
-          
-          1. 安装1sudo pacman -S aria2  2.Aria2 配置说明 创建&#x2F;home&#x2F;用户名&#x2F;.config&#x2F;aria2&#x2F;文件夹，新建一个名为aria2.conf的配置文件，并把下面的配置示例修改后复制进去 创建&#x2F;home&#x2F;用户名&#x2F;.aria2&#x2F;文件夹，用touch命令建立两个文件aria2.session和input.session 第二步里的路径可以自行修改，在配置文件里填写好就行
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-12-20 20:16" pubdate>
-              2021-12-20
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E8%BD%AF%E4%BB%B6/">软件</a>
-            
-              <a href="/tags/aria2/">aria2</a>
             
           </div>
         
