@@ -1,0 +1,552 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="夜木">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="指定安装位置 首先创建配置文件夹  1sudo mkdir -p &#x2F;etc&#x2F;flatpak&#x2F;installations.d   创建配置文件  1nano &#x2F;etc&#x2F;flatpak&#x2F;installations.d&#x2F;extra.conf   在刚创建的配置文件里写入下面内容  1234[Installation &quot;extra&quot;]Path&#x3D;&#x2F;run&#x2F;media&#x2F;mwleeds&#x2F;ex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flatpak">
+<meta property="og:url" content="https://knightwood.github.io/posts/b8448ad0/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="指定安装位置 首先创建配置文件夹  1sudo mkdir -p &#x2F;etc&#x2F;flatpak&#x2F;installations.d   创建配置文件  1nano &#x2F;etc&#x2F;flatpak&#x2F;installations.d&#x2F;extra.conf   在刚创建的配置文件里写入下面内容  1234[Installation &quot;extra&quot;]Path&#x3D;&#x2F;run&#x2F;media&#x2F;mwleeds&#x2F;ex">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-03T07:16:59.000Z">
+<meta property="article:modified_time" content="2022-10-04T07:37:19.465Z">
+<meta property="article:author" content="NightWood">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>flatpak - 不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="flatpak">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-10-03 15:16" pubdate>
+        2022年10月3日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      24 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">flatpak</h1>
+            
+            <div class="markdown-body">
+              <h1 id="指定安装位置"><a href="#指定安装位置" class="headerlink" title="指定安装位置"></a>指定安装位置</h1><ol>
+<li>首先创建配置文件夹</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo mkdir -p <span class="hljs-regexp">/etc/</span>flatpak/installations.d<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>创建配置文件</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">nano <span class="hljs-regexp">/etc/</span>flatpak<span class="hljs-regexp">/installations.d/</span>extra.conf<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在刚创建的配置文件里写入下面内容</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk">[Installation <span class="hljs-string">&quot;extra&quot;</span>]<br>Path=<span class="hljs-regexp">/run/m</span>edia<span class="hljs-regexp">/mwleeds/</span>ext4_4tb<span class="hljs-regexp">/flatpak/</span><br>DisplayName=Extra Installation<br>StorageType=harddisk<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>注： Path：希望安装到哪个位置，可以使用<code>df</code>命令查看电脑上的磁盘分区的挂载点。<ul>
+<li>例如：想安装软件到data分区（<code>/dev/sda5</code>）下的<code>newFolder</code>文件夹。<code>df</code>命令得知data分区的挂载点是<code>/home/kiylx/diskstore</code>，那么Path就是<code>/home/kiylx/diskstore/newFolder</code></li>
+</ul>
+</li>
+<li>注：<a target="_blank" rel="noopener" href="http://docs.flatpak.org/en/latest/flatpak-command-reference.html#flatpak-installation">flatpak-installation 完整格式</a></li>
+</ul>
+<ol start="4">
+<li>给刚创建的软件安装位置，添加存储库</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">flatpak --installation=extra remote-add flathub https:<span class="hljs-regexp">//</span>flathub.org<span class="hljs-regexp">/repo/</span>flathub.flatpakrepo<br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>安装软件到刚指定的位置</li>
+</ol>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">flatpak --<span class="hljs-keyword">installation=extra </span><span class="hljs-keyword">install </span>flathub <span class="hljs-keyword">org.inkscape.Inkscape</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>注：如果配置的自定义安装位置只有一个，<code>--installation</code>参数可以省略</li>
+</ul>
+<ol start="6">
+<li>运行软件</li>
+</ol>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">flatpak <span class="hljs-attribute">--installation</span>=extra <span class="hljs-builtin-name">run</span> org.inkscape.Inkscape<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>注：如果配置的自定义安装位置只有一个，<code>--installation</code>参数可以省略</li>
+</ul>
+<hr>
+<h2 id="列出远程仓库"><a href="#列出远程仓库" class="headerlink" title="列出远程仓库"></a>列出远程仓库</h2><p>运行下面的命令，列出在系统中已经配置好远程仓库：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">flatpak remotes</span><br></code></pre></td></tr></table></figure>
+
+<p>列出已经添加了的远程仓库。列表表明每一个远程仓库是用户级的还是系统级的。</p>
+<h2 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h2><p>最方便的方式添加远程仓库是使用 <code>.flatpakrepo</code> 文件，它包含远程仓库的信息和GPG秘钥：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">flatpak remote-add --<span class="hljs-keyword">if</span>-not-exists flathub https:<span class="hljs-regexp">//</span>flathub.org<span class="hljs-regexp">/repo/</span>flathub.flatpakrepo<br></code></pre></td></tr></table></figure>
+
+<p>在这里，<code>flathub </code>是远程的本地名称。 URL 指向远程的<code>.flatpakrepo</code>文件。 <code>--if-not-exists </code>如果远程已经存在，则停止命令产生错误。</p>
+<h2 id="移除远程仓库"><a href="#移除远程仓库" class="headerlink" title="移除远程仓库"></a>移除远程仓库</h2><p>运行下面的命令以移除远程仓库：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs actionscript">flatpak remote-<span class="hljs-keyword">delete</span> flathub<br></code></pre></td></tr></table></figure>
+
+<p>In this case, <code>flathub</code> is the remote’s local name.</p>
+<h2 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h2><p>使用 <code>search</code> 命令查找远程仓库中的应用。如：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>flatpak search gimp<br></code></pre></td></tr></table></figure>
+
+<p>搜索会返回匹配搜索词的应用。每一个搜索结果包含应用ID和应用所在的仓库。在这个例子中，搜索词是 <code>gimp</code> 。</p>
+<h2 id="安装应用"><a href="#安装应用" class="headerlink" title="安装应用"></a>安装应用</h2><h3 id="普通安装"><a href="#普通安装" class="headerlink" title="普通安装"></a>普通安装</h3><p>运行下面的明明安装应用：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">flatpak <span class="hljs-keyword">install</span> flathub org.gimp.GIMP<br></code></pre></td></tr></table></figure>
+
+<p>在这里, <code>flathub</code> 是将要安装的远程仓库的名称, 而 <code>org.gimp.GIMP</code> 则是要安装的应用名称。</p>
+<p>ps：有时，应用需要特定的运行时，运行时需要在安装应用前安装。</p>
+<h3 id="使用flatpakref文件安装"><a href="#使用flatpakref文件安装" class="headerlink" title="使用flatpakref文件安装"></a>使用<code>flatpakref</code>文件安装</h3><ol>
+<li>在线安装</li>
+</ol>
+<p>将要安装的应用的详细信息可以由 <code>.flatpakref</code> 文件提供， <code>.flatpakref</code> 文件可以是本地的，也可以是远程的。运行下面的命令指定 <code>.flatpakref</code> ，而不是手动指定远程仓库和应用ID。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">flatpak install https:<span class="hljs-regexp">//</span>flathub.org<span class="hljs-regexp">/repo/</span>appstream/org.gimp.GIMP.flatpakref<br></code></pre></td></tr></table></figure>
+
+<p>如果 <code>.flatpakref</code> 文件指定从远程仓库中安装的应用已经添加过，在应用安装前，将会被问到，哪一个应用应该添加。</p>
+<p>​        自<code>Flatpak1.2</code>开始，<code>install</code>命令可以搜索应用程式：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">flatpak <span class="hljs-keyword">install</span> gimp<br></code></pre></td></tr></table></figure>
+
+<p>​        之后将确认远端和开始安装</p>
+<ol start="2">
+<li>本地安装</li>
+</ol>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">flatpak install --<span class="hljs-keyword">from</span> <span class="hljs-regexp">/文件位置/</span>org.gimp.GIMP.flatpakref<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>还可以添加参数指定安装位置</li>
+</ul>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">flatpak <span class="hljs-params">--installation=extra</span> install <span class="hljs-params">--from</span> /文件位置<span class="hljs-string">/org.gimp.GIMP.flatpakref</span><br>注：<span class="hljs-params">--installation=extra</span> 指向了上面我们自定义的安装位置<br><br>flatpak <span class="hljs-params">--user</span> install <span class="hljs-params">--from</span> /文件位置<span class="hljs-string">/org.gimp.GIMP.flatpakref</span><br>注：安装到<br></code></pre></td></tr></table></figure>
+
+<h3 id="注"><a href="#注" class="headerlink" title="注"></a>注</h3><p><code>Flatpak</code>在安装应用时，有一个系统级安装位置<code>/var/lib/flatpak/</code>和用户级的安装位置<code>$HOME/.local/share/flatpak/</code>，这类似于windwos为所有用户安装还是只为当前用户安装</p>
+<p>默认是安装到系统级的位置，可以在<code>install</code>命令后面添加上<code>--user</code>，以安装到用户文件夹下。</p>
+<p><code>--user</code>这个选项可以和大多数 <code>flatpak</code> 命令组合使用。用户级运行命令和系统级运行命令行为一致。</p>
+<p>例如：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">$ flatpak --<span class="hljs-keyword">user</span> <span class="hljs-title">remote-add</span> tutorial-repo repo<br>$ flatpak --<span class="hljs-keyword">user</span> <span class="hljs-title">install</span> tutorial-repo org.flatpak.Hello<br>第一个命令添加先前步骤创建的的仓库。第二个命令从仓库安装应用。<br><br>两个命令都使用 --<span class="hljs-keyword">user</span> <span class="hljs-title">参数，仓库和应用是按照用户来添加而不是系统范围的。</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="运行应用"><a href="#运行应用" class="headerlink" title="运行应用"></a>运行应用</h2><p>应用安装后，可以使用 <code>run</code> 命令和应用ID运行应用：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">flatpak <span class="hljs-builtin-name">run</span> org.gimp.GIMP<br></code></pre></td></tr></table></figure>
+
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><p>运行下面的命令更新所有的应用和运行时到最新版本：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">flatpak update</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="列出安装的应用"><a href="#列出安装的应用" class="headerlink" title="列出安装的应用"></a>列出安装的应用</h2><p>运行下面的命令，列出安装的应用和运行时：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">flatpak list</span><br></code></pre></td></tr></table></figure>
+
+<p>运行下面的命令仅列出安装的应用：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">flatpak list <span class="hljs-comment">--app</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="移除应用"><a href="#移除应用" class="headerlink" title="移除应用"></a>移除应用</h2><p>运行下面的命令移除应用：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">flatpak</span> uninstall org.gimp.GIMP<br></code></pre></td></tr></table></figure>
+
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>Flatpak 有一些命令可以帮助你在出现问题时让事情重新开始。要删除已安装应用程序未使用的运行时和扩展，请使用：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">flatpak uninstall <span class="hljs-comment">--unused</span><br></code></pre></td></tr></table></figure>
+
+<p>如果您中断了某次安装，重新下载可能会出现找不到文件的问题。您可以使用 <code>flatpak repair</code> 解决相关的问题。</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">flatpak repair</span><br></code></pre></td></tr></table></figure>
+
+<p>Flatpak 还有许多命令来管理已安装应用程序的门户权限。要重置应用程序的所有门户权限，请使用 <code>flatpak permission-reset</code>:</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">flatpak permission-<span class="hljs-built_in">reset</span> org.gimp.GIMP<br></code></pre></td></tr></table></figure>
+
+<p>要了解随着时间的推移对 Flatpak 安装所做的更改，您可以查看日志（从 1.2 开始）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">flatpak <span class="hljs-built_in">history</span><br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/0/">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467495390882-16467507662933.gif">
 <meta property="og:image" content="https://knightwood.github.io/posts/398acbb1/TyporaRaw/android%E5%AD%98%E5%82%A8%E4%BD%BF%E7%94%A8.assets/640-16467495390883-16467507662934.gif">
 <meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
-<meta property="article:modified_time" content="2022-03-08T15:07:05.216Z">
+<meta property="article:modified_time" content="2022-03-16T03:31:57.963Z">
 <meta property="article:author" content="NightWood">
 <meta property="article:tag" content="android">
 <meta name="twitter:card" content="summary_large_image">
@@ -215,7 +215,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      277 分钟
+      274 分钟
     </span>
   
 
@@ -276,10 +276,6 @@
 <blockquote>
 <p><a target="_blank" rel="noopener" href="https://github.com/guolindev/ScopedStorageDemo">https://github.com/guolindev/ScopedStorageDemo</a></p>
 </blockquote>
-<h2 id="这么做的好处"><a href="#这么做的好处" class="headerlink" title="这么做的好处"></a>这么做的好处</h2><p>对用户而言，当开发者适配完成后，用户的文件目录将不再像以前那么混乱，能够让用户更好的管理自己的文件。</p>
-<p>应用的数据全部存储在沙盒内，卸载应用时所有的文件也随之移除，解决了卸载应用仍然占用存储空间的问题。</p>
-<p>保护用户隐私，应用将不能随便访问公共文件，存储媒体文件等需要通过操作媒体数据库的方式存储在特定的媒体文件夹中，对用户来说，所有的媒体文件都存储在特定的文件夹下，也方便管理。</p>
-<p>对于开发者而言，这样做也能更好的保护自己的应用，应用不能访问其他应用的沙盒目录，应用的沙盒目录存储在 /Android/data/包名 文件夹下，而且在AndroidR版本的手机上，Android/data文件夹也向用户隐藏，通过系统文件管理器或者是连接电脑都无法访问data文件夹（可以通过SAF向用户申请权限来访问，仅用于文件管理类应用，或者获取Root权限）。</p>
 <h2 id="那么到底什么是作用域存储-分区存储呢？"><a href="#那么到底什么是作用域存储-分区存储呢？" class="headerlink" title="那么到底什么是作用域存储/分区存储呢？"></a>那么到底什么是作用域存储/分区存储呢？</h2><p>简单来讲，就是Android系统对SD卡的使用做了很大的限制。从Android 10开始，每个应用程序只能有权在自己的外置存储空间关联目录下读取和创建文件，获取该关联目录的代码是：context.getExternalFilesDir()。关联目录对应的路径大致如下：</p>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/storage/</span>emulated<span class="hljs-regexp">/0/</span>Android<span class="hljs-regexp">/data/</span>&lt;包名&gt;/files<br></code></pre></td></tr></table></figure>
 
@@ -433,7 +429,7 @@
 <p><a target="_blank" rel="noopener" href="https://github.com/guolindev/ScopedStorageDemo">https://github.com/guolindev/ScopedStorageDemo</a></p>
 </blockquote>
 <hr>
-<h1 id="一文带你了解适配Android-11分区存储"><a href="#一文带你了解适配Android-11分区存储" class="headerlink" title="一文带你了解适配Android 11分区存储"></a>一文带你了解适配Android 11分区存储</h1><h2 id="1-分区存储概念"><a href="#1-分区存储概念" class="headerlink" title="1 分区存储概念"></a><em>1</em> 分区存储概念</h2><p>为了让用户更好地控制自己的文件并减少混乱，Android 10针对应用推出的一个新的存储范例，新的存储模型会让以 Android 10（API 级别 29）及更高版本为目标平台的应用在默认情况下被赋予了对外部存储设备的分区访问权限，即分区存储(scoped storage)。分区存储改变了应用在设备的外部存储设备中存储和访问文件的方式。</p>
+<h1 id="———分割线————"><a href="#———分割线————" class="headerlink" title="———分割线————-"></a>———分割线————-</h1><h1 id="一文带你了解适配Android-11分区存储"><a href="#一文带你了解适配Android-11分区存储" class="headerlink" title="一文带你了解适配Android 11分区存储"></a>一文带你了解适配Android 11分区存储</h1><h2 id="1-分区存储概念"><a href="#1-分区存储概念" class="headerlink" title="1 分区存储概念"></a><em>1</em> 分区存储概念</h2><p>为了让用户更好地控制自己的文件并减少混乱，Android 10针对应用推出的一个新的存储范例，新的存储模型会让以 Android 10（API 级别 29）及更高版本为目标平台的应用在默认情况下被赋予了对外部存储设备的分区访问权限，即分区存储(scoped storage)。分区存储改变了应用在设备的外部存储设备中存储和访问文件的方式。</p>
 <p>从另一个角度来说，分区存储的推出更好的保护用户的隐私。默认情况下，对于以 Android 10 及更高版本为目标平台的应用，其访问权限范围限定为外部存储，即分区存储。此类应用可以查看外部存储设备内以下类型的文件，无需请求任何与存储相关的用户权限：</p>
 <ul>
 <li><p>特定于应用的目录中的文件（使用 getExternalFilesDir() 访问）。</p>
@@ -559,7 +555,7 @@
 
 
 <hr>
-<h1 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h1><h2 id="文件系统目录"><a href="#文件系统目录" class="headerlink" title="文件系统目录"></a>文件系统目录</h2><blockquote>
+<h1 id="———分割线————-1"><a href="#———分割线————-1" class="headerlink" title="———分割线————-"></a>———分割线————-</h1><h1 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h1><h2 id="文件系统目录"><a href="#文件系统目录" class="headerlink" title="文件系统目录"></a>文件系统目录</h2><blockquote>
 <p>/storage/emulated/0/ 对应的是手机-&gt;文件管理-&gt; 内部存储空间</p>
 </blockquote>
 <blockquote>
@@ -645,9 +641,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/8d2ce9e6/">
+                      <a href="/posts/64a98929/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Sqlite基本内容</span>
+                        <span class="hidden-mobile">app_process 来调用高权限 API</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -655,8 +651,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/64a98929/">
-                        <span class="hidden-mobile">app_process 来调用高权限 API</span>
+                      <a href="/posts/a7d9bd28/">
+                        <span class="hidden-mobile">hexo整理</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="NightWood">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="———分割线————-一 分区存储概述 Android 10之前，Android的文件存储现象就像个垃圾桶，但凡app取得了存储空间的读写权限WRITE_EXTERNAL_STORAGE，就可以肆意创建文件，难以管理。用户体验也特别差，打开文件管理器，会发现，想找个具体的文件根本无从下手。  1.1 分区存储原则为了更好地管理自己的文件并减少混乱，加强隐私保护，Android Q开始引入了分区存储">
+<meta property="og:type" content="article">
+<meta property="og:title" content="不知名的博客">
+<meta property="og:url" content="https://knightwood.github.io/posts/0/index.html">
+<meta property="og:site_name" content="不知名的博客">
+<meta property="og:description" content="———分割线————-一 分区存储概述 Android 10之前，Android的文件存储现象就像个垃圾桶，但凡app取得了存储空间的读写权限WRITE_EXTERNAL_STORAGE，就可以肆意创建文件，难以管理。用户体验也特别差，打开文件管理器，会发现，想找个具体的文件根本无从下手。  1.1 分区存储原则为了更好地管理自己的文件并减少混乱，加强隐私保护，Android Q开始引入了分区存储">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knightwood.github.io/posts/0/TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/c442a97a4a384c608b90c8c94134a31dtplv-k3u1fbpfcp-zoom-in-crop-mark1304000.awebp">
+<meta property="og:image" content="https://knightwood.github.io/posts/0/TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/a6b774eceadc4af69c9aa94a07086ebftplv-k3u1fbpfcp-zoom-in-crop-mark1304000.awebp">
+<meta property="og:image" content="https://knightwood.github.io/home/kiylx/%E5%AD%98%E6%A1%A3/BlogsRepo/blogs/source/_posts/TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/0a4178f506624c20b8b734abc62c4259tplv-k3u1fbpfcp-zoom-in-crop-mark1304000.awebp">
+<meta property="og:image" content="https://knightwood.github.io/posts/0/TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/170233f62142b86ftplv-t2oaga2asx-zoom-in-crop-mark1304000.awebp">
+<meta property="og:image" content="https://knightwood.github.io/posts/0/TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/170233f78b4fd1betplv-t2oaga2asx-zoom-in-crop-mark1304000.awebp">
+<meta property="og:image" content="https://knightwood.github.io/posts/0/TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/170233f8e56381a8tplv-t2oaga2asx-zoom-in-crop-mark1304000.awebp">
+<meta property="og:image" content="https://knightwood.github.io/posts/0/TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/170233fac3e64f0dtplv-t2oaga2asx-zoom-in-crop-mark1304000.awebp">
+<meta property="article:published_time" content="2022-03-14T15:12:57.688Z">
+<meta property="article:modified_time" content="2022-03-16T03:49:24.043Z">
+<meta property="article:author" content="NightWood">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://knightwood.github.io/posts/0/TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/c442a97a4a384c608b90c8c94134a31dtplv-k3u1fbpfcp-zoom-in-crop-mark1304000.awebp">
+  
+  
+  <title>不知名的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"knightwood.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-03-14 23:12" pubdate>
+        2022年3月14日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      18k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      149 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            <div class="markdown-body">
+              <h1 id="———分割线————"><a href="#———分割线————" class="headerlink" title="———分割线————-"></a>———分割线————-</h1><h1 id="一-分区存储概述"><a href="#一-分区存储概述" class="headerlink" title="一 分区存储概述"></a>一 分区存储概述</h1><blockquote>
+<p>Android 10之前，Android的文件存储现象就像个垃圾桶，但凡app取得了存储空间的读写权限<code>WRITE_EXTERNAL_STORAGE</code>，就可以肆意创建文件，难以管理。用户体验也特别差，打开文件管理器，会发现，想找个具体的文件根本无从下手。</p>
+</blockquote>
+<h2 id="1-1-分区存储原则"><a href="#1-1-分区存储原则" class="headerlink" title="1.1 分区存储原则"></a>1.1 分区存储原则</h2><p>为了更好地管理自己的文件并减少混乱，加强隐私保护，Android Q开始引入了分区存储机制。外部存储空间被重新设计，按应用私有和公用共享划分。应用只能访问到自己私有空间，或者通过<strong>MediaStore API</strong> 和<strong>Storage Access Framework</strong>去访问共享的资源目录。</p>
+<p>分区存储主要遵循了三大原则对文件存储进行重新设计：</p>
+<ol>
+<li><p>记录文件来源：系统会记录文件由哪个应用创建，应用不需要权限就可以对自己创建的文件进行读写；</p>
+<blockquote>
+<p>MediaStore数据库增加<code>owner_package_name</code>字段记录文件属于哪个应用， 应用卸载后<code>owner_package_name</code>字段会置空，也就是说，卸载重装后，之前创建的文件，已不属于应用创建的了，需要相关存储权限才能再次读写</p>
+</blockquote>
+</li>
+<li><p>应用数据的保护：对外部存储空间进行了访问限制，应用只能访问自身的<strong>私有空间或共享空间</strong>，即使获得了读写权限，也是无法访问其他应用的私有空间的；</p>
+</li>
+<li><p>用户数据保护：当用户下载了一些文件，比如带有敏感信息的邮件附件，这些文件应该对其他应用不可见。添加了pdf、office、doc等文件的访问限制，用户即使申请了存储权限也不能通过MediaStore访问其他应用创建的pdf、office、doc等文件，需要通过Storage Access Framework 框架，由用户参与选择，才能获得访问权限</p>
+</li>
+</ol>
+<p>Android 系统的版本越新，就<strong>越依赖于文件的用途</strong>而不是位置来确定应用对文件的访问能力</p>
+<h2 id="1-2-关于存储方式的兼容和判断"><a href="#1-2-关于存储方式的兼容和判断" class="headerlink" title="1.2 关于存储方式的兼容和判断"></a>1.2 关于存储方式的兼容和判断</h2><ol>
+<li>当targetSdk &lt;= 28时，应用使用传统存储方式；</li>
+<li>当targetSdk &lt;= 29时，可以通过在应用清单的application标签中添加<code>android:requestLegacyExternalStorage=&quot;true&quot;</code> ，从而关闭分区存储功能，继续使用传统访问方式。</li>
+<li>当targetSdk&gt;&gt;=30时，Android会强制执行分区存储，无法关闭。</li>
+<li>可以通过<code>Environment.isExternalStorageLegacy()</code>判断应用存储的运行方式，true表示以传统的兼容方式运行，false表示以分区存储运行</li>
+</ol>
+<p><strong>注意</strong>：当修改了requestLegacyExternalStorage属性的值，必须要卸载掉旧APK，重新安装才会生效</p>
+<h1 id="二-存储空间的影响"><a href="#二-存储空间的影响" class="headerlink" title="二 存储空间的影响"></a>二 存储空间的影响</h1><p>Android 提供了两类<strong>物理存储位置</strong>：<strong>内部存储空间和外部存储空间</strong>。在大多数设备上，内部存储空间小于外部存储空间。不过，所有设备上的内部存储空间都是始终可用的，因此在存储应用所依赖的数据时更为可靠。</p>
+<p>可移除卷（例如 SD 卡）在文件系统中属于外部存储空间。空间较大，现在的智能机基本都配有，但为了兼容性，也可在使用相关api时检查该空间是否处于可用状态。<code>Environment.getExternalStorageState()</code></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 是否可读写</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">isExternalStorageWritable</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>    <span class="hljs-keyword">return</span> Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED<br>&#125;<br><br><span class="hljs-comment">// 是否可读</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">isExternalStorageReadable</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>     <span class="hljs-keyword">return</span> Environment.getExternalStorageState() <span class="hljs-keyword">in</span><br>        setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)<br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在写入存储之前，需要知道设备有多少空间可用，不够的话会抛出异常。不过现在的智能设备内存也是比较大的，这部分可以参考<a href="https://link.juejin.cn/?target=https://developer.android.google.cn/training/data-storage/app-specific%23query-free-space">Google 查询可用空间</a></p>
+</blockquote>
+<h2 id="2-1-内部存储空间"><a href="#2-1-内部存储空间" class="headerlink" title="2.1 内部存储空间"></a>2.1 内部存储空间</h2><blockquote>
+<p>打开Android studio的 Device File Explorer时，可以看到应用的内部空间目录：/data/data/包名/</p>
+</blockquote>
+<p>内部存储空间本身便是保护应用隐私设计的。<strong>这部分是没有变化的</strong>。应用不需要任何系统权限即可读取和写入这些目录中的文件。其他应用无法访问存储在内部存储空间中的文件。</p>
+<p>内部存储空间为应用提供目录。一个目录专为应用的持久性文件而设计，而另一个目录包含应用的缓存文件。内部存储空间是应用专属的，是可以正常使用<code>File</code>相关api的，所以只要取得路径便可自由发挥：</p>
+<ol>
+<li>持久性文件根目录File：<code>context.filesDir()</code>，/data/data/包名/files/</li>
+<li>缓存性文件根目录File:：<code>context.cacheDir()</code>，/data/data/包名/cache/</li>
+</ol>
+<blockquote>
+<p>android也提供了一些简便的api创建删除文件：<code>context.openFileOutput(filename, Context.MODE_PRIVATE)</code>、<code>context.openFileInput(filename)</code>、<code>context.fileList()</code>、<code>context.getDir(dirName, Context.MODE_PRIVATE)</code>、<code>context.delefteFile(fileName)</code></p>
+</blockquote>
+<p><strong>注意：卸载app后，系统会自动移除这些目录释放空间！！</strong></p>
+<h2 id="2-2-外部存储空间"><a href="#2-2-外部存储空间" class="headerlink" title="2.2 外部存储空间"></a>2.2 外部存储空间</h2><blockquote>
+<p>/storage/emulated/0/Android/data/包名</p>
+</blockquote>
+<p>Android 10的分区存储特性，对Android系统的外部存储空间重新设计，外部存储被分为应用私有目录以及共享目录两个部分：</p>
+<ol>
+<li>应用私有目录：存储应用私有数据，外部存储应用私有目录对应Android/data/包名</li>
+<li>共享目录：存储其他应用可访问文件， 包含媒体文件、文档文件以及其他文件，对应设备DCIM、Pictures、Alarms, Music, Notifications,Podcasts, Ringtones、Movies、Download等目录。</li>
+</ol>
+<h3 id="2-2-1-应用私有空间"><a href="#2-2-1-应用私有空间" class="headerlink" title="2.2.1  应用私有空间"></a>2.2.1  应用私有空间</h3><p>与以往相同的是，访问自身的外部存储下的应用私有空间是不需要任何权限的。与内部一样，也有一个目录专为应用的持久性文件而设计，和另一个目录包含应用的缓存文件。也是可以正常使用<code>File</code>相关api的，所以只要取得路径便可自由发挥。</p>
+<p><strong>需要注意的不同点是：开启了分区存储特性后，应用只能访问自身的私有空间，即使获得了存储权限，也无法访问其他应用的私有空间</strong></p>
+<p>另外与内部空间的区别是，外部存储空间可能被移除也可能有多个，所以返回的是一个数组，对于返回数组中的第一个元素被视为主外部存储卷。除非该卷已满或不可用，否则请使用该卷。</p>
+<ol>
+<li>持久性文件：<code>getExternalFilesDirs(@NonNull Context context, @Nullable String type)</code>，type根据文件类型可传<a href="https://link.juejin.cn/?target=https://developer.android.google.cn/reference/android/os/Environment%23fields">系统预定义的子目录常量</a>，如图片<code>Environment.DIRECTORY_PICTURES</code>，此时返回<code>/storage/emulated/0/Android/data/包名/files/Pictures</code>。或者传null直接返回<code>/storage/emulated/0/Android/data/包名/files</code></li>
+<li>缓存性文件：<code>ContextCompat.getExternalCacheDirs(context)</code>，<code>/storage/emulated/0/Android/data/包名/cache</code></li>
+</ol>
+<p><strong>注意：卸载app后，系统会自动移除这些目录释放空间！！</strong></p>
+<h1 id="三-共享存储空间的影响"><a href="#三-共享存储空间的影响" class="headerlink" title="三 共享存储空间的影响"></a>三 共享存储空间的影响</h1><blockquote>
+<p>如果用户数据可供或应可供其他应用访问，并且即使在用户卸载应用后也可对其进行保存，请使用共享存储空间。</p>
+</blockquote>
+<p>共享文件类型， 包含媒体文件、文档文件以及其他文件，对应设备DCIM、Pictures、Alarms, Music, Notifications,Podcasts, Ringtones、Movies、Download等目录。Android 分别提供用于获得该类型可共享数据文件Uri的 API：</p>
+<ul>
+<li><strong>媒体内容</strong>：可以使用 <code>MediaStore</code> API 访问此内容</li>
+<li><strong>文档和其他文件</strong>：系统有一个特殊目录，用于包含其他文件类型，例如 PDF 文档和采用 EPUB 格式的图书。应用可以使用<code>Storage Access Framework</code>访问这些文件。</li>
+</ul>
+<p>对于共享文件，。以往可以通过<code>data column</code>获得路径，再使用File API来操作，现在都会返回失败。开启了分区存储特性之后，应用只能通过系统提供的api来向系统请求得到对应文件的<code>Uri</code>，并通过<code>Uri</code>生成<code>FileDescriptor</code>和<code>InputStream</code>等方式进行文件读写：（简而言之，对于共享文件的增删查改，主要问题在于<strong>Uri</strong>的获取）</p>
+<blockquote>
+<p>注：android 11 又允许通过路径来访问，系统会自动重定向为Uri。</p>
+</blockquote>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">               <span class="hljs-keyword">val</span> resolver = applicationContext.contentResolver<br>               <span class="hljs-comment">//读</span><br>                resolver.<span class="hljs-keyword">open</span><span class="hljs-constructor">FileDescriptor(<span class="hljs-params">content</span>-<span class="hljs-params">uri</span>, <span class="hljs-string">&quot;r&quot;</span>)</span>?.use &#123; pfd -&gt;<br>                    <span class="hljs-keyword">val</span> inputStream =  <span class="hljs-constructor">FileInputStream(<span class="hljs-params">pfd</span>.<span class="hljs-params">fileDescriptor</span>)</span><br>                &#125;<br>                resolver.<span class="hljs-keyword">open</span><span class="hljs-constructor">InputStream(<span class="hljs-params">content</span>-<span class="hljs-params">uri</span>)</span>.use &#123; stream -&gt;<br>                &#125;<br><br>                <span class="hljs-comment">//写</span><br>                resolver.<span class="hljs-keyword">open</span><span class="hljs-constructor">FileDescriptor(<span class="hljs-params">content</span>-<span class="hljs-params">uri</span>, <span class="hljs-string">&quot;w&quot;</span>)</span>?.use &#123; pfd -&gt;<br>                    <span class="hljs-keyword">val</span> outputStream =  <span class="hljs-constructor">FileOutputStream(<span class="hljs-params">pfd</span>.<span class="hljs-params">fileDescriptor</span>)</span><br>                &#125;<br>                resolver.<span class="hljs-keyword">open</span><span class="hljs-constructor">OutputStream(<span class="hljs-params">content</span>-<span class="hljs-params">uri</span>)</span>.use &#123; stream -&gt;<br>                &#125;<br><br>                <span class="hljs-comment">//图片bitmap</span><br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">BitmapFactory</span>.</span></span>decode<span class="hljs-constructor">FileDescriptor(<span class="hljs-params">pfd</span>.<span class="hljs-params">fileDescriptor</span>)</span><br>复制代码<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-1-MediaStore-API"><a href="#3-1-MediaStore-API" class="headerlink" title="3.1 MediaStore API"></a>3.1 MediaStore API</h2><blockquote>
+<p><a href="https://link.juejin.cn/?target=https://developer.android.google.cn/training/data-storage/shared/media%23query-collection">MediaStrore API的增删查改，可参看Google官方指南</a>，主要是通过contentResolver获得对应的uri，这里就不引入了。<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904063432130568#heading-21">图片来源</a></p>
+</blockquote>
+<p><img src="TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/c442a97a4a384c608b90c8c94134a31dtplv-k3u1fbpfcp-zoom-in-crop-mark1304000.awebp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="3-1-1-MediaStore-概述"><a href="#3-1-1-MediaStore-概述" class="headerlink" title="3.1.1  MediaStore  概述"></a>3.1.1  MediaStore  概述</h3><p>Android系统会自动扫描外部存储空间，将媒体文件按类型添加到系统预定义的<strong>Images、Videos、Audio files、Downloaded files集合</strong>中。Android Q通过MediaStore.Images、MediaStore.Video、MediaStore.Audio、MediaStore.Downloads 访问相对应共享目录文件资源。预定义集合所对应的目录如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>媒体类型</th>
+<th>Uri</th>
+<th>默认创建目录</th>
+<th>允许创建目录</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Image</td>
+<td>content://media/external/images/media</td>
+<td>Pictures</td>
+<td>DCIM,Pictures</td>
+</tr>
+<tr>
+<td>Audio</td>
+<td>content://media/external/audio/media</td>
+<td>Music</td>
+<td>Alarms,Music,Notifications,Podcasts,Ringtones</td>
+</tr>
+<tr>
+<td>Video</td>
+<td>content://media/external/video/media</td>
+<td>Movies</td>
+<td>DCIM,Movies</td>
+</tr>
+<tr>
+<td>Download</td>
+<td>content://media/external/downloads</td>
+<td>Download</td>
+<td>Download</td>
+</tr>
+</tbody></table>
+<p>注意：<code>MediaStore.Downloads.EXTERNAL_CONTENT_URI</code>是Android10版本新增API，用于创建、访问非媒体文件</p>
+<h4 id="3-1-1-1"><a href="#3-1-1-1" class="headerlink" title="3.1.1.1"></a>3.1.1.1</h4><p>系统里有external.db数据库，该数据库里有files表，该表里存放着共享文件的诸多信息，如图片有宽高，经纬度、存放路径等，视频宽高、时长、存放路径等。而文件真正存放的地方在于共享存储空间。</p>
+<p><strong>1、保存图片到相册</strong><br>当App1保存图片到相册时，简单流程如下：</p>
+<blockquote>
+<p>1、将路径信息写入数据库里，并获取Uri<br>2、通过Uri构造输出流<br>3、将该图片保存在/sdcard/Pictures/目录下</p>
+</blockquote>
+<p><strong>2、从相册获取图片</strong><br>当App2从相册获取图片时，简单流程如下：</p>
+<blockquote>
+<p>1、先查询数据库，找到对应的图片Cursor<br>2、从Cursor里构造Uri<br>3、从Uri构造输入流读取图片</p>
+</blockquote>
+<p>以上以图片为例简单分析了共享存储空间文件的写入与读取，实际上对于视频、音频步骤亦是如此。</p>
+<p>MediaStore.java其内部有Audio、Images等内部类，这些内部类里记录着files表的各个字段名，通过构造这些参数就可以插入相应的字段值以及获取对应的字段值。MediaStore 实际上就是相当于给各个字段起了别名，我们编码的时候更容易记住与使用：</p>
+<p>比如想要查询共享存储空间里的图片文件：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">Cursor</span> <span class="hljs-keyword">cursor</span> = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>);<br></code></pre></td></tr></table></figure>
+
+<p>MediaStore.Images.Media.EXTERNAL_CONTENT_URI 意思是指定查询文件的类型是图片，并构造成Uri对象，Uri实现了Parcelable，能够在进程间传递。<br>接收方(另一个进程收到后)，匹配Uri，解析出对应的字段，进行具体的操作。当然，MediaStore是系统提供的方便操作共享存储空间的类，若是自己写ContentProvider，则也可以自定义类似MediaStore的类用来标记自己的数据库表的字段。</p>
+<h3 id="3-1-1-MediaStore-的变化"><a href="#3-1-1-MediaStore-的变化" class="headerlink" title="3.1.1 MediaStore 的变化"></a>3.1.1 MediaStore 的变化</h3><ol>
+<li>MediaStore API在共享目录指定目录下创建文件或者访问应用自己创建文件，不需要申请存储权限；</li>
+<li>MediaStore API访问其他应用在共享目录创建的媒体文件(图片、音频、视频)， 需要申请存储权限，未申请存储权限，通过ContentResolver查询不到文件Uri，即使通过其他方式获取到文件Uri，读取或创建文件会抛出异常；</li>
+<li>MediaStore API不能够访问其他应用创建的非媒体文件(pdf、office、doc、txt等)， Android 10 里唯一一种访问其他应用创建的非媒体文件的途径是使用存储访问框架 (Storage Access Framework) 提供的文档选择器。</li>
+</ol>
+<h3 id="3-1-2-通过api创建的文件存放到哪里？如何自定义位置？"><a href="#3-1-2-通过api创建的文件存放到哪里？如何自定义位置？" class="headerlink" title="3.1.2 通过api创建的文件存放到哪里？如何自定义位置？"></a>3.1.2 通过api创建的文件存放到哪里？如何自定义位置？</h3><p><strong>当通过<code>MediaStore API</code>创建文件时，文件会默认保存到对应的类型目录，比如图片存到<code>Pictures/</code>目录下，可以往上查看表格的默认目录及允许目录；</strong></p>
+<p><strong>可以使用<code>MediaStore.xxx.Media.RELATIVE_PATH</code>自己指定要存放的目录或者子目录，如：<code>contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + &quot;/自定义子目录&quot;)</code>，文件就会放在<code>Pictures/自定义子目录/</code> 中；或者使用<code>contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment. DIRECTORY_DCIM)</code>，将文件放到<code>DCIM/</code> 中</strong></p>
+<p><strong>注意：每一种类型都有对应的可允许创建的目录，否则会返回失败。具体可创建目录可以往上查看表格</strong></p>
+<p>3.1.3 extrnal.db</p>
+<p>Android 11 （API 级别 30 3030） 之后的存储机制 : Android 中所有文件存储 , 都会将文件的索引存储在数据库中 , 在 /data/data/com.android.providers.media 目录下的文件就是专门用于管理该数据库的 ;</p>
+<p>在 /data/data/com.android.providers.media 目录下有 4 44 个目录 , cache , code_cache , databases , shared_prefs , 其中 databases 就是存储的上述文件索引数据库 , 有两个数据库文件 : external.db , internal.db ;</p>
+<p>查看命令 :</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk">walleye:<span class="hljs-regexp">/ # cd  /</span>data<span class="hljs-regexp">/data/</span>com.android.providers.media<br>walleye:<span class="hljs-regexp">/data/</span>data/com.android.providers.media <span class="hljs-comment"># ls</span><br>cache code_cache databases shared_prefs<br>walleye:<span class="hljs-regexp">/data/</span>data/com.android.providers.media <span class="hljs-comment"># cd databases</span><br>walleye:<span class="hljs-regexp">/data/</span>data<span class="hljs-regexp">/com.android.providers.media/</span>databases <span class="hljs-comment"># ls</span><br>external.db internal.db<br>walleye:<span class="hljs-regexp">/data/</span>data<span class="hljs-regexp">/com.android.providers.media/</span>databases <span class="hljs-comment">#</span><br></code></pre></td></tr></table></figure>
+
+
+<p>将 external.db 数据库拷贝出来 , 使用 SQLite 查看工具查看该数据库 , 该数据库中有一张 files 数据表 , 就是存放文件索引的 , 只有开启分区存储时 , 才将所有的文件都保存在该数据库表中 ;</p>
+<p>生成文件索引 :</p>
+<p>在老版本的文件系统中 , 只有将文件放在 Pictures , Movies , Music , Document 等目录下时 , 才生文件索引放在数据库中 , 在 SD 卡其它位置创建文件 , 不会生成文件索引 ;</p>
+<p>在新版本的分区存储中 , 上述数据表中管理所有 SD 卡上的文件 , 所有的文件和目录都会显示在上述数据库中 ;</p>
+<table>
+<thead>
+<tr>
+<th>external.db 数据库</th>
+<th>files 数据表字段简介 :</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>_id</td>
+<td>每个文件都会被赋予一个 id , 不会重复 ;</td>
+</tr>
+<tr>
+<td>tittle</td>
+<td>文件名称 , 一般是文件的完整名称去掉文件后缀 ;</td>
+</tr>
+<tr>
+<td>_display_name</td>
+<td>文件的完整名称 , 带后缀 ;</td>
+</tr>
+<tr>
+<td>mime_type</td>
+<td>文件的 MIME 类型 ;</td>
+</tr>
+</tbody></table>
+<p>mediastore使用：</p>
+<p>一个 文本文件 , 只能存储在 Download 和 Documents 目录下 , Download 目录可以存放任何类型的文件 , Documents 目录只能存储文本文件 ;</p>
+<p>首先通过 MediaStore 获取 Files 内部类对象 , 调用该内部类的 getContentUri(“external”) , 即可获取在 <a target="_blank" rel="noopener" href="https://hanshuliang.blog.csdn.net/article/details/116943144#_95">【Android 文件管理】分区存储 ( 分区存储机制 和 文件索引数据 ) 四、文件索引数据库</a> 博客章节提到的文件索引数据库 , 然后就可以通过 ContentValues 向其中插入数据 ;</p>
+<p><strong>获取数据库 :</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 操作 external.db 数据库</span><br><span class="hljs-comment">// 获取 Uri 路径</span><br><span class="hljs-keyword">var</span> uri: Uri = MediaStore.Files.getContentUri(<span class="hljs-string">&quot;external&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>插入数据时 , 构造 ContentValues 数据结构 , 主要是设置 external.db 数据库中 files 数据表对应的条目 , 设置该条目的主要字段值 ;</p>
+<p><strong>构造 ContentValues 数据 :</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 将要新建的文件的文件索引插入到 external.db 数据库中</span><br><span class="hljs-comment">// 需要插入到 external.db 数据库 files 表中, 这里就需要设置一些描述信息</span><br><span class="hljs-keyword">var</span> contentValues: ContentValues = ContentValues()<br><br><span class="hljs-comment">// 设置插入 external.db 数据库中的 files 数据表的各个字段的值</span><br><br><span class="hljs-comment">// 设置存储路径 , files 数据表中的对应 relative_path 字段在 MediaStore 中以常量形式定义</span><br>contentValues.put(MediaStore.Downloads.RELATIVE_PATH, <span class="hljs-string">&quot;$&#123;Environment.DIRECTORY_DOWNLOADS&#125;/hello&quot;</span>)<br><span class="hljs-comment">// 设置文件名称</span><br>contentValues.put(MediaStore.Downloads.DISPLAY_NAME, <span class="hljs-string">&quot;hello.txt&quot;</span>)<br><span class="hljs-comment">// 设置文件标题, 一般是删除后缀, 可以不设置</span><br>contentValues.put(MediaStore.Downloads.TITLE, <span class="hljs-string">&quot;hello&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>ContentValues 构造成功后 , 使用 ContentResolver 将数据插入数据库中 ; 系统会自动创建对应的文件 ;</p>
+<p><strong>向数据库中插入数据 :</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// uri 表示操作哪个数据库 , contentValues 表示要插入的数据内容</span><br><span class="hljs-keyword">var</span> insert: Uri = contentResolver.insert(uri, contentValues)!!<br></code></pre></td></tr></table></figure>
+
+<p>系统自动创建的文件是一个目录文件 , 向其中写出 “Hello World” 文本数据 , 即可完成相关文件创建 ;</p>
+<p><strong>通过返回的 Uri 打开输出流 , 向文件中写出数据 :</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 向 Download/hello/hello.txt 文件中插入数据</span><br><span class="hljs-keyword">var</span> os: OutputStream = contentResolver.openOutputStream(insert)!!<br><span class="hljs-keyword">var</span> bos = BufferedOutputStream(os)<br>bos.write(<span class="hljs-string">&quot;Hello World&quot;</span>.toByteArray())<br>bos.close()<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-2-Storage-Access-Framework"><a href="#3-2-Storage-Access-Framework" class="headerlink" title="3.2 Storage Access Framework"></a>3.2 Storage Access Framework</h2><p>SAF框架支持用户与系统选择器互动，从而选择文档提供器以及供您的应用创建、打开或修改的特定文档和其他文件。由于用户参与了文件的选择，因此该机制无需任何系统权限。</p>
+<p>应用通过调用  <code>ACTION_CREATE_DOCUMENT</code> ,  <code>ACTION_OPEN_DOCUMENT</code> , 和<code>ACTION_OPEN_DOCUMENT_TREE</code>  Intent获取Document provider提供的文件，并在onActivityResult接口接收返回的被选择文件的Uri。另外，在配置 intent 时，应指定文件的名称和 MIME 类型，并且还可以根据需要使用 <code>EXTRA_INITIAL_URI</code> intent extra 指定文件选择器在首次加载时应显示的文件或目录的 URI。</p>
+<p>这部分也是没变化的，可参考<a href="https://link.juejin.cn/?target=https://developer.android.google.cn/training/data-storage/shared/documents-files">官方指南：从共享存储空间访问文档和其他文件</a></p>
+<h3 id="3-2-1-获取持久权限"><a href="#3-2-1-获取持久权限" class="headerlink" title="3.2.1 获取持久权限"></a>3.2.1 获取持久权限</h3><p>对于通过SAF框架获得的uri权限，可以通过申请持久权限，不用每次重启手机都要重新请求。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus">contentResolver<span class="hljs-selector-class">.takePersistableUriPermission</span>(<br>    documentUri,<br>    Intent<span class="hljs-selector-class">.FLAG_GRANT_READ_URI_PERMISSION</span><br>)<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<h1 id="四-存储特性Android版本差异概览"><a href="#四-存储特性Android版本差异概览" class="headerlink" title="四 存储特性Android版本差异概览"></a>四 存储特性Android版本差异概览</h1><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904063432130568#heading-12">图片来源</a></p>
+<p><img src="TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/a6b774eceadc4af69c9aa94a07086ebftplv-k3u1fbpfcp-zoom-in-crop-mark1304000.awebp" srcset="/img/loading.gif" lazyload alt="img">img</p>
+<h2 id="4-1-其他变化：图片位置信息"><a href="#4-1-其他变化：图片位置信息" class="headerlink" title="4.1 其他变化：图片位置信息"></a>4.1 其他变化：图片位置信息</h2><p>一些照片在元数据中包含位置信息，以便用户查看照片的拍摄地点。由于此位置信息属于敏感信息，如果应用使用了分区存储，默认情况下 Android 10 会对应用隐藏此信息。</p>
+<p>如果应用需要访问照片的位置信息：</p>
+<ol>
+<li>在应用清单中请求<code>ACCESS_MEDIA_LOCATION</code>权限</li>
+<li>通过调用 <code>setRequireOriginal()</code>，从 <code>MediaStore</code> 对象获取照片的确切字节，并传入照片的 URI</li>
+</ol>
+<p><a href="https://link.juejin.cn/?target=https://developer.android.google.cn/training/data-storage/shared/media%23location-info-photos">图片中的位置信息获取</a></p>
+<h1 id="五-更新"><a href="#五-更新" class="headerlink" title="五 更新"></a>五 更新</h1><h2 id="5-1-Android-10-的分区存储”bug”"><a href="#5-1-Android-10-的分区存储”bug”" class="headerlink" title="5.1 Android 10 的分区存储”bug”"></a>5.1 Android 10 的分区存储”bug”</h2><p>Android 10 通过媒体MediaStore API 删除（delete）一个媒体文件，只是简单移除了MediaStore数据库的索引，并不会真正删除物理存储上的实体文件，而且只要手机重启，则索引又被加上去了。<a href="https://link.juejin.cn/?target=https://github.com/android/storage-samples/issues/36">issue</a></p>
+<p>这需求也比较少见，只是刚好测试发现了。网上查了下，的确存在这个问题，Android 11 就可以正常删除了。 要是有什么解决方案，热烈欢迎指出！！</p>
+<h2 id="5-2-Android-11-的存储变更"><a href="#5-2-Android-11-的存储变更" class="headerlink" title="5.2 Android 11 的存储变更"></a>5.2 Android 11 的存储变更</h2><h3 id="5-2-1-允许继续使用原始文件路径"><a href="#5-2-1-允许继续使用原始文件路径" class="headerlink" title="5.2.1  允许继续使用原始文件路径"></a>5.2.1  允许继续使用原始文件路径</h3><p><a href="https://link.juejin.cn/?target=https://developer.android.google.cn/preview/privacy/storage%23media-files-raw-paths">可以再次使用文件路径，系统自动重定向为Uri</a></p>
+<h3 id="5-2-2-增加批量操作"><a href="#5-2-2-增加批量操作" class="headerlink" title="5.2.2 增加批量操作"></a>5.2.2 增加批量操作</h3><p>在 Android 10 中，应用在对MediaStore的每一个文件请求编辑或删除时都必须一个个地得到用户的确认。而在 Android 11 中，应用可以一次请求修改或者删除多个媒体文件。</p>
+<p><img src="/home/kiylx/%E5%AD%98%E6%A1%A3/BlogsRepo/blogs/source/_posts/TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/0a4178f506624c20b8b734abc62c4259tplv-k3u1fbpfcp-zoom-in-crop-mark1304000.awebp" srcset="/img/loading.gif" lazyload></p>
+<p>Screenshot_20201203_193743</p>
+<p>主要通过以下新增的批量操作api</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MediaStore.createDeleteRequest (resolver, uris)</td>
+<td>批量删除（不放入回收站）</td>
+</tr>
+<tr>
+<td>MediaStore.createFavoriteRequest(resolver, uris)</td>
+<td>批量收藏</td>
+</tr>
+<tr>
+<td>MediaStore.createTrashRequest (resolver, uris)</td>
+<td>批量移入回收站</td>
+</tr>
+<tr>
+<td>MediaStore.createWriteRequest(resolver, uris)</td>
+<td>批量获得写入权限</td>
+</tr>
+</tbody></table>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> uris = ...<br><span class="hljs-keyword">val</span> pi = MediaStore.createWriteRequest(contentResolver,<br>        uris)<br>startIntentSenderForResult(pi.intentSender, REQUEST_CODE, <span class="hljs-literal">null</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)<br><br><span class="hljs-comment">//相应</span><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onActivityResult</span><span class="hljs-params">(xxx)</span></span> &#123;<br>    <span class="hljs-keyword">when</span> (requestCode) &#123;<br>        REQUEST_CODE -&gt;<br>            <span class="hljs-keyword">if</span> (resultCode == Activity.RESULT_OK) &#123;<br>                <span class="hljs-comment">//获得权限，继续操作</span><br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// 用户拒绝了权限授予</span><br>            &#125;<br>    &#125;<br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<h1 id="六-参考链接"><a href="#六-参考链接" class="headerlink" title="六 参考链接"></a>六 参考链接</h1><ul>
+<li><a href="https://link.juejin.cn/?target=https://developer.android.google.cn/guide/topics/data">Google 指南：应用数据和文件</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904063432130568">Android 10 分区存储介绍及百度APP适配实践</a></li>
+<li><a href="https://link.juejin.cn/?target=https://mp.weixin.qq.com/s/sac-ml2-3uR1_FVPZIYpCA">Android 11 中的存储机制更新</a></li>
+<li><a href="https://link.juejin.cn/?target=https://github.com/android/storage-samples">storage-samples</a></li>
+</ul>
+<p>作者：CYQ<br>链接：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6902285295513763848">https://juejin.cn/post/6902285295513763848</a><br>来源：稀土掘金<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+<h1 id="———分割线————-1"><a href="#———分割线————-1" class="headerlink" title="———分割线————-"></a>———分割线————-</h1><h1 id="Saf访问框架"><a href="#Saf访问框架" class="headerlink" title="Saf访问框架"></a>Saf访问框架</h1><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904058743078919#heading-8">文章源</a></p>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h2><blockquote>
+<p>Android 4.4 就引入了存储访问框架 (SAF)。借助 SAF，用户可轻松在其所有首选文档存储提供程序中浏览并打开文档、图像及其他文件。用户可通过易用的标准界面，以统一方式在所有应用和提供程序中浏览文件，以及访问最近使用的文件。</p>
+</blockquote>
+<p>SAF 提供的部分功能：</p>
+<ul>
+<li>让用户浏览所有文档提供程序的内容，而不仅仅是单个应用的内容。</li>
+<li>让您的应用获得对文档提供程序所拥有文档的长期、持续性访问权限。用户可通过此访问权限添加、编辑、保存和删除提供程序上的文件。</li>
+<li>支持多个用户帐户和临时根目录，如只有在插入驱动器后才会出现的 USB 存储提供程序。</li>
+</ul>
+<p>虽说早在Android 4.4就已经引入了，但是我却从未使用过。。。然而在适配Android 10中它却是一个无法忽略的存在。因为Android 10的外部存储访问限制，我们无法像以前一样自由的操作文件。SAF就是应对这一限制的方法之一。</p>
+<h2 id="2-使用"><a href="#2-使用" class="headerlink" title="2.使用"></a>2.使用</h2><h3 id="选择文件"><a href="#选择文件" class="headerlink" title="选择文件"></a>选择文件</h3><p>使用<code>Intent.ACTION_OPEN_DOCUMENT</code>可以调起文件选择页面，选择一个文件。我以选择图片文件为例：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    <span class="hljs-comment">//通过系统的文件浏览器选择一个文件</span><br>    Intent intent = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Intent(Intent.ACTION_OPEN_DOCUMENT)</span>;<br>    <span class="hljs-comment">//筛选，只显示可以“打开”的结果，如文件(而不是联系人或时区列表)</span><br>    intent.add<span class="hljs-constructor">Category(Intent.CATEGORY_OPENABLE)</span>;<br>    <span class="hljs-comment">//过滤只显示图像类型文件</span><br>    intent.set<span class="hljs-constructor">Type(<span class="hljs-string">&quot;image/*&quot;</span>)</span>;<br>    start<span class="hljs-constructor">ActivityForResult(<span class="hljs-params">intent</span>, REQUEST_CODE_FOR_SINGLE_FILE)</span>;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>文件选择页面如下（系统MIUI 11）：</p>
+<p><img src="TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/170233f62142b86ftplv-t2oaga2asx-zoom-in-crop-mark1304000.awebp" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>在<code>onActivityResult</code>获取文件Uri，同时也可以通过<code>ContentResolver</code>查询文件信息：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">private</span> final String<span class="hljs-literal">[]</span> IMAGE_PROJECTION = &#123;<br>            MediaStore.Images.Media.DISPLAY_NAME,<br>            MediaStore.Images.Media.SIZE,<br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MediaStore</span>.</span><span class="hljs-module"><span class="hljs-identifier">Images</span>.</span><span class="hljs-module"><span class="hljs-identifier">Media</span>.</span><span class="hljs-module"><span class="hljs-identifier">_ID</span> </span></span>&#125;;<br><br>@Override<br>public void on<span class="hljs-constructor">ActivityResult(<span class="hljs-params">int</span> <span class="hljs-params">requestCode</span>, <span class="hljs-params">int</span> <span class="hljs-params">resultCode</span>, Intent <span class="hljs-params">resultData</span>)</span> &#123;<br>    <span class="hljs-keyword">if</span> (requestCode<span class="hljs-operator"> == </span>READ_REQUEST_CODE<span class="hljs-operator"> &amp;&amp; </span>resultCode<span class="hljs-operator"> == </span>Activity.RESULT_OK) &#123;<br>        Uri uri = null;<br>        <span class="hljs-keyword">if</span> (resultData != null) &#123;<br>            <span class="hljs-comment">// 获取选择文件Uri</span><br>            uri = resultData.get<span class="hljs-constructor">Data()</span>;<br>            <span class="hljs-comment">// 获取图片信息</span><br>            Cursor cursor = this.get<span class="hljs-constructor">ContentResolver()</span><br>                .query(uri, IMAGE_PROJECTION, null, null, null, null);<br><br>            <span class="hljs-keyword">if</span> (cursor != null<span class="hljs-operator"> &amp;&amp; </span>cursor.move<span class="hljs-constructor">ToFirst()</span>) &#123;<br>                String displayName = cursor.get<span class="hljs-constructor">String(<span class="hljs-params">cursor</span>.<span class="hljs-params">getColumnIndexOrThrow</span>(IMAGE_PROJECTION[0])</span>);<br>                String size = cursor.get<span class="hljs-constructor">String(<span class="hljs-params">cursor</span>.<span class="hljs-params">getColumnIndexOrThrow</span>(IMAGE_PROJECTION[1])</span>);<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>i(TAG, <span class="hljs-string">&quot;Uri: &quot;</span> + uri.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>);<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>i(TAG, <span class="hljs-string">&quot;Name: &quot;</span> + displayName);<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>i(TAG, <span class="hljs-string">&quot;Size: &quot;</span> + size);<br>            &#125;<br>            cursor.close<span class="hljs-literal">()</span>;<br>        &#125;<br>    &#125;<br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<h3 id="创建文件"><a href="#创建文件" class="headerlink" title="创建文件"></a>创建文件</h3><p>这部分的用法我暂时也只在淘宝App -&gt; 商品评论 -&gt; 保存评论图片的地方看到过。有兴趣的可以去试试。</p>
+<p>具体用法（我以创建txt文件为例）：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    public void create<span class="hljs-constructor">File()</span> &#123;<br>        Intent intent = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Intent(Intent.ACTION_CREATE_DOCUMENT)</span>;<br>        intent.add<span class="hljs-constructor">Category(Intent.CATEGORY_OPENABLE)</span>;<br>        <span class="hljs-comment">// 文件类型</span><br>        intent.set<span class="hljs-constructor">Type(<span class="hljs-string">&quot;text/plain&quot;</span>)</span>;<br>        <span class="hljs-comment">// 文件名称</span><br>        intent.put<span class="hljs-constructor">Extra(Intent.EXTRA_TITLE, System.<span class="hljs-params">currentTimeMillis</span>()</span> + <span class="hljs-string">&quot;.txt&quot;</span>);<br>        start<span class="hljs-constructor">ActivityForResult(<span class="hljs-params">intent</span>, WRITE_REQUEST_CODE)</span>;<br>    &#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>交互页面如下：</p>
+<p><img src="TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/170233f78b4fd1betplv-t2oaga2asx-zoom-in-crop-mark1304000.awebp" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="读取文件"><a href="#读取文件" class="headerlink" title="读取文件"></a>读取文件</h3><p>获得文件的 Uri 后，就可以对其执行任何操作。</p>
+<ol>
+<li>Bitmap</li>
+</ol>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    <span class="hljs-keyword">private</span> Bitmap get<span class="hljs-constructor">BitmapFromUri(Uri <span class="hljs-params">uri</span>)</span> throws IOException &#123;<br>    	ParcelFileDescriptor parcelFileDescriptor =<br>            	get<span class="hljs-constructor">ContentResolver()</span>.<span class="hljs-keyword">open</span><span class="hljs-constructor">FileDescriptor(<span class="hljs-params">uri</span>, <span class="hljs-string">&quot;r&quot;</span>)</span>;<br>    	FileDescriptor fileDescriptor = parcelFileDescriptor.get<span class="hljs-constructor">FileDescriptor()</span>;<br>    	Bitmap image = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">BitmapFactory</span>.</span></span>decode<span class="hljs-constructor">FileDescriptor(<span class="hljs-params">fileDescriptor</span>)</span>;<br>    	parcelFileDescriptor.close<span class="hljs-literal">()</span>;<br>    	return image;<br>    &#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>获取 <code>InputStream</code></li>
+</ol>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs processing">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">String</span> readTextFromUri(Uri uri) <span class="hljs-keyword">throws</span> IOException &#123;<br>    	StringBuilder stringBuilder = <span class="hljs-keyword">new</span> StringBuilder();<br>    	<span class="hljs-keyword">try</span> (InputStream inputStream = getContentResolver().openInputStream(uri);<br>            <span class="hljs-keyword">BufferedReader</span> reader = <span class="hljs-keyword">new</span> <span class="hljs-keyword">BufferedReader</span>(<br>            <span class="hljs-keyword">new</span> InputStreamReader(Objects.requireNonNull(inputStream)))) &#123;<br>        	<span class="hljs-keyword">String</span> <span class="hljs-built_in">line</span>;<br>        	<span class="hljs-keyword">while</span> ((<span class="hljs-built_in">line</span> = reader.readLine()) != <span class="hljs-keyword">null</span>) &#123;<br>            	stringBuilder.<span class="hljs-built_in">append</span>(<span class="hljs-built_in">line</span>);<br>        	&#125;<br>    	&#125;<br>    	<span class="hljs-keyword">return</span> stringBuilder.toString();<br>    &#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<h3 id="修改文件"><a href="#修改文件" class="headerlink" title="修改文件"></a>修改文件</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    <span class="hljs-keyword">private</span> void alter<span class="hljs-constructor">Document(Uri <span class="hljs-params">uri</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span> (uri != null) &#123;<br>            OutputStream outputStream = null;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-comment">// 获取 OutputStream</span><br>                outputStream = get<span class="hljs-constructor">ContentResolver()</span>.<span class="hljs-keyword">open</span><span class="hljs-constructor">OutputStream(<span class="hljs-params">uri</span>)</span>;<br>                outputStream.write(<span class="hljs-string">&quot;Storage Access Framework Example&quot;</span>.get<span class="hljs-constructor">Bytes(StandardCharsets.UTF_8)</span>);<br>            &#125; catch (IOException e) &#123;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Toast</span>.</span></span>make<span class="hljs-constructor">Text(<span class="hljs-params">this</span>, <span class="hljs-string">&quot;修改文件失败！&quot;</span>, Toast.LENGTH_SHORT)</span>.show<span class="hljs-literal">()</span>;<br>            &#125; finally &#123;<br>                <span class="hljs-keyword">if</span> (outputStream != null) &#123;<br>                    <span class="hljs-keyword">try</span> &#123;<br>                        outputStream.close<span class="hljs-literal">()</span>;<br>                    &#125; catch (IOException e) &#123;<br>                        e.fill<span class="hljs-constructor">InStackTrace()</span>;<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125; <br>    &#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    <span class="hljs-keyword">private</span> void alter<span class="hljs-constructor">Document(Uri <span class="hljs-params">uri</span>)</span> &#123;<br>    	<span class="hljs-keyword">try</span> &#123;<br>        	ParcelFileDescriptor pfd = get<span class="hljs-constructor">ContentResolver()</span>.<br>                <span class="hljs-keyword">open</span><span class="hljs-constructor">FileDescriptor(<span class="hljs-params">uri</span>, <span class="hljs-string">&quot;w&quot;</span>)</span>;<br>        	FileOutputStream fileOutputStream =<br>                <span class="hljs-keyword">new</span> <span class="hljs-constructor">FileOutputStream(<span class="hljs-params">pfd</span>.<span class="hljs-params">getFileDescriptor</span>()</span>);<br>        	fileOutputStream.write((<span class="hljs-string">&quot;Storage Access Framework Example&quot;</span>).get<span class="hljs-constructor">Bytes()</span>)；<br>        	fileOutputStream.close<span class="hljs-literal">()</span>;<br>        	pfd.close<span class="hljs-literal">()</span>;<br>    	&#125; catch (FileNotFoundException e) &#123;<br>        	e.print<span class="hljs-constructor">StackTrace()</span>;<br>    	&#125; catch (IOException e) &#123;<br>        	e.print<span class="hljs-constructor">StackTrace()</span>;<br>    	&#125;<br>    &#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<h3 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h3><p>使用<code>DocumentsContract.deleteDocument</code> 方法进行删除。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    public void delete<span class="hljs-constructor">File(Uri <span class="hljs-params">uri</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span> (uri != null) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DocumentsContract</span>.</span></span>delete<span class="hljs-constructor">Document(<span class="hljs-params">getContentResolver</span>()</span>, uri);<br>            &#125; catch (FileNotFoundException e) &#123;<br>                e.print<span class="hljs-constructor">StackTrace()</span>;<br>            &#125;<br>        &#125; <br>    &#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<h3 id="选择目录（Android-5-0以上支持）"><a href="#选择目录（Android-5-0以上支持）" class="headerlink" title="选择目录（Android 5.0以上支持）"></a>选择目录（Android 5.0以上支持）</h3><p>使用<code>Intent.ACTION_OPEN_DOCUMENT_TREE</code>可以调起文件目录选择页面，选择一个目录，并将其子文件夹的读写权限授予APP。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    <span class="hljs-keyword">private</span> void select<span class="hljs-constructor">Dir()</span> &#123;<br>        <span class="hljs-comment">// 用户可以选择任意文件夹，将它及其子文件夹的读写权限授予APP。</span><br>        Intent intent = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)</span>;<br>        start<span class="hljs-constructor">ActivityForResult(<span class="hljs-params">intent</span>, REQUEST_CODE_FOR_DIR)</span>;<br>    &#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>交互页面如下：</p>
+<p><img src="TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/170233f8e56381a8tplv-t2oaga2asx-zoom-in-crop-mark1304000.awebp" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>在<code>onActivityResult</code>获取目录的Uri，并创建<code>DocumentFile</code>来进行文件操作：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@Override<br>public void on<span class="hljs-constructor">ActivityResult(<span class="hljs-params">int</span> <span class="hljs-params">requestCode</span>, <span class="hljs-params">int</span> <span class="hljs-params">resultCode</span>, Intent <span class="hljs-params">resultData</span>)</span> &#123;<br>    <span class="hljs-keyword">if</span> (requestCode<span class="hljs-operator"> == </span>REQUEST_CODE_FOR_DIR<span class="hljs-operator"> &amp;&amp; </span>resultCode<span class="hljs-operator"> == </span>Activity.RESULT_OK) &#123;<br>        Uri uriTree = null;<br>    	<span class="hljs-keyword">if</span> (data != null) &#123;<br>            uriTree = data.get<span class="hljs-constructor">Data()</span>;<br>    	&#125;<br>    	<span class="hljs-keyword">if</span> (uriTree != null) &#123;<br>            <span class="hljs-comment">// 创建所选目录的DocumentFile，可以使用它进行文件操作</span><br>            DocumentFile root = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DocumentFile</span>.</span></span>from<span class="hljs-constructor">TreeUri(<span class="hljs-params">this</span>, <span class="hljs-params">uriTree</span>)</span>;<br>            <span class="hljs-comment">// 比如使用它创建文件夹</span><br>            DocumentFile dir = root.create<span class="hljs-constructor">Directory(”Test“)</span>;<br>   	&#125;<br>    &#125;<br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>当然每次这样选择授权会很麻烦，所以我们也可以在首次授权时保存获取的目录权限：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">	<span class="hljs-comment">// 获取权限</span><br>    final <span class="hljs-built_in">int</span> takeFlags = resultData.get<span class="hljs-constructor">Flags()</span><br>			&amp; (Intent.FLAG_GRANT_READ_URI_PERMISSION<br>            <span class="hljs-pattern-match">| <span class="hljs-constructor">Intent</span>.<span class="hljs-constructor">FLAG_GRANT_WRITE_URI_PERMISSION</span>);</span><br><span class="hljs-pattern-match">    get<span class="hljs-constructor">ContentResolver()</span>.take<span class="hljs-constructor">PersistableUriPermission(<span class="hljs-params">uri</span>, <span class="hljs-params">takeFlags</span>)</span>;</span><br><span class="hljs-pattern-match">	<span class="hljs-operator">/</span><span class="hljs-operator">/</span> 保存获取的目录权限</span><br><span class="hljs-pattern-match">    <span class="hljs-constructor">SharedPreferences</span> sp = get<span class="hljs-constructor">SharedPreferences(<span class="hljs-string">&quot;DirPermission&quot;</span>, Context.MODE_PRIVATE)</span>;</span><br><span class="hljs-pattern-match">    <span class="hljs-constructor">SharedPreferences</span>.<span class="hljs-constructor">Editor</span> editor = sp.edit();</span><br><span class="hljs-pattern-match">    editor.put<span class="hljs-constructor">String(<span class="hljs-string">&quot;uriTree&quot;</span>, <span class="hljs-params">uri</span>.<span class="hljs-params">toString</span>()</span>);</span><br><span class="hljs-pattern-match">    editor.apply();</span><br><span class="hljs-pattern-match">复制代码</span><br></code></pre></td></tr></table></figure>
+
+<p>使用时从<code>SharedPreferences</code>获取<code>uriTree</code>，不存在或是无权限则重新授权：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    SharedPreferences sp = get<span class="hljs-constructor">SharedPreferences(<span class="hljs-string">&quot;DirPermission&quot;</span>, Context.MODE_PRIVATE)</span>;<br>    String uriTree = sp.get<span class="hljs-constructor">String(<span class="hljs-string">&quot;uriTree&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)</span>;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TextUtils</span>.</span></span>is<span class="hljs-constructor">Empty(<span class="hljs-params">uriTree</span>)</span>) &#123;<br>    	<span class="hljs-comment">// 重新授权</span><br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>    	<span class="hljs-keyword">try</span> &#123;<br>            Uri uri = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Uri</span>.</span></span>parse(uriTree);<br>            final <span class="hljs-built_in">int</span> takeFlags = get<span class="hljs-constructor">Intent()</span>.get<span class="hljs-constructor">Flags()</span><br>        	        &amp; (Intent.FLAG_GRANT_READ_URI_PERMISSION<br>                	<span class="hljs-pattern-match">| <span class="hljs-constructor">Intent</span>.<span class="hljs-constructor">FLAG_GRANT_WRITE_URI_PERMISSION</span>);</span><br><span class="hljs-pattern-match">            get<span class="hljs-constructor">ContentResolver()</span>.take<span class="hljs-constructor">PersistableUriPermission(<span class="hljs-params">uri</span>, <span class="hljs-params">takeFlags</span>)</span>;</span><br><span class="hljs-pattern-match">            <span class="hljs-constructor">DocumentFile</span> root = <span class="hljs-constructor">DocumentFile</span>.from<span class="hljs-constructor">TreeUri(<span class="hljs-params">this</span>, <span class="hljs-params">uri</span>)</span>;</span><br><span class="hljs-pattern-match">    	&#125; catch (<span class="hljs-constructor">SecurityException</span> e) &#123;</span><br><span class="hljs-pattern-match">            <span class="hljs-operator">/</span><span class="hljs-operator">/</span> 重新授权</span><br><span class="hljs-pattern-match">    	&#125;</span><br><span class="hljs-pattern-match">    &#125;</span><br><span class="hljs-pattern-match">复制代码</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码中使用到的<code>takePersistableUriPermission</code>方法是为了检查最新的数据。防止另一个应用可能删除或修改了文件导致Uri失效。</p>
+<p>有了授权就有撤销授权，使用<code>releasePersistableUriPermission</code>或<code>revokeUriPermission</code>方法就可以实现权限的撤销。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    public void release<span class="hljs-constructor">Permission(View <span class="hljs-params">view</span>)</span> &#123;<br>        SharedPreferences sp = get<span class="hljs-constructor">SharedPreferences(<span class="hljs-string">&quot;DirPermission&quot;</span>, Context.MODE_PRIVATE)</span>;<br>        String uriTree = sp.get<span class="hljs-constructor">String(<span class="hljs-string">&quot;uriTree&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)</span>;<br>        <span class="hljs-keyword">if</span> (!<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TextUtils</span>.</span></span>is<span class="hljs-constructor">Empty(<span class="hljs-params">uriTree</span>)</span>) &#123;<br>            Uri uri = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Uri</span>.</span></span>parse(uriTree);<br>                final <span class="hljs-built_in">int</span> takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION<br>                		<span class="hljs-pattern-match">| <span class="hljs-constructor">Intent</span>.<span class="hljs-constructor">FLAG_GRANT_WRITE_URI_PERMISSION</span>;</span><br><span class="hljs-pattern-match">                </span><br><span class="hljs-pattern-match">            get<span class="hljs-constructor">ContentResolver()</span>.release<span class="hljs-constructor">PersistableUriPermission(<span class="hljs-params">uri</span>, <span class="hljs-params">takeFlags</span>)</span>;</span><br><span class="hljs-pattern-match">            <span class="hljs-operator">/</span><span class="hljs-operator">/</span> 或</span><br><span class="hljs-pattern-match">            this.revoke<span class="hljs-constructor">UriPermission(<span class="hljs-params">uri</span>, <span class="hljs-params">takeFlags</span>)</span>;</span><br><span class="hljs-pattern-match">            <span class="hljs-operator">/</span><span class="hljs-operator">/</span> 重启才会生效，所以可以清除uri<span class="hljs-constructor">Tree</span></span><br><span class="hljs-pattern-match">            <span class="hljs-constructor">SharedPreferences</span>.<span class="hljs-constructor">Editor</span> editor = sp.edit();</span><br><span class="hljs-pattern-match">            editor.put<span class="hljs-constructor">String(<span class="hljs-string">&quot;uriTree&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)</span>;</span><br><span class="hljs-pattern-match">            editor.apply();</span><br><span class="hljs-pattern-match">        &#125; </span><br><span class="hljs-pattern-match">    &#125;</span><br><span class="hljs-pattern-match"></span><br><span class="hljs-pattern-match">复制代码</span><br></code></pre></td></tr></table></figure>
+
+<p>或者在应用设置页面点击<code>取消访问权限</code>手动删除（MIUI 11 上未发现此按钮）：</p>
+<p><img src="TyporaRaw/ANDROID%E5%AD%98%E5%82%A8%E9%80%82%E9%85%8D.assets/170233fac3e64f0dtplv-t2oaga2asx-zoom-in-crop-mark1304000.awebp" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>本篇都是具体场景的的使用示例，完整的代码我已上传<a href="https://link.juejin.cn/?target=https://github.com/simplezhli/SAFExample">GitHub</a>。可以去自行查看体验。</p>
+<h2 id="3-参考"><a href="#3-参考" class="headerlink" title="3.参考"></a>3.参考</h2><ul>
+<li><a href="https://link.juejin.cn/?target=https://open.oppomobile.com/wiki/doc%23id=10432">Android Q版本应用兼容性适配指导（推荐）</a></li>
+<li><a href="https://link.juejin.cn/?target=https://developer.android.google.cn/guide/topics/providers/document-provider">使用存储访问框架打开文件</a></li>
+</ul>
+<p>作者：唯鹿<br>链接：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904058743078919">https://juejin.cn/post/6844904058743078919</a><br>来源：稀土掘金<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。 </p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/b8448ad0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">flatpak</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/899e41d0/">
+                        <span class="hidden-mobile">Rsync</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

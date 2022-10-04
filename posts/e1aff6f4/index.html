@@ -16,15 +16,15 @@
   <meta name="author" content="夜木">
   <meta name="keywords" content="">
   
-    <meta name="description" content="更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  fcitx5安装1sudo pacman -S fcitx5-im fcitx5-chinese-addons   其他一些软件包 1234567fcitx5: 输入法基础框架主程序   fcitx5-chinese-addons: 简体中文输入的支持，云拼音   fcitx5">
+    <meta name="description" content="更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  修改aur源： 原始地址https:&#x2F;&#x2F;aur.archlinux.org   添加 AUR 源: yay --aururl &quot;https:&#x2F;&#x2F;aur.tuna.tsinghua.edu.cn&quot; --save   查看配置 yay -P -g或者直接查看 ~">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Manjaro文档">
 <meta property="og:url" content="https://knightwood.github.io/posts/e1aff6f4/index.html">
 <meta property="og:site_name" content="不知名的博客">
-<meta property="og:description" content="更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  fcitx5安装1sudo pacman -S fcitx5-im fcitx5-chinese-addons   其他一些软件包 1234567fcitx5: 输入法基础框架主程序   fcitx5-chinese-addons: 简体中文输入的支持，云拼音   fcitx5">
+<meta property="og:description" content="更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  修改aur源： 原始地址https:&#x2F;&#x2F;aur.archlinux.org   添加 AUR 源: yay --aururl &quot;https:&#x2F;&#x2F;aur.tuna.tsinghua.edu.cn&quot; --save   查看配置 yay -P -g或者直接查看 ~">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
-<meta property="article:modified_time" content="2022-01-18T07:47:18.873Z">
+<meta property="article:modified_time" content="2022-10-03T11:47:24.796Z">
 <meta property="article:author" content="NightWood">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="manjaro">
@@ -198,7 +198,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      33k 字
+      35k 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      279 分钟
+      289 分钟
     </span>
   
 
@@ -241,6 +241,15 @@
             <div class="markdown-body">
               <h1 id="更换国内源（可以在软件商店设置里修改）"><a href="#更换国内源（可以在软件商店设置里修改）" class="headerlink" title="更换国内源（可以在软件商店设置里修改）"></a>更换国内源（可以在软件商店设置里修改）</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">sudo pacman-mirrors -<span class="hljs-selector-tag">i</span> -c China -m rank<br></code></pre></td></tr></table></figure>
 
+<h2 id="修改aur源："><a href="#修改aur源：" class="headerlink" title="修改aur源："></a>修改aur源：</h2><ul>
+<li>原始地址<code>https://aur.archlinux.org</code></li>
+</ul>
+<ul>
+<li>添加 AUR 源: <code>yay --aururl &quot;https://aur.tuna.tsinghua.edu.cn&quot; --save</code></li>
+</ul>
+<ul>
+<li>查看配置 <code>yay -P -g</code>或者直接查看 <code>~/.config/yay/config.json</code> 文件内容。</li>
+</ul>
 <h1 id="fcitx5"><a href="#fcitx5" class="headerlink" title="fcitx5"></a>fcitx5</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> pacman -S fcitx<span class="hljs-number">5</span>-im fcitx<span class="hljs-number">5</span>-chinese-addons<br></code></pre></td></tr></table></figure>
 
 <ul>
@@ -741,6 +750,7 @@
 </ul>
 <h2 id="dock栏"><a href="#dock栏" class="headerlink" title="dock栏"></a>dock栏</h2><ul>
 <li>latte dock</li>
+<li>cairo-dock</li>
 </ul>
 <h2 id="顶栏"><a href="#顶栏" class="headerlink" title="顶栏"></a>顶栏</h2><ul>
 <li><p>applet-window-appmenu</p>
@@ -774,6 +784,8 @@
 <p><a target="_blank" rel="noopener" href="https://github.com/Zren/plasma-applet-eventcalendar">github地址</a></p>
 </li>
 </ul>
+<h3 id="dolphin插件"><a href="#dolphin插件" class="headerlink" title="dolphin插件"></a>dolphin插件</h3><pre><code>位置：`~/.local/share/kservices5/ServiceMenus/`
+</code></pre>
 <hr>
 <h1 id="ufw防火墙"><a href="#ufw防火墙" class="headerlink" title="ufw防火墙"></a>ufw防火墙</h1><p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Uncomplicated_Firewall#Installation"><strong>archwiki</strong></a></p>
 <h2 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h2><ol>
@@ -813,6 +825,30 @@
 <p>   一旦匹配某个规则，检查便会停止。因此，如果某个规则允许访问TCP端口22(如使用udo ufw allow 22)，<br>   后面另一个规则指示拦截某个IP地址(如使用 ufw deny proto tcp from 202.54.1.1 to any port 22)。<br>   最终，允许访问TCP端口22的规则会被使用，而后一个拦截黑客IP地址 202.54.1.1 却没有被使用。<br>   这都是由于规则的顺序造成的。为避免这类问题，<br>   你需要编辑 /etc/ufw/before.rules文件，<br>   在“# End required lines”之后”Block an IP Address”添加规则。</p>
    <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">在/etc/ufw/<span class="hljs-keyword">before</span>.rules文件添加规则之后生效<br><br># <span class="hljs-keyword">End</span> required lines<br><br># Block spammers<br><br>-A ufw-<span class="hljs-keyword">before</span>-<span class="hljs-keyword">input</span> -s <span class="hljs-number">123.125</span><span class="hljs-number">.71</span><span class="hljs-number">.0</span>/<span class="hljs-number">24</span> -j <span class="hljs-keyword">DROP</span><br>-A ufw-<span class="hljs-keyword">before</span>-<span class="hljs-keyword">input</span> -s <span class="hljs-number">220.181</span><span class="hljs-number">.108</span><span class="hljs-number">.0</span>/<span class="hljs-number">24</span> -j <span class="hljs-keyword">DROP</span><br><br>保存并关闭文件。***，让防火墙重新加载配置信息：<br><br>sudo ufw reload<br></code></pre></td></tr></table></figure>
 
+<h1 id="在单独的用户帐户下运行-Wine"><a href="#在单独的用户帐户下运行-Wine" class="headerlink" title="在单独的用户帐户下运行 Wine"></a>在单独的用户帐户下运行 Wine</h1><ol>
+<li><p>新建一个用户：<code>guest</code></p>
+</li>
+<li><p>将新建的用户<code>guest</code>添加到xorg的权限列表：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">xhost +<span class="hljs-built_in">SI</span>:localuser:guest  添加<br>xhost -<span class="hljs-built_in">SI</span>:localuser:guest  移除<br>xhost  打印列表<br></code></pre></td></tr></table></figure></li>
+<li><p>最后，你可以通过以下命令来运行Wine，该命令使用<code>env</code>来启动Wine，并加入它所期望的环境变量。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">sudo -u guest env <span class="hljs-attribute">HOME</span>=/home/guest <span class="hljs-attribute">USER</span>=guest <span class="hljs-attribute">USERNAME</span>=guest <span class="hljs-attribute">LOGNAME</span>=guest wine arguments<br></code></pre></td></tr></table></figure>
+
+<p>可以使用如下的shell脚本，使用Wine运行Windows应用程序的过程自动化：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros">/usr/local/bin/runaswine  存放位置，文件名<br><br>shell脚本内容：<br><br><span class="hljs-comment">#!/bin/zsh</span><br>xhost +SI:localuser:guest<br>sudo -u guest env <span class="hljs-attribute">HOME</span>=/home/guest <span class="hljs-attribute">USER</span>=guest <span class="hljs-attribute">USERNAME</span>=guest <span class="hljs-attribute">LOGNAME</span>=guest wine <span class="hljs-string">&quot;<span class="hljs-variable">$@</span>&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>Wine程式可以被通过以下指令启动：</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs taggerscript">runaswine &quot;C:<span class="hljs-symbol">\p</span>ath<span class="hljs-symbol">\t</span>o<span class="hljs-symbol">\a</span>pplication.exe&quot;<br></code></pre></td></tr></table></figure>
+
+<p>为了在每次以其他用户身份运行Wine时不被要求输入密码，可以在sudoers文件中加入以下条目。<code>*mainuser* ALL=(guest) NOPASSWD: ALL</code>。更多信息见<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Sudo#Configuration">Sudo#Configuration</a>。</p>
+<p>建议以Wine用户身份运行<code>winecfg</code>，并在配置窗口的 “桌面集成 “部分删除Wine用户主目录以外的所有目录绑定，这样，使用Wine运行的程序就无法读取特殊用户主目录以外的任何文件。</p>
+<p>请记住，如果使用了<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/PulseAudio">PulseAudio</a>，那么在以这种方式运行的Wine程序中，音频可能将无法发挥作用。请参阅 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/PulseAudio/Examples#Allowing_multiple_users_to_share_a_PulseAudio_daemon">PulseAudio/Examples#Allowing multiple users to share a PulseAudio daemon</a> 以了解关于允许Wine用户访问主用户的PulseAudio daemon的信息。</p>
+</li>
+</ol>
+<h1 id="tty"><a href="#tty" class="headerlink" title="tty"></a>tty</h1><ul>
+<li><code>Ctrl+alt+F1~F6</code> 登录其他用户</li>
+<li>在终端中使用<code>W</code>查看登录的用户</li>
+<li>使用<code>pkill -kill -t tty2</code>（此处tty2是从上面的命令w查询得到的用户登录tty）命令强制某用户登出</li>
+</ul>
 
             </div>
             <hr>
@@ -849,9 +885,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/9dcd67b4/">
+                      <a href="/posts/8d2ce9e6/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">配置 AndroidStudio</span>
+                        <span class="hidden-mobile">Sqlite基本内容</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -859,8 +895,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/8d2ce9e6/">
-                        <span class="hidden-mobile">Sqlite基本内容</span>
+                      <a href="/posts/64a98929/">
+                        <span class="hidden-mobile">app_process 来调用高权限 API</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
