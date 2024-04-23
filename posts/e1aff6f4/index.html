@@ -24,7 +24,7 @@
 <meta property="og:description" content="更换国内源（可以在软件商店设置里修改）1sudo pacman-mirrors -i -c China -m rank  修改aur源： 原始地址https:&#x2F;&#x2F;aur.archlinux.org   添加 AUR 源: yay --aururl &quot;https:&#x2F;&#x2F;aur.tuna.tsinghua.edu.cn&quot; --save   查看配置 yay -P -g或者直接查看 ~">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-23T06:36:09.000Z">
-<meta property="article:modified_time" content="2022-10-03T11:47:24.796Z">
+<meta property="article:modified_time" content="2024-04-23T11:28:43.061Z">
 <meta property="article:author" content="NightWood">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="manjaro">
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      289 分钟
+      292 分钟
     </span>
   
 
@@ -259,7 +259,7 @@
 <p>打开系统设置在 设置–区域设置—输入法—添加输入法—拼音—配置—-在程序中显示与编辑文本——启用云拼音 返回 配置附加组件 Classic User Interface 选择主题</p>
 <p>配置fcitx5的环境变量：</p>
 <p> <strong>不要在 fcitx 运行时修改, 因为进程退出后会覆写所有配置文件 (大字才能醒目)</strong></p>
-<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">nano ~<span class="hljs-string">/.pam_environment</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">nano ~<span class="hljs-string">/.pam_environment</span><br>如果不生效，则使用<br>nano ~<span class="hljs-string">/.xprofile</span><br></code></pre></td></tr></table></figure>
 
 <p>写入以下内容（内容来自manjaro的wiki）</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">GTK_IM_MODULE <span class="hljs-attribute">DEFAULT</span>=fcitx<br>QT_IM_MODULE  <span class="hljs-attribute">DEFAULT</span>=fcitx<br>XMODIFIERS    <span class="hljs-attribute">DEFAULT</span>=\@im=fcitx<br>SDL_IM_MODULE <span class="hljs-attribute">DEFAULT</span>=fcitx<br>最后那行 SDL_IM_MODULE 是为了让一些使用特定版本 SDL2 库的游戏，比如 Dota2 能正常使用输入法。 <br></code></pre></td></tr></table></figure>
@@ -271,7 +271,10 @@
 <p>输入法的默认设置：</p>
 <figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dos">Ctrl + Space 激活输入法<br>左<span class="hljs-built_in">Shift</span> 临时切换到英文<br>Ctrl + <span class="hljs-built_in">Shift</span> 输入法间切换<br>-/= 向前/向后翻页<br><span class="hljs-built_in">Shift</span> + Space 全角、半角切换<br></code></pre></td></tr></table></figure>
 
-<h2 id="全自动配置"><a href="#全自动配置" class="headerlink" title="全自动配置"></a>全自动配置</h2><p>manjaro的源里的<code>manjaro-asian-input-support</code></p>
+<h2 id="全自动配置"><a href="#全自动配置" class="headerlink" title="全自动配置"></a>全自动配置</h2><p>安装 manjaro的源里的<code>manjaro-asian-input-support</code></p>
+<h2 id="更新："><a href="#更新：" class="headerlink" title="更新："></a>更新：</h2><p>​    2022-11-17 </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">I recently updated manjaro, fcitx became completely unavailable, a PAM configuration<span class="hljs-built_in"> service </span>gave up ~/.pam_environment, so just rewrite it <span class="hljs-keyword">to</span> ~/.xprofile look like this:<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">INPUT_METHOD</span>=fcitx5<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">GTK_IM_MODULE</span>=fcitx5<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">QT_IM_MODULE</span>=fcitx5<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">XMODIFIERS</span>=@im=fcitx5<br></code></pre></td></tr></table></figure>
+
 <h2 id="fcitx5主题文件"><a href="#fcitx5主题文件" class="headerlink" title="fcitx5主题文件"></a>fcitx5主题文件</h2><p>主题文件位置：<code>~/.local/share/fcitx5/themes/</code></p>
 <p>将下载的主题放进去，在设置面板里更改就可以了</p>
 <h3 id="deepin论坛里的一个主题"><a href="#deepin论坛里的一个主题" class="headerlink" title="deepin论坛里的一个主题"></a>deepin论坛里的一个主题</h3><p><a target="_blank" rel="noopener" href="https://bbs.deepin.org/zh/post/223743">地址</a></p>
@@ -291,7 +294,7 @@
 <h1 id="manjaro的pamac命令"><a href="#manjaro的pamac命令" class="headerlink" title="manjaro的pamac命令"></a>manjaro的pamac命令</h1><p>他是软件商店的命令版本，也是manjaro自己的包管理命令。类似于ubuntu的apt命令。</p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs applescript">pamac search <span class="hljs-built_in">name</span> <span class="hljs-comment">#搜索</span><br>pamac info <span class="hljs-built_in">name</span>  <span class="hljs-comment">#详细信息</span><br>pamac install <span class="hljs-built_in">name</span> <span class="hljs-comment">#安装软件</span><br>pamac remove <span class="hljs-built_in">name</span> <span class="hljs-comment">#卸载软件</span><br>pamac checkupdates <span class="hljs-comment">#检查更新</span><br>pamac upgrade <span class="hljs-comment">#安装更新</span><br></code></pre></td></tr></table></figure>
 
-<h1 id="改善火狐或chrome滚动"><a href="#改善火狐或chrome滚动" class="headerlink" title="改善火狐或chrome滚动"></a>改善火狐或chrome滚动</h1><ul>
+<h1 id="火狐"><a href="#火狐" class="headerlink" title="火狐"></a>火狐</h1><h2 id="改善火狐或chrome滚动"><a href="#改善火狐或chrome滚动" class="headerlink" title="改善火狐或chrome滚动"></a>改善火狐或chrome滚动</h2><ul>
 <li>在火狐中搜索<code> Yet Another Smooth Scrolling WE</code>扩展</li>
 <li>chrome中搜索<code>Chromium Wheel Smooth Scroller</code>扩展</li>
 </ul>
@@ -301,6 +304,8 @@
 <p>about:config<br>搜索mousewheel<br>其中<code> mousewheel.defalut.delta_multiplier_y</code>越大，每次滚动一下<br>滚轮，屏幕就滑动地越大。<br>除此之外，推测<code>durationMaxMs和durationMinMs</code>参数是<br>完成滚动的时间间隔，以毫秒计算，数值越小，单次滚动越快。factor<br>和鼠标滚轮滚动时，屏幕滚动的加速度有关。</p>
 </li>
 </ul>
+<h2 id="禁用webrtc"><a href="#禁用webrtc" class="headerlink" title="禁用webrtc"></a>禁用webrtc</h2><p> 输入about:config**<br> 搜索:media.peerconnection.enabled<br> 设置成:false</p>
+<p>注：测试网站:<a target="_blank" rel="noopener" href="https://www.vpninsights.com/webrtc-leak-test">https://www.vpninsights.com/webrtc-leak-test</a></p>
 <h1 id="设置界面缩放"><a href="#设置界面缩放" class="headerlink" title="设置界面缩放"></a>设置界面缩放</h1><pre><code>高分屏缩放，比如netease-cloud-music软件：
 可以通过 env QT_SCREEN_SCALE_FACTORS=1.25 netease-cloud-music 启动来解决,也就是在启动文件里添加。
 </code></pre>
@@ -885,9 +890,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/8d2ce9e6/">
+                      <a href="/posts/9dcd67b4/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Sqlite基本内容</span>
+                        <span class="hidden-mobile">配置 AndroidStudio</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -895,8 +900,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/398acbb1/">
-                        <span class="hidden-mobile">android10新存储方案</span>
+                      <a href="/posts/8d2ce9e6/">
+                        <span class="hidden-mobile">Sqlite基本内容</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
